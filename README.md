@@ -12,14 +12,26 @@ A personal information manager that can write notes & add contacts & create some
 
 ## Code Usage
 
-- Download a JSON Jar Library
-  - Linke: https://github.com/stleary/JSON-java
-- IntelliJ IDEA
-  - Add dependency
-    - Add JSON Jar to the project dependency (in Project Structure)
-  - Just run the code
-- Command Line
-  - Add dependency
+- Building
+
+  - Download a JSON Jar Library
+    - Link: https://github.com/stleary/JSON-java
+
+  - IntelliJ IDEA
+    - Add dependency
+      - Add JSON Jar to the project dependency (in Project Structure)
+    - Just run the code
+    
+  - Command Line
+    - Add dependency
+
+- Testing
+
+  - Download the JUnit 4.9 Jar Library
+    - Link: http://www.java2s.com/Code/JarDownload/junit/junit-4.9.jar.zip
+  - IntelliJ IDEA
+    - Add dependency
+      - Add JSON Jar to the project dependency (in Project Structure)
 
 ## Content
 

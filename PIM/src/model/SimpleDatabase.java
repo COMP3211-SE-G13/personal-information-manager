@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
-import org.json.JSONObject;
+
+import org.json.*;
 
 public class SimpleDatabase {
     private String mode;
@@ -90,8 +91,32 @@ public class SimpleDatabase {
      * @return true || false
      */
     private Boolean create(String fileBasePath, String fileName) {
+        JSONObject authData = new JSONObject();
+
+        JSONObject personalData = new JSONObject();
+        authData.put("lastName", "");
+        authData.put("firstName", "");
+
+        JSONObject contactData = new JSONObject();
+        JSONObject noteData = new JSONObject();
+        JSONObject taskData = new JSONObject();
+        JSONObject eventData = new JSONObject();
+        JSONObject allData = new JSONObject();
+
+        allData.put("auth", authData);
+        allData.put("personal", personalData);
+        allData.put("contact", contactData);
+        allData.put("note", noteData);
+        allData.put("task", taskData);
+        allData.put("event", eventData);
+
         try {
+//            authData.put("id", );
+            authData.put("userName", "");
+            authData.put("password", "");
+
             FileWriter file = new FileWriter("./data" + fileBasePath + fileName + ".json");
+            file.write(allData.toString());
             file.close();
             System.out.println("Successfully created the data file");
             return true;

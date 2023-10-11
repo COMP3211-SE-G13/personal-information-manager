@@ -8,23 +8,16 @@ A personal information manager that can write notes & add contacts & create some
 
 - MacOS & Unix & Linux
 - Java (JDK Version 17)
-- JSON (File Database)
+- Data File - CSV
 
 ## Code Usage
 
 - Building
 
-  - Download a JSON Jar Library
-    - Link: https://github.com/stleary/JSON-java
-
   - IntelliJ IDEA
-    - Add dependency
-      - Add JSON Jar to the project dependency (in Project Structure)
-    - Just run the code
-    
-  - Command Line
-    - Add dependency
 
+    - Just run the code
+  - Command Line
 - Testing
 
   - Download the JUnit 4.9 Jar Library
@@ -57,9 +50,38 @@ A personal information manager that can write notes & add contacts & create some
   - Events Class
   - Export Class
 
-## File Database Design (JSON)
+## File Database Design
 
-N/A
+
+| userID | userName | password |
+| ------ | -------- | -------- |
+|        |          |          |
+|        |          |          |
+
+| contactID | userID | firstName | lastName | phoneNumber | address |
+| --------- | ------ | --------- | -------- | ----------- | ------- |
+|           |        |           |          |             |         |
+|           |        |           |          |             |         |
+
+| noteID | userID | noteTitle | noteContent | createTime | lastModifyTime |
+| ------ | ------ | --------- | ----------- | ---------- | -------------- |
+|        |        |           |             |            |                |
+|        |        |           |             |            |                |
+
+| taskID | userID | taskTitle | taskDescription | taskDDL | isTaskComplete |
+| ------ | ------ | --------- | --------------- | ------- | -------------- |
+|        |        |           |                 |         |                |
+|        |        |           |                 |         |                |
+
+| eventID | userID | eventTitle | eventDescription | eventStartTime | eventAlarm | isEventSendNotify |
+| ------- | ------ | ---------- | ---------------- | -------------- | ---------- | ----------------- |
+|         |        |            |                  |                |            |                   |
+|         |        |            |                  |                |            |                   |
+
+| notificationID | userID | notification | notificationTime | isNotificationRead |
+| -------------- | ------ | ------------ | ---------------- | ------------------ |
+|                |        |              |                  |                    |
+|                |        |              |                  |                    |
 
 ## Contributors
 
@@ -67,4 +89,3 @@ N/A
 - MENG Guanlin
 - JIANG Guanlin
 - YE Feng
-

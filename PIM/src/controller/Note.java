@@ -10,7 +10,7 @@ public class Note {
      * Note Contract
      * @param noteTitle: the title of note
      * @param noteContent: the content of note
-     * @param createTime: the create time of note
+     * @param createTime: the creation time of note
      * @param lastModifyTime: the last modify time of note
      */
     public Note(String noteTitle, String noteContent, String createTime, String lastModifyTime) {
@@ -18,6 +18,8 @@ public class Note {
         this.noteContent = noteContent;
         this.createTime = createTime;
         this.lastModifyTime = lastModifyTime;
+
+
     }
 
     /**

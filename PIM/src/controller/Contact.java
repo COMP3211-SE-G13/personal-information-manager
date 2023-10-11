@@ -1,5 +1,7 @@
 package controller;
 
+import model.SimpleDatabase;
+
 public class Contact {
     private String lastName;
     private String firstName;
@@ -22,9 +24,26 @@ public class Contact {
 
     /**
      * Create Contact Function
+     * @param lastName: The last name of the contact
+     * @param firstName: The first name of the contact
+     * @param phoneNumber: The Phone number of the contact
+     * @param address: The address of the contact
+     * @param userId: The ID of the user
      */
-    private void createContact() {
+    private void createContact(String lastName, String firstName, String phoneNumber, String address, int userId) {
+        try {
+            int contactId = SimpleDatabase.getNewID("contacts.csv");
 
+            String[][] newContactData = {
+                    {String.valueOf(contactId), String.valueOf(userId), firstName, lastName, phoneNumber, address}
+            };
+
+            new SimpleDatabase("insert", "contact.csv", newContactData);
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+        }
     }
 
     /**

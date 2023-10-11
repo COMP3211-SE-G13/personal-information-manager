@@ -65,6 +65,14 @@ public class Pages {
         System.out.print(">>> Please select the above options x in [x]:");
     }
 
+    public void newNotePage() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println();
+        System.out.print("- [1] Save Note");
+        System.out.print("- [2] Discard Note");
+        System.out.print(">>> Please select the above options x in [x]:");
+    }
+
 
     /**
      * The Contact Page

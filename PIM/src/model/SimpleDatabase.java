@@ -1,46 +1,52 @@
 package model;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
-import org.json.*;
 
 public class SimpleDatabase {
     private String mode;
-    private String fileBasePath;
     private String fileName;
-    private String key;
-    private String value;
-
+    private String[][] data;
 
     /**
      * SimpleDatabase Contract
      * Operations:
-     * - create (return true || false)
-     * - deleteall (return true || false)
-     * - getall (return data)
+     * - insert
+     * - update (return true || false)
      *
      * @param mode: the mode of the database
-     * @param fileBasePath: the file bath path of the data
      * @param fileName: the file name of the data file
+     * @param data: the data
      */
-    public SimpleDatabase(String mode, String fileBasePath, String fileName) {
+    public SimpleDatabase(String mode, String fileName, String[][] data) throws IOException {
         this.mode = mode;
-        this.fileBasePath = fileBasePath;
         this.fileName = fileName;
+        this.data = data;
 
-        if (mode.equals("create")) {
-            create(fileBasePath, fileName);
+        String fileBasePath = "./src/data/";
+
+        if (mode.equals("insert")) {
+            try {
+                isDatabaseExist();
+                File file = new File(fileBasePath + fileName);
+                FileWriter fileWriter = new FileWriter(file);
+                insert(fileWriter, data);
+            } catch (Exception e) {
+                System.err.println(e);
+            }
         }
 
-        if (mode.equals("deleteall")) {
-            deleteall(fileBasePath, fileName);
-        }
+        if (mode.equals("update")) {
+            try {
 
-        if (mode.equals("getall")) {
-            getall(fileBasePath, fileName);
+
+            } catch (Exception e) {
+                System.err.println(e);
+            }
         }
     }
 
@@ -49,146 +55,206 @@ public class SimpleDatabase {
      * SimpleDatabase Contract
      * Operations:
      * - remove (return true || false)
-     * - get (return data)
-     * - insert (return true || false)
-     * - update (return true || false)
+     * - get (return data - [ type -> String[][] ])
      *
      * @param mode: the mode of the database
-     * @param fileBasePath: the file bath path of the data
      * @param fileName: the file name of the data file
-     * @param key: the key of the data
-     * @param value: the value of the data
      */
-    public SimpleDatabase(String mode, String fileBasePath, String fileName, String key, String value) {
+    public SimpleDatabase(String mode, String fileName) throws IOException {
         this.mode = mode;
-        this.fileBasePath = fileBasePath;
         this.fileName = fileName;
-        this.key = key;
-        this.value = value;
+
+        String fileBasePath = "./src/data/";
 
         if (mode.equals("get")) {
-
-        }
-
-        if (mode.equals("insert")) {
-
-        }
-
-        if (mode.equals("update")) {
-
+            try {
+                isDatabaseExist();
+                File file = new File(fileBasePath + fileName);
+                FileReader fileReader = new FileReader(file);
+                String[][] data = get(fileReader);
+            } catch (Exception e) {
+                System.err.println(e);
+            }
         }
 
         if (mode.equals("remove")) {
-
-        }
-    }
-
-
-    /**
-     * Create Data File Operation Function
-     * @param fileBasePath: the file bath path of the data
-     * @param fileName: the file name of the data file
-     * @return true || false
-     */
-    private Boolean create(String fileBasePath, String fileName) {
-        JSONObject authData = new JSONObject();
-
-        JSONObject personalData = new JSONObject();
-        authData.put("lastName", "");
-        authData.put("firstName", "");
-
-        JSONObject contactData = new JSONObject();
-        JSONObject noteData = new JSONObject();
-        JSONObject taskData = new JSONObject();
-        JSONObject eventData = new JSONObject();
-        JSONObject allData = new JSONObject();
-
-        allData.put("auth", authData);
-        allData.put("personal", personalData);
-        allData.put("contact", contactData);
-        allData.put("note", noteData);
-        allData.put("task", taskData);
-        allData.put("event", eventData);
-
-        try {
-//            authData.put("id", );
-            authData.put("userName", "");
-            authData.put("password", "");
-
-            FileWriter file = new FileWriter("./data" + fileBasePath + fileName + ".json");
-            file.write(allData.toString());
-            file.close();
-            System.out.println("Successfully created the data file");
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-
-    /**
-     * Delete the User all data File Operation Function
-     * @param fileBasePath: the file bath path of the data
-     * @param fileName: the file name of the data file
-     * @return true || false
-     */
-    private Boolean deleteall(String fileBasePath, String fileName) {
-        try {
-            File dataFile = new File("./data" + fileBasePath + fileName + ".json");
-            if (dataFile.delete()) {
-                System.out.println("Deleted the data file");
-                return true;
-            } else {
-                System.out.println("Failed to delete the data file");
-                return false;
+            try{
+                File file = new File(fileBasePath + fileName);
+                List<String> lines = File
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
     }
 
 
     /**
-     * Get all data File Operation Function
-     * @param fileBasePath: the file bath path of the data
-     * @param fileName: the file name of the data file
-     * @return data
+     * Check the database is existed or not Function
      */
-    private String getall(String fileBasePath, String fileName) {
+    private void isDatabaseExist() {
+        String dirPath = "./src/data/";
+        String[] dataFilePaths = {dirPath + "user.csv", dirPath + "contacts.csv", dirPath + "notes.csv", dirPath + "tasks.csv", dirPath + "events.csv", "notifications.csv"};
+
+        for (int i = 0; i < dataFilePaths.length; i++) {
+            if (!Files.exists(Path.of(dataFilePaths[i]))) {
+                createDatabase();
+            }
+        }
+    }
+
+    /**
+     * Create (Initial) Database Function
+     */
+    private void createDatabase() {
         try {
-            FileReader file = new FileReader("./data" + fileBasePath + fileName + ".json");
-            String data = (char) file.read() + "";
+            Path path = Paths.get("./src/data");
+            Files.createDirectories(path);
+            System.out.println("Data Folder is created!");
 
-            System.out.println(data);
-            file.close();
+            String fileBasePath = "./src/data/";
 
-            return data;
+            File userCSVFile = new File(fileBasePath + "user.csv");
+            File contactsCSVFile = new File(fileBasePath + "contacts.csv");
+            File notesCSVFile = new File(fileBasePath + "notes.csv");
+            File tasksCSVFile = new File(fileBasePath + "tasks.csv");
+            File eventsCSVFile = new File(fileBasePath + "events.csv");
+            File notificationsCSVFile = new File(fileBasePath + "notifications.csv");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            FileWriter userWriter = new FileWriter(userCSVFile);
+            String[][] userData = {
+                    {"userID", "userName", "password"}
+            };
+            insert(userWriter, userData);
+
+            FileWriter contactsWriter = new FileWriter(contactsCSVFile);
+            String[][] contactsData = {
+                    {"contactID", "userID", "firstName", "lastName", "phoneNumber", "address"}
+            };
+            insert(contactsWriter, contactsData);
+
+            FileWriter notesWriter = new FileWriter(notesCSVFile);
+            String[][] notesData = {
+                    {"noteID", "userID", "noteTitle", "noteContent", "createTime", "lastModifyTime"}
+            };
+            insert(notesWriter, notesData);
+
+            FileWriter tasksWriter = new FileWriter(tasksCSVFile);
+            String[][] tasksData = {
+                    {"taskID", "userID", "taskTitle", "taskDescription", "taskDDL", "isTaskComplete"}
+            };
+            insert(tasksWriter, tasksData);
+
+
+            FileWriter eventsWriter = new FileWriter(eventsCSVFile);
+            String[][] eventsData = {
+                    {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm", "isEventSendNotify"}
+            };
+            insert(eventsWriter, eventsData);
+
+
+            FileWriter notificationsWriter = new FileWriter(notificationsCSVFile);
+            String[][] notificationsData = {
+                    {"notificationID", "userID", "notification", "notificationTime", "isNotificationRead"}
+            };
+            insert(notificationsWriter, notificationsData);
+
+        } catch (IOException e) {
+            System.err.println("Failed to create directory!" + e.getMessage());
         }
     }
 
 
-    private String get(String fileBasePath, String fileName, String key) {
-        return null;
+    /**
+     * Get The new ID function
+     * @param fileName: The file name that want to get new ID
+     * @return newID: Get the new ID
+     * @throws IOException: IOException throw the I/O error
+     */
+    public static int getNewID(String fileName) throws IOException {
+        int rowCount = 0;
+        int newID = 0;
+        String fileBasePath = "./src/data/";
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileBasePath + fileName))) {
+            while (reader.readLine() != null) {
+                rowCount++;
+            }
+        }
+        newID = rowCount + 1;
+
+        return newID;
     }
 
 
-    private Boolean insert(String fileBasePath, String fileName, String key, String value) {
-        return true;
+    private String[][] get(FileReader fileReader) {
+        try {
+            BufferedReader bufferedReader1 = new BufferedReader(fileReader);
+            BufferedReader bufferedReader2 = new BufferedReader(fileReader);
+            int rowNum = 0;
+            while ((bufferedReader1.readLine()) != null) {
+                rowNum++;
+            }
+
+            String[][] data = new String[rowNum][];
+            String line;
+            int i = 0;
+            while ((line = bufferedReader2.readLine()) != null) {
+                data[i] = line.split(",");
+            }
+            fileReader.close();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        return data;
     }
 
 
-    private Boolean update(String fileBasePath, String fileName, String key, String value) {
-        return true;
+    /**
+     * Insert Data Function
+     * @param fileWriter: The filewrite pointer of the file
+     * @param csvData: the data of the user want to insert
+     */
+    private void insert(FileWriter fileWriter, String[][] csvData) {
+        try {
+            for (String[] data : csvData) {
+                StringBuilder line = new StringBuilder();
+                for (int i = 0; i < data.length; i++) {
+                    line.append(data[i]);
+                    if (i != data.length - 1) {
+                        line.append(',');
+                    }
+                }
+                line.append("\n");
+                fileWriter.write(line.toString());
+            }
+            fileWriter.close();
+
+        } catch (Exception e) {
+            System.err.println(e);
+        }
     }
 
 
-    private Boolean remove(String fileBasePath, String fileName, String key) {
+    /**
+     * Update Data Function
+     * @param fileWriter: The filewrite pointer of the file
+     * @param csvData: the data of the user want to update
+     */
+    private Boolean update(FileWriter fileWriter, String[][] csvData) {
+        try {
+            for(String[] data : csvData) {
+                StringBuilder line = new StringBuilder();
+                for(int i = 0; i < data.length; i++) {
+
+                }
+            }
+        } catch(Exception e) {
+            return false;
+        }
+    }
+
+
+    private Boolean remove() {
+
         return true;
     }
 

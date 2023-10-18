@@ -32,7 +32,15 @@ public class Auth {
      */
     private void verifyAccount(String userName, String password) {
         try {
-
+            String[][] data = SimpleDatabase.get("user.csv");
+            for (int i = 0; i < data.length; i++) {
+                if (data[i][1].equals(userName) && data[i][2].equals(password)) {
+                    System.out.println("Login Success!");
+                    System.out.println("ID: " + data[i][0]);
+                    userId = Integer.parseInt(data[i][0]);
+                    return;
+                }
+            }
         } catch (Exception e) {
             System.out.println("Error: " + e);
             System.out.println("Please try again!");
@@ -58,6 +66,15 @@ public class Auth {
             System.out.println("Error: " + e);
             System.out.println("Please try again!");
         }
+    }
+
+
+    /**
+     * Get User ID Function
+     * @return userId: the user id of account
+     */
+    public int getUserId() {
+        return userId;
     }
 
 }

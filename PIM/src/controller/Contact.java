@@ -32,6 +32,11 @@ public class Contact {
      */
     private void createContact(String lastName, String firstName, String phoneNumber, String address, int userId) {
         try {
+            if (lastName.equals("") || firstName.equals("") || phoneNumber.equals("") || address.equals("")) {
+                System.out.println("Please enter all information!");
+                return;
+            }
+
             int contactId = SimpleDatabase.getNewID("contacts.csv");
 
             String[][] newContactData = {
@@ -50,13 +55,47 @@ public class Contact {
      * Get All Contacts Function
      */
     private void getAllContacts() {
+        try{
+            String[][] data = SimpleDatabase.get("contacts.csv");
+
+            for (int i = 0; i < data.length - 1; i++) {
+                System.out.println("Contact ID: " + data[i][0]);
+                System.out.println("First Name: " + data[i][2]);
+                System.out.println("Last Name: " + data[i][3]);
+                System.out.println("Phone Number: " + data[i][4]);
+                System.out.println("Address: " + data[i][5]);
+                System.out.println();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+        }
 
     }
 
     /**
      * Get One Contact Function
      */
-    private void getOneContact() {
+    private void getOneContact(String contactId) {
+        try{
+            String[][] data = SimpleDatabase.get("contacts.csv");
+
+            for (int i = 0; i < data.length; i++) {
+                if (data[i][0].equals(contactId)) {
+                    System.out.println("Contact ID: " + data[i][0]);
+                    System.out.println("First Name: " + data[i][2]);
+                    System.out.println("Last Name: " + data[i][3]);
+                    System.out.println("Phone Number: " + data[i][4]);
+                    System.out.println("Address: " + data[i][5]);
+                    System.out.println();
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+        }
 
     }
 
@@ -64,14 +103,31 @@ public class Contact {
      * Modify Contact Function
      */
     private void modifyContact() {
+        try {
+            String[][] dataWantUpdate = {
 
+            };
+            new SimpleDatabase("update", "contacts.csv", dataWantUpdate);
+            System.out.println("Update Successfully!");
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+        }
     }
 
     /**
      * Remove Contact Function
      */
-    private void removeContact() {
+    private void removeContact(int userId, int contactId) {
+        try {
+            new SimpleDatabase("remove", "contacts.csv", userId, contactId);
+            System.out.println("Remove Successfully!");
 
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+        }
     }
 
 }

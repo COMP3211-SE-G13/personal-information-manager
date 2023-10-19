@@ -28,27 +28,18 @@ A personal information manager that can write notes & add contacts & create some
 
 ## Content
 
-- View
-  - Login Page
-  - Signup Page
-  - Home Page
-  - Notification Page
-  - Note Pages
-  - Searching Page
-  - Contacts Pages
-  - Tasks Pages (To-do Pages)
-  - Events Pages
-  - Load .pim file Page
-  - Export .pim file Page
-- Model
-  - SimpleDatabase Class
-- Controller
-  - Auth Class
-  - Notes Class
-  - Contacts Class
-  - Tasks Class
-  - Events Class
-  - Export Class
+| view                      | Model                | controller    |
+| ------------------------- | -------------------- | ------------- |
+| Login Page                | SimpleDatabase Class | Auth Class    |
+| Signup Page               |                      | Note Class    |
+| Home Page                 |                      | Contact Class |
+| Note Page                 |                      | Task Class    |
+| Searching Page            |                      | Event Class   |
+| Contact Page              |                      | Export Class  |
+| Tasks Pages (To-do Pages) |                      |               |
+| Events Pages              |                      |               |
+| Load .pim file Page       |                      |               |
+| Export .pim file Page     |                      |               |
 
 ## File Database Design
 
@@ -56,32 +47,22 @@ A personal information manager that can write notes & add contacts & create some
 | userID | userName | password |
 | ------ | -------- | -------- |
 |        |          |          |
-|        |          |          |
 
 | contactID | userID | firstName | lastName | phoneNumber | address |
 | --------- | ------ | --------- | -------- | ----------- | ------- |
-|           |        |           |          |             |         |
 |           |        |           |          |             |         |
 
 | noteID | userID | noteTitle | noteContent | createTime | lastModifyTime |
 | ------ | ------ | --------- | ----------- | ---------- | -------------- |
 |        |        |           |             |            |                |
-|        |        |           |             |            |                |
 
 | taskID | userID | taskTitle | taskDescription | taskDDL | isTaskComplete |
 | ------ | ------ | --------- | --------------- | ------- | -------------- |
 |        |        |           |                 |         |                |
-|        |        |           |                 |         |                |
 
-| eventID | userID | eventTitle | eventDescription | eventStartTime | eventAlarm | isEventSendNotify |
-| ------- | ------ | ---------- | ---------------- | -------------- | ---------- | ----------------- |
-|         |        |            |                  |                |            |                   |
-|         |        |            |                  |                |            |                   |
-
-| notificationID | userID | notification | notificationTime | isNotificationRead |
-| -------------- | ------ | ------------ | ---------------- | ------------------ |
-|                |        |              |                  |                    |
-|                |        |              |                  |                    |
+| eventID | userID | eventTitle | eventDescription | eventStartTime | eventAlarm |
+| ------- | ------ | ---------- | ---------------- | -------------- | ---------- |
+|         |        |            |                  |                |            |
 
 ## Contributors
 

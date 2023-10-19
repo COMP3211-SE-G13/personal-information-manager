@@ -5,29 +5,31 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Scanner;
 
 
+/**
+ * SimpleDatabase Class
+ * API:
+ *  - insert
+ *      - new SimpleDatabase("insert", FILE_NAME, DATA_STRING_2D_ARRAY[][]);
+ *  - update
+ *      - new SimpleDatabase("update", FILE_NAME, USER_ID, DATA_STRING_ARRAY[]);
+ *  - remove
+ *      - new SimpleDatabase("remove", FILE_NAME, USER_ID, CLASS_ID);
+ *  - getNewID(String fileName)
+ *  - get(String fileName)
+ */
 public class SimpleDatabase {
-    private String mode = "";
-    private String fileName = "";
-    private String[][] data = new String[0][0];
-
     /**
      * SimpleDatabase Contract
      * Operations:
      * - insert
-     * - update (return true || false)
      *
      * @param mode: the mode of the database
      * @param fileName: the file name of the data file
      * @param data: the data
      */
     public SimpleDatabase(String mode, String fileName, String[][] data) throws IOException {
-        this.mode = mode;
-        this.fileName = fileName;
-        this.data = data;
-
         String fileBasePath = "./src/data/";
 
         if (mode.equals("insert")) {
@@ -40,29 +42,53 @@ public class SimpleDatabase {
                 System.err.println(e);
             }
         }
-
-        if (mode.equals("update")) {
-            try {
-            } catch (Exception e) {
-                System.err.println(e);
-            }
-        }
     }
-
-
 
     /**
      * SimpleDatabase Contract
      * Operations:
-     *
+     * - update
      *
      * @param mode: the mode of the database
      * @param fileName: the file name of the data file
+     * @param classID: the ID of those classes
+     * @param data: The updated data
+     */
+    public SimpleDatabase(String mode, String fileName, int classID, String[] data) throws IOException {
+        String fileBasePath = "./src/data/";
+
+        String[] userData = {"userID", "userName", "password"};
+        String[] contactsData = {"contactID", "userID", "firstName", "lastName", "phoneNumber", "address"};
+        String[] notesData = {"noteID", "userID", "noteTitle", "noteContent", "createTime", "lastModifyTime"};
+        String[] tasksData = {"taskID", "userID", "taskTitle", "taskDescription", "taskDDL"};
+        String[] eventsData = {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"};
+
+        if (mode.equals("update")) {
+            File file = new File(fileBasePath + fileName);
+            if (fileName.contains("user")) {
+                update(file, userData, classID, data);
+            } else if (fileName.contains("contacts")) {
+                update(file, contactsData, classID, data);
+            } else if (fileName.contains("notes")) {
+                update(file, notesData, classID, data);
+            } else if (fileName.contains("tasks")) {
+                update(file, tasksData, classID, data);
+            } else if (fileName.contains("events")) {
+                update(file, eventsData, classID, data);
+            }
+        }
+    }
+
+    /**
+     * SimpleDatabase Contract
+     * Operations:
+     * - remove
+     *
+     * @param mode: the mode of the database
+     * @param fileName: the file name of the data file
+     * @exception IOException: The exception for the File Operation
      */
     public SimpleDatabase(String mode, String fileName, int userID, int classID) throws IOException {
-        this.mode = mode;
-        this.fileName = fileName;
-
         String fileBasePath = "./src/data/";
 
         if (mode.equals("remove")) {
@@ -103,7 +129,6 @@ public class SimpleDatabase {
             File notesCSVFile = new File(fileBasePath + "notes.csv");
             File tasksCSVFile = new File(fileBasePath + "tasks.csv");
             File eventsCSVFile = new File(fileBasePath + "events.csv");
-//            File notificationsCSVFile = new File(fileBasePath + "notifications.csv");
 
             FileWriter userWriter = new FileWriter(userCSVFile);
             String[][] userData = {
@@ -125,25 +150,15 @@ public class SimpleDatabase {
 
             FileWriter tasksWriter = new FileWriter(tasksCSVFile);
             String[][] tasksData = {
-//                    {"taskID", "userID", "taskTitle", "taskDescription", "taskDDL", "isTaskComplete"}
                     {"taskID", "userID", "taskTitle", "taskDescription", "taskDDL"}
             };
             insert(tasksWriter, tasksData);
 
-
             FileWriter eventsWriter = new FileWriter(eventsCSVFile);
             String[][] eventsData = {
-//                    {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm", "isEventSendNotify"}
                     {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"}
             };
             insert(eventsWriter, eventsData);
-
-
-//            FileWriter notificationsWriter = new FileWriter(notificationsCSVFile);
-//            String[][] notificationsData = {
-//                    {"notificationID", "userID", "notification", "notificationTime", "isNotificationRead"}
-//            };
-//            insert(notificationsWriter, notificationsData);
 
         } catch (IOException e) {
             System.err.println("Failed to create directory!" + e.getMessage());
@@ -166,10 +181,12 @@ public class SimpleDatabase {
             String line;
             int ID = 0;
 
+            // Find the number of rows of the file
             while (bufferedReader1.readLine() != null) {
                 rowNum++;
             }
 
+            // Initiate class ID
             if (rowNum == 1) {
                 newID = 1;
             } else {
@@ -178,11 +195,13 @@ public class SimpleDatabase {
                 try (BufferedReader bufferedReader2 = new BufferedReader(new FileReader(fileBasePath + fileName))) {
                     int i = 0;
                     while ((line = bufferedReader2.readLine()) != null) {
+                        // Find the last class ID of the file
                         if (i == rowNum - 1)
                             ID = Integer.parseInt(line.split(",")[0]);
                         i++;
                     }
                 }
+                // Construct the new class ID by adding one to the last class ID
                 newID = ID + 1;
             }
 
@@ -198,7 +217,7 @@ public class SimpleDatabase {
     /**
      * Get Data Function
      * @param fileName: The file name of the data file
-     * @return: the data
+     * @return data: the data
      * @throws IOException: IOException throw the I/O error
      */
     public static String[][] get(String fileName) throws IOException {
@@ -212,6 +231,7 @@ public class SimpleDatabase {
             int colNum = 0;
             String line;
 
+            // Find the size of String[][]
             while ((line = bufferedReader.readLine()) != null) {
                 String[] values = line.split(",");
                 colNum = Math.max(colNum, values.length);
@@ -225,6 +245,7 @@ public class SimpleDatabase {
             bufferedReader.close();
             fileReader.close();
 
+            // Load the csv data into a String[][]
             try (FileReader newFileReader = new FileReader(file);
                  BufferedReader newBufferedReader = new BufferedReader(newFileReader)) {
 
@@ -248,6 +269,7 @@ public class SimpleDatabase {
      * Insert Data Function
      * @param fileWriter: The filewrite pointer of the file
      * @param csvData: the data of the user want to insert
+     * @exception Exception: The Exception for File operation
      */
     private void insert(FileWriter fileWriter, String[][] csvData) {
         try {
@@ -273,20 +295,24 @@ public class SimpleDatabase {
     /**
      * Update Data Function
      * @param file: The file that want to update
-     * @param userID: The user ID
+     * @param contactID: The user ID
+     * @exception IOException: The IOException for File operation
      */
-    private void update(File file, int userID, String[] newData) throws IOException {
+    private void update(File file, String[] classDataAttribute, int contactID, String[] newData) throws IOException {
         if (!file.exists() || !file.isFile() || !file.canWrite()) {
             System.out.println("Cannot modify the file.");
             return;
         }
-        String[][] data = get(file.getName());
-        String id = Integer.toString(userID);
+        String[][] data = new String[1+get(file.getName()).length][];
+        data[0] = classDataAttribute;
+
+        System.arraycopy(get(file.getName()), 0, data, 1, get(file.getName()).length - 1);
+        String id = Integer.toString(contactID);
 
         // Find the row with the matching ID
         int rowIndex = -1;
-        for (int i = 0; i < data.length; i++) {
-            if (data[i][1].equals(id)) {
+        for (int i = 1; i < data.length; i++) {
+            if (data[i][0].equals(id)) {
                 rowIndex = i;
                 break;
             }
@@ -294,35 +320,39 @@ public class SimpleDatabase {
 
         // If a matching row is found, update the data
         if (rowIndex != -1) {
-            for (int j = 0; j < newData.length; j++) {
-                data[rowIndex][j] = newData[j];
-            }
+            String[] values;
+            values = newData;
+            data[rowIndex] = values;
         }
 
         // Write the updated data back to the file
-        try (FileWriter fileWriter = new FileWriter(file);
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+        try (FileWriter fileWriter = new FileWriter(file)) {
 
-            for (String[] row : data) {
-                bufferedWriter.write(String.join(",", row));
-                bufferedWriter.newLine();
+            for (int i = 0; i < data.length - 1; i++) {
+                StringBuilder line = new StringBuilder();
+                for (int j = 0; j < data[i].length; j++) {
+                    line.append(data[i][j]);
+                    if (j != data[i].length - 1) {
+                        line.append(',');
+                    }
+                }
+                line.append("\n");
+                fileWriter.append(line.toString());
             }
+            fileWriter.close();
         } catch (IOException ex) {
             System.out.println("Error reading or writing the file.");
         }
     }
 
 
-
-
-
-        /**
-             * Remove Data Function
-             * @param file: The file that want to remove
-             * @param userID: The user ID
-             * @param classID: The class ID
-             * @throws IOException: IOException throw the I/O error
-         */
+    /**
+         * Remove Data Function
+         * @param file: The file that want to remove
+         * @param userID: The user ID
+         * @param classID: The class ID
+         * @throws IOException: IOException throw the I/O error
+     */
     private void remove(File file, int userID, int classID) throws IOException {
         try {
             List<String> lines = Files.readAllLines(file.toPath());

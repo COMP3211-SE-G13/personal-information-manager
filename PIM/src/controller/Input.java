@@ -1,7 +1,9 @@
 package controller;
 
+import java.util.Scanner;
+
 public class Input {
-    private String input;
+    private static String input;
 
     /**
      * Input Contract
@@ -15,15 +17,15 @@ public class Input {
      * Get Input Function
      * @return String: the input of user
      */
-    public String getInput() {
+    public static String getInput() {
         return input;
     }
 
     /**
      * Set Input Function
-     * @param input: the input of user
      */
-    public void setInput(String input) {
-        this.input = input;
+    public static void setInput() {
+        Scanner scanner = new Scanner(System.in);
+        input = scanner.next();
     }
 }

@@ -36,7 +36,7 @@ public class SimpleDatabase {
             try {
                 isDatabaseExist();
                 File file = new File(fileBasePath + fileName);
-                FileWriter fileWriter = new FileWriter(file);
+                FileWriter fileWriter = new FileWriter(file, true);
                 insert(fileWriter, data);
             } catch (Exception e) {
                 System.err.println(e);

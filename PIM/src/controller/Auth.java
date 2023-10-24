@@ -1,22 +1,19 @@
 package controller;
 
 import model.SimpleDatabase;
-
 public class Auth {
-    private int userId;
-    private String userName;
-    private String password;
+    private static int userId;
+    private static String userName;
 
     /**
      * Auth Contract
-     * @param userId: the user id of account
      * @param userName: the username of account
      * @param password: the password of account
      * @param mode: the login or signup mode
      */
-    public Auth(int userId, String userName, String password, String mode) {
+    public Auth(String userName, String password, String mode) {
         this.userName = userName;
-        this.password = password;
+
         if (mode.equals("login")) {
             verifyAccount(userName, password);
         }
@@ -73,8 +70,11 @@ public class Auth {
      * Get User ID Function
      * @return userId: the user id of account
      */
-    public int getUserId() {
+    public static int getUserId() {
         return userId;
     }
 
+    public static String getUserName() {
+        return userName;
+    }
 }

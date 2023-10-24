@@ -32,7 +32,7 @@ public class Contact {
      */
     private void createContact(String lastName, String firstName, String phoneNumber, String address, int userId) {
         try {
-            if (lastName.equals("") || firstName.equals("") || phoneNumber.equals("") || address.equals("")) {
+            if (lastName.isEmpty() || firstName.isEmpty() || phoneNumber.isEmpty() || address.isEmpty()) {
                 System.out.println("Please enter all information!");
                 return;
             }
@@ -43,7 +43,7 @@ public class Contact {
                     {String.valueOf(contactId), String.valueOf(userId), firstName, lastName, phoneNumber, address}
             };
 
-            new SimpleDatabase("insert", "contact.csv", newContactData);
+            new SimpleDatabase("insert", "contacts.csv", newContactData);
 
         } catch (Exception e) {
             System.out.println("Error: " + e);
@@ -54,74 +54,65 @@ public class Contact {
     /**
      * Get All Contacts Function
      */
-    private void getAllContacts() {
+    private String[][] getAllContacts() {
         try{
             String[][] data = SimpleDatabase.get("contacts.csv");
-
-            for (int i = 0; i < data.length - 1; i++) {
-                System.out.println("Contact ID: " + data[i][0]);
-                System.out.println("First Name: " + data[i][2]);
-                System.out.println("Last Name: " + data[i][3]);
-                System.out.println("Phone Number: " + data[i][4]);
-                System.out.println("Address: " + data[i][5]);
-                System.out.println();
-            }
-
+            return data;
         } catch (Exception e) {
             System.out.println("Error: " + e);
             System.out.println("Please try again!");
         }
+        return null;
 
     }
 
     /**
      * Get One Contact Function
+     * @param contactId: the id of contact
+     * @return String[]: the contact data
      */
-    private void getOneContact(String contactId) {
+    private String[] getOneContact(String contactId) {
         try{
             String[][] data = SimpleDatabase.get("contacts.csv");
 
             for (int i = 0; i < data.length; i++) {
-                if (data[i][0].equals(contactId)) {
-                    System.out.println("Contact ID: " + data[i][0]);
-                    System.out.println("First Name: " + data[i][2]);
-                    System.out.println("Last Name: " + data[i][3]);
-                    System.out.println("Phone Number: " + data[i][4]);
-                    System.out.println("Address: " + data[i][5]);
-                    System.out.println();
+                if (data[i][0].equals(contactId) & data[i][1].equals(String.valueOf(Auth.getUserId()))) {
+                    return data[i];
                 }
             }
 
         } catch (Exception e) {
             System.out.println("Error: " + e);
             System.out.println("Please try again!");
+            return null;
         }
 
+        return null;
     }
 
     /**
      * Modify Contact Function
      */
-    private void modifyContact() {
-        try {
-            String[][] dataWantUpdate = {
-
-            };
-            new SimpleDatabase("update", "contacts.csv", dataWantUpdate);
-            System.out.println("Update Successfully!");
-
-        } catch (Exception e) {
-            System.out.println("Error: " + e);
-            System.out.println("Please try again!");
-        }
-    }
+//    private void modifyContact() {
+//        try {
+//            String[][] dataWantUpdate = {
+//
+//            };
+//            new SimpleDatabase("update", "contacts.csv", dataWantUpdate);
+//            System.out.println("Update Successfully!");
+//
+//        } catch (Exception e) {
+//            System.out.println("Error: " + e);
+//            System.out.println("Please try again!");
+//        }
+//    }
 
     /**
      * Remove Contact Function
      */
-    private void removeContact(int userId, int contactId) {
+    private void removeContact(String contactId) {
         try {
-            new SimpleDatabase("remove", "contacts.csv", userId, contactId);
+            new SimpleDatabase("remove", "contacts.csv", Auth.getUserId(),  Integer.parseInt(contactId));
             System.out.println("Remove Successfully!");
 
         } catch (Exception e) {

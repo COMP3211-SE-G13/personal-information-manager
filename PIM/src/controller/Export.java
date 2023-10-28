@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.File;
 
 public class Export {
-    public void export() {
+    public static void export() {
         String contacts = "contacts.csv";
         String notes = "notes.csv";
         String events = "events.csv";

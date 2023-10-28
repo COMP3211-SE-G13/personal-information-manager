@@ -25,7 +25,7 @@ public class Search {
         }
 
         try{
-            //String[] types = {"events.csv", "contacts.csv", "notes.csv", "tasks.csv"};
+            String[] types = {"events.csv", "contacts.csv", "notes.csv", "tasks.csv"};
             //String[][] results = new String[0][];  //store the search result
 
             for (int i = 0; i < types.length; i++){

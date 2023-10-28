@@ -2,8 +2,6 @@ package controller;
 
 import model.SimpleDatabase;
 
-import java.io.IOException;
-
 public class Event {
     private String eventName;
     private String eventStartTime;

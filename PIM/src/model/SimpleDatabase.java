@@ -101,9 +101,9 @@ public class SimpleDatabase {
     /**
      * Check the database is existed or not Function
      */
-    private void isDatabaseExist() {
+    public static void isDatabaseExist() {
         String dirPath = "./src/data/";
-        String[] dataFilePaths = {dirPath + "user.csv", dirPath + "contacts.csv", dirPath + "notes.csv", dirPath + "tasks.csv", dirPath + "events.csv", dirPath + "notifications.csv"};
+        String[] dataFilePaths = {dirPath + "user.csv", dirPath + "contacts.csv", dirPath + "notes.csv", dirPath + "tasks.csv", dirPath + "events.csv"};
 
         for (String filePath : dataFilePaths) {
             if (!Files.exists(Path.of(filePath))) {
@@ -116,7 +116,7 @@ public class SimpleDatabase {
     /**
      * Create (Initial) Database Function
      */
-    private void createDatabase() {
+    private static void createDatabase() {
         try {
             Path path = Paths.get("./src/data");
             Files.createDirectories(path);
@@ -271,7 +271,7 @@ public class SimpleDatabase {
      * @param csvData: the data of the user want to insert
      * @exception Exception: The Exception for File operation
      */
-    private void insert(FileWriter fileWriter, String[][] csvData) {
+    private static void insert(FileWriter fileWriter, String[][] csvData) {
         try {
             for (String[] data : csvData) {
                 StringBuilder line = new StringBuilder();
@@ -347,11 +347,11 @@ public class SimpleDatabase {
 
 
     /**
-         * Remove Data Function
-         * @param file: The file that want to remove
-         * @param userID: The user ID
-         * @param classID: The class ID
-         * @throws IOException: IOException throw the I/O error
+     * Remove Data Function
+     * @param file: The file that want to remove
+     * @param userID: The user ID
+     * @param classID: The class ID
+     * @throws IOException: IOException throw the I/O error
      */
     private void remove(File file, int userID, int classID) throws IOException {
         try {

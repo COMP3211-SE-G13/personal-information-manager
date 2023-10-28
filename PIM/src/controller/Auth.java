@@ -3,23 +3,15 @@ package controller;
 import model.SimpleDatabase;
 public class Auth {
     private static int userId;
-    private static String userName;
+    private static String username;
 
     /**
-     * Auth Contract
+     * Verify Account Function - Login (Public)
      * @param userName: the username of account
      * @param password: the password of account
-     * @param mode: the login or signup mode
      */
-    public Auth(String userName, String password, String mode) {
-        this.userName = userName;
-
-        if (mode.equals("login")) {
-            verifyAccount(userName, password);
-        }
-        if (mode.equals("signup")) {
-            createAccount(userName, password);
-        }
+    public static void login(String userName, String password) {
+        verifyAccount(userName, password);
     }
 
     /**
@@ -27,14 +19,16 @@ public class Auth {
      * @param userName: the username of account
      * @param password: the password of account
      */
-    private void verifyAccount(String userName, String password) {
+    private static void verifyAccount(String userName, String password) {
         try {
             String[][] data = SimpleDatabase.get("user.csv");
             for (int i = 0; i < data.length; i++) {
+                System.out.println(data[i][1] + " " + data[i][2]);
                 if (data[i][1].equals(userName) && data[i][2].equals(password)) {
                     System.out.println("Login Success!");
                     System.out.println("ID: " + data[i][0]);
                     userId = Integer.parseInt(data[i][0]);
+                    username = userName;
                     return;
                 }
             }
@@ -45,11 +39,20 @@ public class Auth {
     }
 
     /**
+     * Create Account Function - Signup (Public)
+     * @param userName: the username of account
+     * @param password: the password of account
+     */
+    public static void signup(String userName, String password) {
+        createAccount(userName, password);
+    }
+
+    /**
      * Create Account Function - Signup
      * @param userName: the username of account
      * @param password: the password of account
      */
-    private void createAccount(String userName, String password) {
+    private static void createAccount(String userName, String password) {
         try {
             int userId = SimpleDatabase.getNewID("user.csv");
 
@@ -61,6 +64,7 @@ public class Auth {
 
         } catch (Exception e) {
             System.out.println("Error: " + e);
+            System.out.println("testing");
             System.out.println("Please try again!");
         }
     }
@@ -74,7 +78,11 @@ public class Auth {
         return userId;
     }
 
+    /**
+     * Get User Name Function
+     * @return username: the username of account
+     */
     public static String getUserName() {
-        return userName;
+        return username;
     }
 }

@@ -1,7 +1,10 @@
 import controller.*;
+import model.SimpleDatabase;
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        SimpleDatabase.isDatabaseExist();
         view.Pages.startPage();
         Input.setInput();
         System.out.println(Input.getInput());
@@ -10,7 +13,7 @@ public class Main {
         } else if (Input.getInput().equals("2")) {
             view.Pages.signupPage();
             String[] loginSignupInput = loginSignupConnector();
-            new Auth(loginSignupInput[0], loginSignupInput[1], "signup");
+            Auth.signup(loginSignupInput[0], loginSignupInput[1]);
             mainConnector();
         } else {
             System.out.println("Exit System!");
@@ -33,7 +36,7 @@ public class Main {
     public static void mainConnector() {
         view.Pages.loginPage();
         String[] loginSignupInput = loginSignupConnector();
-        new Auth(loginSignupInput[0], loginSignupInput[1], "login");
+        Auth.login(loginSignupInput[0], loginSignupInput[1]);
         view.Pages.mainPage(loginSignupInput[0]);
         Input.setInput();
         if (Input.getInput().equals("1")) {
@@ -72,4 +75,7 @@ public class Main {
             }
         }
     }
+
+
+
 }

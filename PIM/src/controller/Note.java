@@ -1,7 +1,6 @@
 package controller;
 
 import model.SimpleDatabase;
-import view.Pages;
 
 public class Note {
     private String noteTitle;

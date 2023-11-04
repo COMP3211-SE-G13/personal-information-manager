@@ -11,7 +11,7 @@ public class ProjectTest {
      * Test of getNewID method in Model
      */
     @Test
-    public void testGetNewID() {
+    public void test1() {
         try {
 //            new SimpleDatabase("insert", "user.csv", new String[][]{{"1", "admin", "1234"}});
             SimpleDatabase.isDatabaseExist();
@@ -29,7 +29,7 @@ public class ProjectTest {
      * Test of get method in Model
      */
     @Test
-    public void testGet() {
+    public void test2() {
         try {
             String dataString = "";
             String resultString = "";
@@ -66,7 +66,7 @@ public class ProjectTest {
      * Test of Create User method in Controller.Auth
      */
     @Test
-    public void testCreateUser() {
+    public void test3() {
         try {
             Auth.signup("david", "1234");
 
@@ -101,8 +101,11 @@ public class ProjectTest {
         }
     }
 
+    /**
+     * Test Login in Auth Controller
+     */
     @Test
-    public void testSignin() {
+    public void test4() {
         try {
             Auth.login("david", "1234");
             String userId = String.valueOf(Auth.getUserId());
@@ -116,22 +119,79 @@ public class ProjectTest {
         }
     }
 
+    /**
+     * Test Create And GetAll in Contact Controller
+     */
+    @Test
+    public void test5() {
+        try {
+            Auth.login("david", "1234");
+            Contact contactInfo1 = new Contact("Tom", "Smith", "31283425", "HK Street");
+            Contact contactInfo2 = new Contact("Sandy", "Disney", "62481823", "SH Street");
+
+            Contact.createContact(contactInfo1);
+            Contact.createContact(contactInfo2);
+
+            String dataGetAllString = "";
+            String dataGetOneString = "";
+            String resultGetAllString = "";
+            String resultGetOneString = "";
+
+            String[][] dataGetAll = Contact.getAllContacts();
+            String[] dataGetOne = Contact.getOneContact("2");
+            String[][] resultGetAll = new String[][] {{"1", "2", "Tom", "Smith", "31283425", "HK Street"}, {"2", "2", "Sandy", "Disney", "62481823", "SH Street"}};
+            String[][] resultGetOne = new String[][] {{"2", "2", "Sandy", "Disney", "62481823", "SH Street"}};
+
+            StringBuilder dataGetAllTempStr = new StringBuilder();
+            for (int i = 0; i < dataGetAll.length - 1; i++) {
+                for (int j = 0; j < dataGetAll[i].length; j++){
+                    dataGetAllTempStr.append(dataGetAll[i][j]);
+                }
+            }
+            dataGetAllString = dataGetAllTempStr.toString();
+
+            StringBuilder dataGetOneTempStr = new StringBuilder();
+            for (int i = 0; i < dataGetOne.length; i++) {
+                dataGetOneTempStr.append(dataGetOne[i]);
+            }
+            dataGetOneString = dataGetOneTempStr.toString();
+
+            StringBuilder resultGetAllTempStr = new StringBuilder();
+            for (int i = 0; i < resultGetAll.length; i++) {
+                for (int j = 0; j < resultGetAll[i].length; j++){
+                    resultGetAllTempStr.append(resultGetAll[i][j]);
+                }
+            }
+            resultGetAllString = resultGetAllTempStr.toString();
+
+            StringBuilder resultGetOneTempStr = new StringBuilder();
+            for (int i = 0; i < resultGetOne.length; i++) {
+                for (int j = 0; j < resultGetOne[i].length; j++){
+                    resultGetOneTempStr.append(resultGetOne[i][j]);
+                }
+            }
+            resultGetOneString = resultGetOneTempStr.toString();
 
 
-//
-//    @Test
-//    public void testUpdate() {
-//        String[][] data = {{"1", "1", "test", "test", "test", "test"}};
-//        SimpleDatabase.update("events.csv", data);
-//        String[][] newData = SimpleDatabase.get("events.csv");
-//        Assert.assertEquals(1, newData.length);
-//    }
-//
-//    @Test
-//    public void testDelete() {
-//        String[][] data = {{"1", "1", "test", "test", "test", "test"}};
-//        SimpleDatabase.delete("events.csv", data);
-//        String[][] newData = SimpleDatabase.get("events.csv");
-//        Assert.assertEquals(0, newData.length);
-//    }
+            assertEquals(resultGetAllString, dataGetAllString);
+            assertEquals(resultGetOneString, dataGetOneString);
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
+
+    @Test
+    public void test6() {
+        try {
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
+
 }

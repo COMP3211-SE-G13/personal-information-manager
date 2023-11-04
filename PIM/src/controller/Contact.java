@@ -2,11 +2,14 @@ package controller;
 
 import model.SimpleDatabase;
 
+import static controller.Auth.getUserId;
+
 public class Contact {
     private String lastName;
     private String firstName;
     private String phoneNumber;
     private String address;
+    private int userId;
 
     /**
      * Contact Contract
@@ -15,11 +18,16 @@ public class Contact {
      * @param phoneNumber: the phone number of contact
      * @param address: the address of contact
      */
-    public Contact(String lastName, String firstName, String phoneNumber, String address) {
+    public Contact(String firstName, String lastName, String phoneNumber, String address) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.userId = getUserId();
+    }
+
+    public static void createContact(Contact contactInfo) {
+        createContact(contactInfo.firstName, contactInfo.lastName, contactInfo.phoneNumber, contactInfo.address, contactInfo.userId);
     }
 
     /**
@@ -30,7 +38,7 @@ public class Contact {
      * @param address: The address of the contact
      * @param userId: The ID of the user
      */
-    private void createContact(String lastName, String firstName, String phoneNumber, String address, int userId) {
+    private static void createContact(String firstName, String lastName, String phoneNumber, String address, int userId) {
         try {
             if (lastName.isEmpty() || firstName.isEmpty() || phoneNumber.isEmpty() || address.isEmpty()) {
                 System.out.println("Please enter all information!");
@@ -54,7 +62,7 @@ public class Contact {
     /**
      * Get All Contacts Function
      */
-    private String[][] getAllContacts() {
+    public static String[][] getAllContacts() {
         try{
             String[][] data = SimpleDatabase.get("contacts.csv");
             return data;
@@ -71,12 +79,12 @@ public class Contact {
      * @param contactId: the id of contact
      * @return String[]: the contact data
      */
-    private String[] getOneContact(String contactId) {
+    public static String[] getOneContact(String contactId) {
         try{
             String[][] data = SimpleDatabase.get("contacts.csv");
 
             for (int i = 0; i < data.length; i++) {
-                if (data[i][0].equals(contactId) & data[i][1].equals(String.valueOf(Auth.getUserId()))) {
+                if (data[i][0].equals(contactId) & data[i][1].equals(String.valueOf(getUserId()))) {
                     return data[i];
                 }
             }
@@ -112,7 +120,7 @@ public class Contact {
      */
     private void removeContact(String contactId) {
         try {
-            new SimpleDatabase("remove", "contacts.csv", Auth.getUserId(),  Integer.parseInt(contactId));
+            new SimpleDatabase("remove", "contacts.csv", getUserId(), Integer.parseInt(contactId));
             System.out.println("Remove Successfully!");
 
         } catch (Exception e) {

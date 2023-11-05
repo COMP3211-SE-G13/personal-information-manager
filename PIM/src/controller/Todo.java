@@ -72,12 +72,12 @@ public class Todo {
      * @param contactId: the id of task
      * @return String[]: the task data
      */
-    public static String[] getOneTask(String contactId) {
+    public static String[] getOneTask(String taskId) {
         try {
             String[][] data = SimpleDatabase.get("tasks.csv");
 
             for (int i = 0; i < data.length; i++) {
-                if (data[i][0].equals(contactId) & data[i][1].equals(String.valueOf(Auth.getUserId()))) {
+                if (data[i][0].equals(taskId) & data[i][1].equals(String.valueOf(Auth.getUserId()))) {
                     return data[i];
                 }
             }
@@ -117,7 +117,7 @@ public class Todo {
      */
     private static void removeTask(int taskId) {
         try {
-            new SimpleDatabase("remove", "todo.csv", Auth.getUserId(), taskId);
+            new SimpleDatabase("remove", "tasks.csv", Auth.getUserId(), taskId);
             System.out.println("Remove Successfully!");
         } catch (Exception e) {
             System.out.println("Error: " + e);

@@ -104,8 +104,6 @@ public class Note {
             System.out.println("Error: " + e);
             System.out.println("Please try again!");
         }
-
-
     }
 
 

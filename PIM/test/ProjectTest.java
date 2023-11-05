@@ -18,7 +18,6 @@ public class ProjectTest {
     @Test
     public void test1_1() {
         try {
-//            new SimpleDatabase("insert", "user.csv", new String[][]{{"1", "admin", "1234"}});
             SimpleDatabase.isDatabaseExist();
             Auth.signup("admin", "1234");
             int id = SimpleDatabase.getNewID("user.csv");
@@ -614,41 +613,5 @@ public class ProjectTest {
             fail();
         }
     }
-
-
-    // Controller - Search
-
-    /**
-     * Test the searching in Search Controller
-     */
-    @Test
-    public void test7() {
-        try {
-
-        } catch (Exception e) {
-            System.out.println("Error: " + e);
-            System.out.println("Please try again!");
-            fail();
-        }
-    }
-
-
-    // Controller - Export
-
-
-
-
-
-    // Controller - Import
-
-
-
-
-
-    // View
-
-
-
-
 
 }

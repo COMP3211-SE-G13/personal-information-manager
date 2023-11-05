@@ -2,11 +2,14 @@ package controller;
 
 import model.SimpleDatabase;
 
+import static controller.Auth.getUserId;
+
 public class Event {
     private String eventName;
     private String eventStartTime;
     private String eventAlarm;
     private String eventDescription;
+    private int userId;
 
     /**
      * Event Contract
@@ -20,12 +23,17 @@ public class Event {
         this.eventStartTime = eventStartTime;
         this.eventAlarm = eventAlarm;
         this.eventDescription = eventDescription;
+        this.userId = getUserId();
     }
 
+
+    public static void createEvent(Event eventInfo) {
+        createEvent(eventInfo.eventName, eventInfo.eventStartTime, eventInfo.eventAlarm, eventInfo.eventDescription, eventInfo.userId);
+    }
     /**
      * Create Event Function
      */
-    private void createEvent(String eventName, String eventStartTime, String eventAlarm, String eventDescription, int userId) {
+    private static void createEvent(String eventName, String eventStartTime, String eventAlarm, String eventDescription, int userId) {
         try {
             if (eventName.isEmpty() || eventStartTime.isEmpty() || eventAlarm.isEmpty() || eventDescription.isEmpty()) {
                 System.out.println("Please enter all information!");
@@ -49,7 +57,7 @@ public class Event {
     /**
      * Get All Events Function
      */
-    private String[][] getAllEvents() {
+    public static String[][] getAllEvents() {
         try{
             String[][] data = SimpleDatabase.get("events.csv");
             return data;
@@ -65,7 +73,7 @@ public class Event {
      * @param eventId: the id of event
      * @return: the event data
      */
-    private String[] getOneEvent(String eventId) {
+    public static String[] getOneEvent(String eventId) {
         try{
             String[][] data = SimpleDatabase.get("events.csv");
 
@@ -100,12 +108,17 @@ public class Event {
         }
     }
 
+
+    public static void removeEvent(String eventId) {
+        removeEvent(Integer.parseInt(eventId));
+    }
+
     /**
      * Remove Event Function
      */
-    private void removeEvent(String eventId) {
+    private static void removeEvent(int eventId) {
         try {
-            new SimpleDatabase("remove", "events.csv", Auth.getUserId(), Integer.parseInt(eventId));
+            new SimpleDatabase("remove", "events.csv", Auth.getUserId(), eventId);
             System.out.println("Remove Successfully!");
 
         } catch (Exception e) {

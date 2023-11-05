@@ -1,31 +1,41 @@
 package controller;
 
 import model.SimpleDatabase;
+import static controller.Auth.getUserId;
+
+import java.time.LocalDate;
+
 
 public class Note {
     private String noteTitle;
     private String noteContent;
     private String createTime;
     private String lastModifyTime;
+    private int userId;
 
     /**
      * Note Contract
      * @param noteTitle: the title of note
      * @param noteContent: the content of note
-     * @param createTime: the creation time of note
-     * @param lastModifyTime: the last modify time of note
      */
-    public Note(String noteTitle, String noteContent, String createTime, String lastModifyTime) {
+    public Note(String noteTitle, String noteContent) {
+        LocalDate date = LocalDate.now();
+
         this.noteTitle = noteTitle;
         this.noteContent = noteContent;
-        this.createTime = createTime;
-        this.lastModifyTime = lastModifyTime;
+        this.createTime = String.valueOf(date);
+        this.lastModifyTime = String.valueOf(date);
+        this.userId = getUserId();
+    }
+
+    public static void createNote(Note noteInfo) {
+        createNote(noteInfo.noteTitle, noteInfo.noteContent, noteInfo.createTime, noteInfo.lastModifyTime, noteInfo.userId);
     }
 
     /**
      * Create Note Function
      */
-    private void createNote(String noteTitle, String noteContent, String createTime, String lastModifyTime, int userId) {
+    private static void createNote(String noteTitle, String noteContent, String createTime, String lastModifyTime, int userId) {
         try {
             if (noteTitle.isEmpty() || noteContent.isEmpty() || createTime.isEmpty() || lastModifyTime.isEmpty()) {
                 System.out.println("Please enter all information!");
@@ -48,7 +58,7 @@ public class Note {
     /**
      * Get All Notes Function
      */
-    private String[][] getAllNotes() {
+    public static String[][] getAllNotes() {
         try{
             String[][] data = SimpleDatabase.get("notes.csv");
             return data;
@@ -63,12 +73,12 @@ public class Note {
      * Get One Note Function
      * @return String[]: the data of one note
      */
-    private String[] getOneNote() {
+    public static String[] getOneNote(String noteId) {
         try {
             String[][] data = SimpleDatabase.get("notes.csv");
 
             for (int i = 0; i < data.length; i++) {
-                if (data[i][0].equals(noteTitle) && data[i][1].equals(String.valueOf(Auth.getUserId()))) {
+                if (data[i][0].equals(noteId) && data[i][1].equals(String.valueOf(Auth.getUserId()))) {
                     return data[i];
                 }
             }
@@ -98,20 +108,22 @@ public class Note {
 
     }
 
+
+    public static void removeNote(String noteId) {
+        removeNote(Integer.parseInt(noteId));
+    }
+
     /**
      * Remove Note Function
      */
-    private void removeNote( String contactId) {
+    private static void removeNote(int noteId) {
+        try {
+            new SimpleDatabase("remove", "notes.csv", Auth.getUserId(), noteId);
+            System.out.println("Remove Successfully!");
 
-            try {
-                new SimpleDatabase("remove", "note.csv",Auth.getUserId(), Integer.parseInt(contactId));
-                System.out.println("Remove Successfully!");
-
-            } catch (Exception e) {
-                System.out.println("Error: " + e);
-                System.out.println("Please try again!");
-            }
-
-
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+        }
     }
 }

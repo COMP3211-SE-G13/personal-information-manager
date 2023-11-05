@@ -115,12 +115,16 @@ public class Contact {
 //        }
 //    }
 
+    public static void removeContact(String contactId) {
+        removeContact(Integer.parseInt(contactId));
+    }
+
     /**
      * Remove Contact Function
      */
-    private void removeContact(String contactId) {
+    private static void removeContact(int contactId) {
         try {
-            new SimpleDatabase("remove", "contacts.csv", getUserId(), Integer.parseInt(contactId));
+            new SimpleDatabase("remove", "contacts.csv", getUserId(), contactId);
             System.out.println("Remove Successfully!");
 
         } catch (Exception e) {

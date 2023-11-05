@@ -2,27 +2,36 @@ package controller;
 
 import model.SimpleDatabase;
 
+import static controller.Auth.getUserId;
+
 public class Todo {
     private String taskName;
     private String taskDDL;
     private String taskDescription;
+    private int userId;
 
     /**
      * Todo Contract
-     * @param taskName: the name of task
-     * @param taskDDL: the deadline of task
+     *
+     * @param taskName:        the name of task
+     * @param taskDDL:         the deadline of task
      * @param taskDescription: the description of task
      */
     public Todo(String taskName, String taskDDL, String taskDescription) {
         this.taskName = taskName;
         this.taskDDL = taskDDL;
         this.taskDescription = taskDescription;
+        this.userId = getUserId();
+    }
+
+    public static void createTask(Todo taskInfo) {
+        createTask(taskInfo.taskName, taskInfo.taskDDL, taskInfo.taskDescription, taskInfo.userId);
     }
 
     /**
      * Create Task Function
      */
-    private void createTask(String taskName, String taskDDL, String taskDescription, int userId) {
+    private static void createTask(String taskName, String taskDDL, String taskDescription, int userId) {
         try {
             if (taskName.isEmpty() || taskDDL.isEmpty() || taskDescription.isEmpty()) {
                 System.out.println("Please enter all information!");
@@ -46,8 +55,8 @@ public class Todo {
     /**
      * Get All Tasks Function
      */
-    private String[][] getAllTasks() {
-        try{
+    public static String[][] getAllTasks() {
+        try {
             String[][] data = SimpleDatabase.get("tasks.csv");
             return data;
         } catch (Exception e) {
@@ -59,11 +68,12 @@ public class Todo {
 
     /**
      * Get One Task Function
+     *
      * @param contactId: the id of task
      * @return String[]: the task data
      */
-    private String[] getOneTask(String contactId) {
-        try{
+    public static String[] getOneTask(String contactId) {
+        try {
             String[][] data = SimpleDatabase.get("tasks.csv");
 
             for (int i = 0; i < data.length; i++) {
@@ -97,25 +107,22 @@ public class Todo {
         }
     }
 
+
+    public static void removeTask(String taskId) {
+        removeTask(Integer.parseInt(taskId));
+    }
+
     /**
      * Remove Task Function
      */
-    private void removeTask(String taskId) {
+    private static void removeTask(int taskId) {
         try {
-            new SimpleDatabase("remove", "todo.csv", Auth.getUserId(), Integer.parseInt(taskId));
+            new SimpleDatabase("remove", "todo.csv", Auth.getUserId(), taskId);
             System.out.println("Remove Successfully!");
         } catch (Exception e) {
             System.out.println("Error: " + e);
             System.out.println("Please try again!");
         }
     }
-
-//    /**
-//     * Task Complete or not Function
-//     * @return Boolean: the task is complete or not
-//     */
-//    private Boolean taskComplete() {
-//        return true;
-//    }
 
 }

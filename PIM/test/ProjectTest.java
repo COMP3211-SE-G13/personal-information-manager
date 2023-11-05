@@ -2,16 +2,21 @@ import model.SimpleDatabase;
 import controller.*;
 
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ProjectTest {
 
+    // Model
+
     /**
      * Test of getNewID method in Model
      */
     @Test
-    public void test1() {
+    public void test1_1() {
         try {
 //            new SimpleDatabase("insert", "user.csv", new String[][]{{"1", "admin", "1234"}});
             SimpleDatabase.isDatabaseExist();
@@ -29,7 +34,7 @@ public class ProjectTest {
      * Test of get method in Model
      */
     @Test
-    public void test2() {
+    public void test1_2() {
         try {
             String dataString = "";
             String resultString = "";
@@ -62,11 +67,14 @@ public class ProjectTest {
         }
     }
 
+
+    // Controller - Auth
+
     /**
      * Test of Create User method in Controller.Auth
      */
     @Test
-    public void test3() {
+    public void test2_1() {
         try {
             Auth.signup("david", "1234");
 
@@ -105,7 +113,7 @@ public class ProjectTest {
      * Test Login in Auth Controller
      */
     @Test
-    public void test4() {
+    public void test2_2() {
         try {
             Auth.login("david", "1234");
             String userId = String.valueOf(Auth.getUserId());
@@ -119,11 +127,14 @@ public class ProjectTest {
         }
     }
 
+
+    // Controller - Contact
+
     /**
      * Test Create And GetAll in Contact Controller
      */
     @Test
-    public void test5() {
+    public void test3_1() {
         try {
             Auth.login("david", "1234");
             Contact contactInfo1 = new Contact("Tom", "Smith", "31283425", "HK Street");
@@ -183,8 +194,11 @@ public class ProjectTest {
         }
     }
 
+    /**
+     * Test Update contact from Contact Controller
+     */
     @Test
-    public void test6() {
+    public void test3_2() {
         try {
 
         } catch (Exception e) {
@@ -193,5 +207,172 @@ public class ProjectTest {
             fail();
         }
     }
+
+    /**
+     * Test Remove contact from Contact Controller
+     */
+    @Test
+    public void test3_3() {
+        try {
+            Auth.login("david", "1234");
+            Contact.removeContact("2");
+
+            String dataString = "";
+            String resultString = "";
+
+            String[][] data = Contact.getAllContacts();
+            String[][] result = new String[][] {{"1", "2", "Tom", "Smith", "31283425", "HK Street"}};
+
+            StringBuilder dataTempStr = new StringBuilder();
+            for (int i = 0; i < data.length - 1; i++) {
+                for (int j = 0; j < data[i].length; j++){
+                    dataTempStr.append(data[i][j]);
+                }
+            }
+            dataString = dataTempStr.toString();
+
+            StringBuilder resultTempStr = new StringBuilder();
+            for (int i = 0; i < result.length; i++) {
+                for (int j = 0; j < result[i].length; j++){
+                    resultTempStr.append(result[i][j]);
+                }
+            }
+            resultString = resultTempStr.toString();
+
+            assertEquals(resultString, dataString);
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
+
+
+    // Controller - Note
+
+    /**
+     * Test Create And GetAll in Note Controller
+     */
+    @Test
+    public void test4_1() {
+        try {
+            Auth.login("david", "1234");
+            Note noteInfo1 = new Note("Note 1", "Here is Note 1");
+            Note noteInfo2 = new Note("Note 2", "Here is Note 2");
+
+            Note.createNote(noteInfo1);
+            Note.createNote(noteInfo2);
+
+            String dataGetAllString = "";
+            String dataGetOneString = "";
+            String resultGetAllString = "";
+            String resultGetOneString = "";
+
+            String date = String.valueOf(LocalDate.now());
+
+            String[][] dataGetAll = Note.getAllNotes();
+            String[] dataGetOne = Note.getOneNote("2");
+            String[][] resultGetAll = new String[][] {{"1", "2", "Note 1", "Here is Note 1", date, date}, {"2", "2", "Note 2", "Here is Note 2", date, date}};
+            String[][] resultGetOne = new String[][] {{"2", "2", "Note 2", "Here is Note 2", date, date}};
+
+            StringBuilder dataGetAllTempStr = new StringBuilder();
+            for (int i = 0; i < dataGetAll.length - 1; i++) {
+                for (int j = 0; j < dataGetAll[i].length; j++){
+                    dataGetAllTempStr.append(dataGetAll[i][j]);
+                }
+            }
+            dataGetAllString = dataGetAllTempStr.toString();
+
+            StringBuilder dataGetOneTempStr = new StringBuilder();
+            for (int i = 0; i < dataGetOne.length; i++) {
+                dataGetOneTempStr.append(dataGetOne[i]);
+            }
+            dataGetOneString = dataGetOneTempStr.toString();
+
+            StringBuilder resultGetAllTempStr = new StringBuilder();
+            for (int i = 0; i < resultGetAll.length; i++) {
+                for (int j = 0; j < resultGetAll[i].length; j++){
+                    resultGetAllTempStr.append(resultGetAll[i][j]);
+                }
+            }
+            resultGetAllString = resultGetAllTempStr.toString();
+
+            StringBuilder resultGetOneTempStr = new StringBuilder();
+            for (int i = 0; i < resultGetOne.length; i++) {
+                for (int j = 0; j < resultGetOne[i].length; j++){
+                    resultGetOneTempStr.append(resultGetOne[i][j]);
+                }
+            }
+            resultGetOneString = resultGetOneTempStr.toString();
+
+
+            assertEquals(resultGetAllString, dataGetAllString);
+            assertEquals(resultGetOneString, dataGetOneString);
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
+
+    /**
+     * Test Update note from Note Controller
+     */
+    @Test
+    public void test4_2() {
+        try {
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
+
+    /**
+     * Test Remove note from Note Controller
+     */
+    @Test
+    public void test4_3() {
+        try {
+            Auth.login("david", "1234");
+            Note.removeNote("2");
+
+            String dataString = "";
+            String resultString = "";
+
+            String[][] data = Note.getAllNotes();
+
+            String date = String.valueOf(LocalDate.now());
+            String[][] result = new String[][] {{"1", "2", "Note 1", "Here is Note 1", date, date}};
+
+            StringBuilder dataTempStr = new StringBuilder();
+            for (int i = 0; i < data.length - 1; i++) {
+                for (int j = 0; j < data[i].length; j++){
+                    dataTempStr.append(data[i][j]);
+                }
+            }
+            dataString = dataTempStr.toString();
+
+            StringBuilder resultTempStr = new StringBuilder();
+            for (int i = 0; i < result.length; i++) {
+                for (int j = 0; j < result[i].length; j++){
+                    resultTempStr.append(result[i][j]);
+                }
+            }
+            resultString = resultTempStr.toString();
+
+            assertEquals(resultString, dataString);
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
+
+
 
 }

@@ -26,20 +26,26 @@ A personal information manager that can write notes & add contacts & create some
     - Add dependency
       - Add JSON Jar to the project dependency (in Project Structure)
 
-## Content
+## Program Structure
 
-| view                      | Model                | controller    |
-| ------------------------- | -------------------- | ------------- |
-| Login Page                | SimpleDatabase Class | Auth Class    |
-| Signup Page               |                      | Note Class    |
-| Home Page                 |                      | Contact Class |
-| Note Page                 |                      | Task Class    |
-| Searching Page            |                      | Event Class   |
-| Contact Page              |                      | Export Class  |
-| Tasks Pages (To-do Pages) |                      |               |
-| Events Pages              |                      |               |
-| Load .pim file Page       |                      |               |
-| Export .pim file Page     |                      |               |
+```bash
+├── Main.java
+├── controller
+│   ├── Auth.java
+│   ├── Contact.java
+│   ├── Event.java
+│   ├── Export.java
+│   ├── Input.java
+│   ├── Note.java
+│   ├── Search.java
+│   └── Todo.java
+├── input
+├── model
+│   └── SimpleDatabase.java
+├── output
+└── view
+    └── Pages.java
+```
 
 ## File Database Design
 

@@ -1,5 +1,10 @@
 package view;
 
+import controller.Auth;
+import controller.Note;
+
+import java.util.Objects;
+
 public class Pages {
 
     /**
@@ -80,14 +85,36 @@ public class Pages {
         System.out.print(">>> Please select the above options x in [x]:");
     }
 
+    public static void noteTitle() {
+        System.out.print("Note Title: ");
+    }
+
+    public static void noteContent() {
+        System.out.println("Note Content: ");
+        System.out.println("----------------------------------------------------------------");
+    }
+
     public static void newNotePage() {
         System.out.println("----------------------------------------------------------------");
         System.out.println();
-        System.out.print("- [1] Save Note");
-        System.out.print("- [2] Discard Note");
+        System.out.println("- [1] Save Note");
+        System.out.println("- [2] Discard Note");
         System.out.print(">>> Please select the above options x in [x]:");
     }
 
+    public static void readNotePage() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println();
+        System.out.println("Your List of Notes: ");
+        System.out.println("Note ID        Note Title");
+        for (int i = 0; i < Objects.requireNonNull(Note.getAllNotes()).length - 1; i++){
+            if (Auth.getUserId() == Integer.parseInt(Note.getAllNotes()[i][1])) {
+                System.out.printf("%-15s %-30s\n", Note.getAllNotes()[i][0], Note.getAllNotes()[i][2]);
+            }
+        }
+
+
+    }
 
     /**
      * The Contact Page
@@ -107,11 +134,27 @@ public class Pages {
         System.out.print(">>> Please select the above options x in [x]:");
     }
 
+    public static void contactFirstName() {
+        System.out.print("First Name: ");
+    }
+
+    public static void contactLastName() {
+        System.out.print("Last Name: ");
+    }
+
+    public static void contactPhoneNumber() {
+        System.out.print("Phone Number: ");
+    }
+
+    public static void contactAddress() {
+        System.out.print("Address: ");
+    }
+
     public static void newContactPage() {
         System.out.println("----------------------------------------------------------------");
         System.out.println();
-        System.out.print("- [1] Save Note");
-        System.out.print("- [2] Discard Note");
+        System.out.println("- [1] Save Contact");
+        System.out.println("- [2] Discard Contact");
         System.out.print(">>> Please select the above options x in [x]:");
     }
 
@@ -133,6 +176,26 @@ public class Pages {
         System.out.print(">>> Please select the above options x in [x]:");
     }
 
+    public static void todoName() {
+        System.out.print("Task Name: ");
+    }
+
+    public static void todoDDL() {
+        System.out.print("Task Deadline: ");
+    }
+
+    public static void todoDescription() {
+        System.out.print("Task Description: ");
+    }
+
+    public static void newTodoPage() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println();
+        System.out.println("- [1] Save Task");
+        System.out.println("- [2] Discard Task");
+        System.out.print(">>> Please select the above options x in [x]:");
+    }
+
 
     /**
      * The Event Page
@@ -149,6 +212,31 @@ public class Pages {
         System.out.println("- [5] Remove Event");
         System.out.println("- [-1] Back to last page");
         System.out.println();
+        System.out.print(">>> Please select the above options x in [x]:");
+    }
+
+    public static void eventName() {
+        System.out.print("Event Name: ");
+    }
+
+    public static void eventStartTime() {
+        System.out.print("Event Start Time: ");
+    }
+
+    public static void eventAlarm() {
+        System.out.print("Event Alarm: ");
+    }
+
+    public static void eventDescription() {
+        System.out.println("Event Description: ");
+        System.out.println("----------------------------------------------------------------");
+    }
+
+    public static void newEventPage() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println();
+        System.out.println("- [1] Save Event");
+        System.out.println("- [2] Discard Event");
         System.out.print(">>> Please select the above options x in [x]:");
     }
 

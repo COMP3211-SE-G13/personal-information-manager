@@ -1,0 +1,2 @@
+eventID,userID,eventTitle,eventDescription,eventStartTime,eventAlarm
+1,2,Event 2,Join the event 2,2023-11-25 10:00:00,24h

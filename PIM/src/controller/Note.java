@@ -9,7 +9,6 @@ import java.time.LocalDate;
 public class Note {
     private String noteTitle;
     private String noteContent;
-    private String createTime;
     private String lastModifyTime;
     private int userId;
 
@@ -23,21 +22,28 @@ public class Note {
 
         this.noteTitle = noteTitle;
         this.noteContent = noteContent;
-        this.createTime = String.valueOf(date);
         this.lastModifyTime = String.valueOf(date);
         this.userId = getUserId();
     }
 
+    /**
+     * Create Note Function (Public)
+     * @param noteInfo: the note info
+     */
     public static void createNote(Note noteInfo) {
-        createNote(noteInfo.noteTitle, noteInfo.noteContent, noteInfo.createTime, noteInfo.lastModifyTime, noteInfo.userId);
+        createNote(noteInfo.noteTitle, noteInfo.noteContent, noteInfo.lastModifyTime, noteInfo.userId);
     }
 
     /**
      * Create Note Function
+     * @param noteTitle: The title of the note
+     * @param noteContent: The content of the note
+     * @param lastModifyTime: The last modify time of the note
+     * @param userId: The ID of the user
      */
-    private static void createNote(String noteTitle, String noteContent, String createTime, String lastModifyTime, int userId) {
+    private static void createNote(String noteTitle, String noteContent, String lastModifyTime, int userId) {
         try {
-            if (noteTitle.isEmpty() || noteContent.isEmpty() || createTime.isEmpty() || lastModifyTime.isEmpty()) {
+            if (noteTitle.isEmpty() || noteContent.isEmpty() || lastModifyTime.isEmpty()) {
                 System.out.println("Please enter all information!");
                 return;
             }
@@ -45,7 +51,7 @@ public class Note {
             int noteId = SimpleDatabase.getNewID("notes.csv");
 
             String[][] newNoteData = {
-                    {String.valueOf(noteId), String.valueOf(userId), noteTitle, noteContent, createTime, lastModifyTime}
+                    {String.valueOf(noteId), String.valueOf(userId), noteTitle, noteContent, lastModifyTime}
             };
 
             new SimpleDatabase("insert", "notes.csv", newNoteData);
@@ -91,13 +97,28 @@ public class Note {
         return null;
     }
 
+
+    /**
+     * Modify Note Function (Public)
+     * @param noteInfo: the note info
+     * @param noteId: the id of note
+     */
+    public static void modifyNote(Note noteInfo, String noteId) {
+        modifyNote(noteInfo.noteTitle, noteInfo.noteContent, noteInfo.lastModifyTime, noteInfo.userId, noteId);
+    }
+
     /**
      * Modify Note Function
+     * @param noteTitle: The title of the note
+     * @param noteContent: The content of the note
+     * @param lastModifyTime: The last modify time of the note
+     * @param userId: The ID of the user
+     * @param noteId: The ID of the note
      */
-    private void modifyNote(String noteTitle, String noteContent, String createTime, String lastModifyTime, int userId, int noteId) {
+    private static void modifyNote(String noteTitle, String noteContent, String lastModifyTime, int userId, String noteId) {
         try {
-            String[] dataWantUpdate = {String.valueOf(noteId), String.valueOf(userId), noteTitle, noteContent, createTime, lastModifyTime};
-            new SimpleDatabase("update", "notes.csv", noteId, dataWantUpdate);
+            String[] dataWantUpdate = {noteId, String.valueOf(userId), noteTitle, noteContent, lastModifyTime};
+            new SimpleDatabase("update", "notes.csv", Integer.parseInt(noteId), dataWantUpdate);
             System.out.println("Update Successfully!");
 
         } catch (Exception e) {
@@ -107,12 +128,17 @@ public class Note {
     }
 
 
+    /**
+     * Remove Note Function (Public)
+     * @param noteId: the id of note
+     */
     public static void removeNote(String noteId) {
         removeNote(Integer.parseInt(noteId));
     }
 
     /**
      * Remove Note Function
+     * @param noteId: The ID of the note
      */
     private static void removeNote(int noteId) {
         try {

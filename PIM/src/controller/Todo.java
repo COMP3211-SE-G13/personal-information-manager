@@ -24,12 +24,20 @@ public class Todo {
         this.userId = getUserId();
     }
 
+    /**
+     * Create Task Function (Public)
+     * @param taskInfo: the task info
+     */
     public static void createTask(Todo taskInfo) {
         createTask(taskInfo.taskName, taskInfo.taskDDL, taskInfo.taskDescription, taskInfo.userId);
     }
 
     /**
      * Create Task Function
+     * @param taskName: the name of task
+     * @param taskDDL: the deadline of task
+     * @param taskDescription: the description of task
+     * @param userId: the id of user
      */
     private static void createTask(String taskName, String taskDDL, String taskDescription, int userId) {
         try {
@@ -69,7 +77,7 @@ public class Todo {
     /**
      * Get One Task Function
      *
-     * @param contactId: the id of task
+     * @param taskId: the id of task
      * @return String[]: the task data
      */
     public static String[] getOneTask(String taskId) {
@@ -91,14 +99,23 @@ public class Todo {
         return null;
     }
 
+    public static void modifyTask(Todo taskInfo, String taskId) {
+        modifyTask(taskInfo.taskName, taskInfo.taskDDL, taskInfo.taskDescription, taskInfo.userId, taskId);
+    }
+
     /**
      * Modify Task Function
+     * @param taskName: the name of task
+     * @param taskDDL: the deadline of task
+     * @param taskDescription: the description of task
+     * @param userId: the id of user
+     * @param taskId: the id of task
      */
-    private void modifyTask(String taskName, String taskDDL, String taskDescription, int userId, int taskId) {
+    private static void modifyTask(String taskName, String taskDDL, String taskDescription, int userId, String taskId) {
         try {
-            String[] dataWantUpdate = {String.valueOf(taskId), String.valueOf(userId), taskName, taskDDL, taskDescription};
+            String[] dataWantUpdate = {taskId, String.valueOf(userId), taskName, taskDDL, taskDescription};
 
-            new SimpleDatabase("update", "tasks.csv", taskId, dataWantUpdate);
+            new SimpleDatabase("update", "tasks.csv", Integer.parseInt(taskId), dataWantUpdate);
             System.out.println("Update Successfully!");
 
         } catch (Exception e) {
@@ -108,12 +125,17 @@ public class Todo {
     }
 
 
+    /**
+     * Remove Task Function (Public)
+     * @param taskId: the id of task
+     */
     public static void removeTask(String taskId) {
         removeTask(Integer.parseInt(taskId));
     }
 
     /**
      * Remove Task Function
+     * @param taskId: the id of task
      */
     private static void removeTask(int taskId) {
         try {

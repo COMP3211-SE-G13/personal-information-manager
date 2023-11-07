@@ -26,6 +26,6 @@ public class Input {
      */
     public static void setInput() {
         Scanner scanner = new Scanner(System.in);
-        input = scanner.next();
+        input = scanner.nextLine();
     }
 }

@@ -27,11 +27,20 @@ public class Event {
     }
 
 
+    /**
+     * Create Event Function (Public)
+     * @param eventInfo: the event info
+     */
     public static void createEvent(Event eventInfo) {
         createEvent(eventInfo.eventName, eventInfo.eventStartTime, eventInfo.eventAlarm, eventInfo.eventDescription, eventInfo.userId);
     }
+
     /**
      * Create Event Function
+     * @param eventName: The name of the event
+     * @param eventStartTime: The start time of the event
+     * @param eventAlarm: The alarm of the event
+     * @param eventDescription: The description of the event
      */
     private static void createEvent(String eventName, String eventStartTime, String eventAlarm, String eventDescription, int userId) {
         try {
@@ -43,7 +52,7 @@ public class Event {
             int eventId = SimpleDatabase.getNewID("events.csv");
 
             String[][] newEventData = {
-                    {String.valueOf(eventId), String.valueOf(userId), eventName, eventStartTime, eventAlarm, eventDescription}
+                    {String.valueOf(eventId), String.valueOf(userId), eventName, eventDescription, eventStartTime, eventAlarm}
             };
 
             new SimpleDatabase("insert", "events.csv", newEventData);
@@ -95,12 +104,27 @@ public class Event {
     }
 
     /**
-     * Modify Event Function
+     * Modify Event Function (Public)
+     * @param eventInfo: the event info
+     * @param eventId: the id of event
      */
-    private void modifyEvent(String eventName, String eventStartTime, String eventAlarm, String eventDescription, int userId, int eventId) {
+    public static void modifyEvent(Event eventInfo, String eventId) {
+        modifyEvent(eventInfo.eventName, eventInfo.eventStartTime, eventInfo.eventAlarm, eventInfo.eventDescription, eventInfo.userId, eventId);
+    }
+
+    /**
+     * Modify Event Function
+     * @param eventName: The name of the event
+     * @param eventStartTime: The start time of the event
+     * @param eventAlarm: The alarm of the event
+     * @param eventDescription: The description of the event
+     * @param userId: The user id of the event
+     * @param eventId: The id of the event
+     */
+    private static void modifyEvent(String eventName, String eventStartTime, String eventAlarm, String eventDescription, int userId, String eventId) {
         try{
-            String [] dataWantUpdate = {String.valueOf(eventId), String.valueOf(userId), eventName, eventStartTime, eventAlarm, eventDescription};
-            new SimpleDatabase("update", "events.csv", eventId, dataWantUpdate);
+            String [] dataWantUpdate = {eventId, String.valueOf(userId), eventName, eventStartTime, eventAlarm, eventDescription};
+            new SimpleDatabase("update", "events.csv", Integer.parseInt(eventId), dataWantUpdate);
             System.out.println("Update Successfully!");
         }catch (Exception e) {
             System.out.println("Error: " + e);
@@ -109,12 +133,17 @@ public class Event {
     }
 
 
+    /**
+     * Remove Event Function (Public)
+     * @param eventId: the id of event
+     */
     public static void removeEvent(String eventId) {
         removeEvent(Integer.parseInt(eventId));
     }
 
     /**
      * Remove Event Function
+     * @param eventId: the id of event
      */
     private static void removeEvent(int eventId) {
         try {
@@ -126,19 +155,5 @@ public class Event {
             System.out.println("Please try again!");
         }
     }
-
-//    /**
-//     * Set Alarm Function
-//     */
-//    private void setAlarm() {
-//
-//    }
-//
-//    /**
-//     * Cancel Alarm Function
-//     */
-//    private void cancelAlarm() {
-//
-//    }
 
 }

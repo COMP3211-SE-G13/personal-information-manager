@@ -32,12 +32,20 @@ public class SimpleDatabase {
     public SimpleDatabase(String mode, String fileName, String[][] data) throws IOException {
         String fileBasePath = "./src/data/";
 
+        String[] eventsData = {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"};
+
         if (mode.equals("insert")) {
             try {
                 isDatabaseExist();
                 File file = new File(fileBasePath + fileName);
-                FileWriter fileWriter = new FileWriter(file, true);
-                insert(fileWriter, data);
+                // FileWriter fileWriter = new FileWriter(file, true);
+                if (fileName.contains("events")) {
+                    // FileWriter fileWriter = new FileWriter(file);
+                    insertEvent(file, fileName, data, eventsData);
+                } else {
+                    FileWriter fileWriter = new FileWriter(file, true);
+                    insert(fileWriter, data);
+                }
             } catch (Exception e) {
                 System.err.println(e);
             }
@@ -59,7 +67,7 @@ public class SimpleDatabase {
 
         String[] userData = {"userID", "userName", "password"};
         String[] contactsData = {"contactID", "userID", "firstName", "lastName", "phoneNumber", "address"};
-        String[] notesData = {"noteID", "userID", "noteTitle", "noteContent", "createTime", "lastModifyTime"};
+        String[] notesData = {"noteID", "userID", "noteTitle", "noteContent", "lastModifyTime"};
         String[] tasksData = {"taskID", "userID", "taskTitle", "taskDescription", "taskDDL"};
         String[] eventsData = {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"};
 
@@ -144,7 +152,7 @@ public class SimpleDatabase {
 
             FileWriter notesWriter = new FileWriter(notesCSVFile);
             String[][] notesData = {
-                    {"noteID", "userID", "noteTitle", "noteContent", "createTime", "lastModifyTime"}
+                    {"noteID", "userID", "noteTitle", "noteContent", "lastModifyTime"}
             };
             insert(notesWriter, notesData);
 
@@ -291,6 +299,102 @@ public class SimpleDatabase {
         }
     }
 
+    private void insertEvent(File file, String fileName, String[][] newData, String[] classDataAttribute) {
+        try{
+            // If the csv file is null, we write the new data into the csv file directly.
+            String[][] tempFile = get(fileName);
+            System.out.println(get(fileName).length);
+            System.out.println();
+            System.out.println("----------------------------------------------------------------");
+            for (int i = 0; i < get(fileName).length; i++) {
+                for (int j = 0; j < get(fileName)[i].length; j++) {
+                    System.out.println(get(fileName)[i][j]);
+                }
+            }
+            System.out.println("----------------------------------------------------------------");
+            if ((get(fileName).length - 1) == 0) {
+                FileWriter fileWriter = new FileWriter(file, true);
+                for (String[] data : newData) {
+                    StringBuilder line = new StringBuilder();
+                    for (int i = 0; i < data.length; i++) {
+                        line.append(data[i]);
+                        if (i != data.length - 1) {
+                            line.append(',');
+                        }
+                    }
+                    line.append("\n");
+                    fileWriter.append(line.toString());
+                }
+                fileWriter.close();
+            } else {
+                FileWriter fileWriter = new FileWriter(file);
+                int newIndex = 0;
+                System.out.println("----------------------------------------------------------------");
+                for (int i = 0; i < get(fileName).length; i++) {
+                    for (int j = 0; j < get(fileName)[i].length; j++) {
+                        System.out.println(get(fileName)[i][j]);
+                    }
+                }
+                System.out.println("----------------------------------------------------------------");
+                // Find the index of the new data (which position in the csv file it should be inserted)
+                for (int i = 0; i < tempFile.length - 1; i++) {
+                    if (Integer.parseInt(newData[0][1]) < Integer.parseInt(tempFile[i][1])) {
+                        System.out.println("test1");
+                        break;
+                    } else if (Integer.parseInt(newData[0][1]) == Integer.parseInt(tempFile[i][1])) {
+                        System.out.println(newData[0][4].compareTo(tempFile[i][4]));
+                        System.out.println();
+                        if (newData[0][4].compareTo(tempFile[i][4]) <= 0){
+                            break;
+                        } else {
+                            newIndex++;
+                        }
+                    } else {
+                        System.out.println("test2");
+                        newIndex++;
+                    }
+                }
+
+                System.out.println(newIndex);
+                System.out.println();
+                // Insert the new data into the read 2D string array
+                String[][] temp1 = new String[1+newIndex][];
+                temp1[0] = classDataAttribute;
+                if (newIndex > 0) {
+                    System.arraycopy(tempFile, 0, temp1, 1, newIndex);
+                }
+                String[][] temp2 = new String[2+newIndex][];
+                System.arraycopy(temp1, 0, temp2, 0, newIndex + 1);
+                System.arraycopy(newData, 0, temp2, newIndex + 1, 1);
+                String[][] csvData = new String[2+tempFile.length][];
+                System.arraycopy(temp2, 0, csvData, 0, newIndex + 2);
+                if (newIndex < (tempFile.length - 1)) {
+                    System.arraycopy(tempFile, newIndex, csvData, newIndex + 2, tempFile.length - newIndex - 1);
+                }
+                for (int i = 0; i < csvData.length; i++) {
+                    for (int j = 0; j < csvData[i].length; j++) {
+                        System.out.println(csvData[i][j]);
+                    }
+                }
+
+                // Write the integrated 2D string array into the csv file
+                for (int i = 0; i < csvData.length; i++) {
+                    StringBuilder line = new StringBuilder();
+                    for (int j = 0; j < csvData[i].length; j++) {
+                        line.append(csvData[i][j]);
+                        if (j != csvData[i].length - 1) {
+                            line.append(',');
+                        }
+                    }
+                    line.append("\n");
+                    fileWriter.append(line.toString());
+                }
+                fileWriter.close();
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
 
     /**
      * Update Data Function
@@ -380,6 +484,65 @@ public class SimpleDatabase {
         } catch (Exception e) {
             System.err.println(e);
         }
+    }
+
+    /**
+     * Search Function
+     * @param keyword: the keyword of search
+     * @param type: the type of search
+     * @return the search result
+     */
+    public static String[][] search(String keyword, String type){
+        String[][] results = new String[0][];   //store the search result
+
+        if (type.equals("notes")){
+            type = "notes.csv";
+        } else if (type.equals("contacts")){
+            type = "contacts.csv";
+        } else if (type.equals("tasks")){
+            type = "tasks.csv";
+        } else if (type.equals("events")){
+            type = "events.csv";
+        } else {
+            System.out.println("Invalid type provided.");
+            return results;
+        }
+
+        if (keyword == null || type == null) {
+            System.out.println("Invalid keyword provided.");
+            return results;
+        }
+
+        try{
+            String[][] data = SimpleDatabase.get(type);
+            //String[][] results = new String[0][];  //store the search result
+            for (int j = 0; j < data.length - 1; j++){
+                for(int k = 0; k < data[j].length; k++){
+                    if (data[j][k].contains(keyword)){
+                        results = appendToResults(results, data[j]);
+                        break;
+                    }
+                }
+            }
+            return results;
+        } catch (Exception e){
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            return new String[0][];
+        }
+    }
+
+    /**
+     * Append the new row to the results
+     * @param results: the current results
+     * @param newRow: the new row to append
+     * @return the new results
+     */
+    private static String[][] appendToResults(String[][] results, String[] newRow) {
+        String[][] newResult = new String[results.length+1][];
+        System.arraycopy(results, 0, newResult, 0, results.length);
+        newResult[results.length] = newRow;
+        return newResult;
     }
 
 

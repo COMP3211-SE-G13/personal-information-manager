@@ -513,54 +513,54 @@ public class ProjectTest {
             Event.createEvent(eventInfo1);
             Event.createEvent(eventInfo2);
             Event.createEvent(eventInfo3);
-//
-//            String dataGetAllString = "";
-//            String dataGetOneString = "";
-//            String resultGetAllString = "";
-//            String resultGetOneString = "";
-//
-//            String[][] dataGetAll = Event.getAllEvents();
-//            String[] dataGetOne = Event.getOneEvent("2");
-//            String[][] resultGetAll = new String[][] {
-//                    {"1", "2", "Event 1", "Join the event 1", "2023-11-20 19:30:00", "5h"},
-//                    {"2", "2", "Event 2", "Join the event 2", "2023-11-25 10:00:00", "24h"},
-//                    {"3", "2", "Event 3", "Join the event 3", "2023-11-30 14:00:00", "10h"}
-//            };
-//            String[][] resultGetOne = new String[][] {{"2", "2", "Event 2", "Join the event 2", "2023-11-25 10:00:00", "24h"}};
-//
-//            StringBuilder dataGetAllTempStr = new StringBuilder();
-//            for (int i = 0; i < dataGetAll.length - 1; i++) {
-//                for (int j = 0; j < dataGetAll[i].length; j++){
-//                    dataGetAllTempStr.append(dataGetAll[i][j]);
-//                }
-//            }
-//            dataGetAllString = dataGetAllTempStr.toString();
-//
-//            StringBuilder dataGetOneTempStr = new StringBuilder();
-//            for (int i = 0; i < dataGetOne.length; i++) {
-//                dataGetOneTempStr.append(dataGetOne[i]);
-//            }
-//            dataGetOneString = dataGetOneTempStr.toString();
-//
-//            StringBuilder resultGetAllTempStr = new StringBuilder();
-//            for (int i = 0; i < resultGetAll.length; i++) {
-//                for (int j = 0; j < resultGetAll[i].length; j++){
-//                    resultGetAllTempStr.append(resultGetAll[i][j]);
-//                }
-//            }
-//            resultGetAllString = resultGetAllTempStr.toString();
-//
-//            StringBuilder resultGetOneTempStr = new StringBuilder();
-//            for (int i = 0; i < resultGetOne.length; i++) {
-//                for (int j = 0; j < resultGetOne[i].length; j++){
-//                    resultGetOneTempStr.append(resultGetOne[i][j]);
-//                }
-//            }
-//            resultGetOneString = resultGetOneTempStr.toString();
-//
-//
-//            assertEquals(resultGetAllString, dataGetAllString);
-//            assertEquals(resultGetOneString, dataGetOneString);
+
+            String dataGetAllString = "";
+            String dataGetOneString = "";
+            String resultGetAllString = "";
+            String resultGetOneString = "";
+
+            String[][] dataGetAll = Event.getAllEvents();
+            String[] dataGetOne = Event.getOneEvent("3");
+            String[][] resultGetAll = new String[][] {
+                    {"1", "2", "Event 1", "Join the event 1", "2023-11-20 19:30:00", "5h"},
+                    {"3", "2", "Event 2", "Join the event 2", "2023-11-25 10:00:00", "24h"},
+                    {"2", "2", "Event 3", "Join the event 3", "2023-11-30 14:00:00", "10h"}
+            };
+            String[][] resultGetOne = new String[][] {{"3", "2", "Event 2", "Join the event 2", "2023-11-25 10:00:00", "24h"}};
+
+            StringBuilder dataGetAllTempStr = new StringBuilder();
+            for (int i = 0; i < dataGetAll.length - 1; i++) {
+                for (int j = 0; j < dataGetAll[i].length; j++){
+                    dataGetAllTempStr.append(dataGetAll[i][j]);
+                }
+            }
+            dataGetAllString = dataGetAllTempStr.toString();
+
+            StringBuilder dataGetOneTempStr = new StringBuilder();
+            for (int i = 0; i < dataGetOne.length; i++) {
+                dataGetOneTempStr.append(dataGetOne[i]);
+            }
+            dataGetOneString = dataGetOneTempStr.toString();
+
+            StringBuilder resultGetAllTempStr = new StringBuilder();
+            for (int i = 0; i < resultGetAll.length; i++) {
+                for (int j = 0; j < resultGetAll[i].length; j++){
+                    resultGetAllTempStr.append(resultGetAll[i][j]);
+                }
+            }
+            resultGetAllString = resultGetAllTempStr.toString();
+
+            StringBuilder resultGetOneTempStr = new StringBuilder();
+            for (int i = 0; i < resultGetOne.length; i++) {
+                for (int j = 0; j < resultGetOne[i].length; j++){
+                    resultGetOneTempStr.append(resultGetOne[i][j]);
+                }
+            }
+            resultGetOneString = resultGetOneTempStr.toString();
+
+
+            assertEquals(resultGetAllString, dataGetAllString);
+            assertEquals(resultGetOneString, dataGetOneString);
 
         } catch (Exception e) {
             System.out.println("Error: " + e);
@@ -586,42 +586,42 @@ public class ProjectTest {
     /**
      * Test Remove event from Event Controller
      */
-//    @Test
-//    public void test6_3() {
-//        try {
-//            Auth.login("david", "1234");
-//            Event.removeEvent("2");
-//            Event.removeEvent("3");
-//
-//            String dataString = "";
-//            String resultString = "";
-//
-//            String[][] data = Event.getAllEvents();
-//            String[][] result = new String[][] {{"1", "2", "Event 1", "2023-11-20 19:30:00", "5h", "Join the event 1"}};
-//
-//            StringBuilder dataTempStr = new StringBuilder();
-//            for (int i = 0; i < data.length - 1; i++) {
-//                for (int j = 0; j < data[i].length; j++){
-//                    dataTempStr.append(data[i][j]);
-//                }
-//            }
-//            dataString = dataTempStr.toString();
-//
-//            StringBuilder resultTempStr = new StringBuilder();
-//            for (int i = 0; i < result.length; i++) {
-//                for (int j = 0; j < result[i].length; j++){
-//                    resultTempStr.append(result[i][j]);
-//                }
-//            }
-//            resultString = resultTempStr.toString();
-//
-//            assertEquals(resultString, dataString);
-//
-//        } catch (Exception e) {
-//            System.out.println("Error: " + e);
-//            System.out.println("Please try again!");
-//            fail();
-//        }
-//    }
+    @Test
+    public void test6_3() {
+        try {
+            Auth.login("david", "1234");
+            Event.removeEvent("2");
+            Event.removeEvent("3");
+
+            String dataString = "";
+            String resultString = "";
+
+            String[][] data = Event.getAllEvents();
+            String[][] result = new String[][] {{"1", "2", "Event 1", "Join the event 1", "2023-11-20 19:30:00", "5h"}};
+
+            StringBuilder dataTempStr = new StringBuilder();
+            for (int i = 0; i < data.length - 1; i++) {
+                for (int j = 0; j < data[i].length; j++){
+                    dataTempStr.append(data[i][j]);
+                }
+            }
+            dataString = dataTempStr.toString();
+
+            StringBuilder resultTempStr = new StringBuilder();
+            for (int i = 0; i < result.length; i++) {
+                for (int j = 0; j < result[i].length; j++){
+                    resultTempStr.append(result[i][j]);
+                }
+            }
+            resultString = resultTempStr.toString();
+
+            assertEquals(resultString, dataString);
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
 
 }

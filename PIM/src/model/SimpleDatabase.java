@@ -40,8 +40,9 @@ public class SimpleDatabase {
                 File file = new File(fileBasePath + fileName);
                 // FileWriter fileWriter = new FileWriter(file, true);
                 if (fileName.contains("events")) {
-                    // FileWriter fileWriter = new FileWriter(file);
-                    insertEvent(file, fileName, data, eventsData);
+                    String[][] tempFile = get(fileName);
+                    FileWriter fileWriter = new FileWriter(file);
+                    insertEvent(fileWriter, data, eventsData, tempFile);
                 } else {
                     FileWriter fileWriter = new FileWriter(file, true);
                     insert(fileWriter, data);
@@ -187,7 +188,7 @@ public class SimpleDatabase {
             int rowNum = 0;
             int newID = 0;
             String line;
-            int ID = 0;
+            int largestID = 0;
 
             // Find the number of rows of the file
             while (bufferedReader1.readLine() != null) {
@@ -203,14 +204,18 @@ public class SimpleDatabase {
                 try (BufferedReader bufferedReader2 = new BufferedReader(new FileReader(fileBasePath + fileName))) {
                     int i = 0;
                     while ((line = bufferedReader2.readLine()) != null) {
-                        // Find the last class ID of the file
-                        if (i == rowNum - 1)
-                            ID = Integer.parseInt(line.split(",")[0]);
+                        // Find the largest class ID of the file
+                        if (i != 0) {
+                            if (i == 1)
+                                largestID = Integer.parseInt(line.split(",")[0]);
+                            if (Integer.parseInt(line.split(",")[0]) > largestID)
+                                largestID = Integer.parseInt(line.split(",")[0]);
+                        }
                         i++;
                     }
                 }
                 // Construct the new class ID by adding one to the last class ID
-                newID = ID + 1;
+                newID = largestID + 1;
             }
 
             return newID;
@@ -276,7 +281,7 @@ public class SimpleDatabase {
     /**
      * Insert Data Function
      * @param fileWriter: The filewrite pointer of the file
-     * @param csvData: the data of the user want to insert
+     * @param csvData: The data of the user want to insert
      * @exception Exception: The Exception for File operation
      */
     private static void insert(FileWriter fileWriter, String[][] csvData) {
@@ -299,22 +304,34 @@ public class SimpleDatabase {
         }
     }
 
-    private void insertEvent(File file, String fileName, String[][] newData, String[] classDataAttribute) {
+    /**
+     * Insert Event Data Function in sequence of user ID and event start time
+     * @param fileWriter: The filewrite pointer of the file
+     * @param newData: The data of the user want to insert
+     * @param classDataAttribute: The first row (class data attribute name) of the file
+     * @param tempFile: The data get from the file by using the get function
+     * @exception Exception: The Exception for File operation
+     */
+    private void insertEvent(FileWriter fileWriter, String[][] newData, String[] classDataAttribute, String[][] tempFile) {
         try{
             // If the csv file is null, we write the new data into the csv file directly.
-            String[][] tempFile = get(fileName);
-            System.out.println(get(fileName).length);
-            System.out.println();
-            System.out.println("----------------------------------------------------------------");
-            for (int i = 0; i < get(fileName).length; i++) {
-                for (int j = 0; j < get(fileName)[i].length; j++) {
-                    System.out.println(get(fileName)[i][j]);
-                }
-            }
-            System.out.println("----------------------------------------------------------------");
-            if ((get(fileName).length - 1) == 0) {
-                FileWriter fileWriter = new FileWriter(file, true);
-                for (String[] data : newData) {
+            // String[][] tempFile = get(fileName);
+//            System.out.println(tempFile.length);
+//            System.out.println();
+//            System.out.println("----------------------------------------------------------------");
+//            for (int i = 0; i < tempFile.length; i++) {
+//                for (int j = 0; j < tempFile[i].length; j++) {
+//                    System.out.println(tempFile[i][j]);
+//                }
+//            }
+//            System.out.println("----------------------------------------------------------------");
+            if (tempFile.length <= 1) {
+                String[][] tempData = new String[1+newData.length][];
+                tempData[0] = classDataAttribute;
+
+                System.arraycopy(newData, 0, tempData, 1, newData.length);
+//                FileWriter fileWriter = new FileWriter(file, true);
+                for (String[] data : tempData) {
                     StringBuilder line = new StringBuilder();
                     for (int i = 0; i < data.length; i++) {
                         line.append(data[i]);
@@ -327,36 +344,36 @@ public class SimpleDatabase {
                 }
                 fileWriter.close();
             } else {
-                FileWriter fileWriter = new FileWriter(file);
+//                FileWriter fileWriter = new FileWriter(file);
                 int newIndex = 0;
-                System.out.println("----------------------------------------------------------------");
-                for (int i = 0; i < get(fileName).length; i++) {
-                    for (int j = 0; j < get(fileName)[i].length; j++) {
-                        System.out.println(get(fileName)[i][j]);
-                    }
-                }
-                System.out.println("----------------------------------------------------------------");
+//                System.out.println("----------------------------------------------------------------");
+//                for (int i = 0; i < get(fileName).length; i++) {
+//                    for (int j = 0; j < get(fileName)[i].length; j++) {
+//                        System.out.println(get(fileName)[i][j]);
+//                    }
+//                }
+//                System.out.println("----------------------------------------------------------------");
                 // Find the index of the new data (which position in the csv file it should be inserted)
                 for (int i = 0; i < tempFile.length - 1; i++) {
                     if (Integer.parseInt(newData[0][1]) < Integer.parseInt(tempFile[i][1])) {
-                        System.out.println("test1");
+//                        System.out.println("test1");
                         break;
                     } else if (Integer.parseInt(newData[0][1]) == Integer.parseInt(tempFile[i][1])) {
-                        System.out.println(newData[0][4].compareTo(tempFile[i][4]));
-                        System.out.println();
+//                        System.out.println(newData[0][4].compareTo(tempFile[i][4]));
+//                        System.out.println();
                         if (newData[0][4].compareTo(tempFile[i][4]) <= 0){
                             break;
                         } else {
                             newIndex++;
                         }
                     } else {
-                        System.out.println("test2");
+//                        System.out.println("test2");
                         newIndex++;
                     }
                 }
 
-                System.out.println(newIndex);
-                System.out.println();
+//                System.out.println(newIndex);
+//                System.out.println();
                 // Insert the new data into the read 2D string array
                 String[][] temp1 = new String[1+newIndex][];
                 temp1[0] = classDataAttribute;
@@ -371,14 +388,14 @@ public class SimpleDatabase {
                 if (newIndex < (tempFile.length - 1)) {
                     System.arraycopy(tempFile, newIndex, csvData, newIndex + 2, tempFile.length - newIndex - 1);
                 }
-                for (int i = 0; i < csvData.length; i++) {
-                    for (int j = 0; j < csvData[i].length; j++) {
-                        System.out.println(csvData[i][j]);
-                    }
-                }
+//                for (int i = 0; i < csvData.length - 1; i++) {
+//                    for (int j = 0; j < csvData[i].length; j++) {
+//                        System.out.println(csvData[i][j]);
+//                    }
+//                }
 
                 // Write the integrated 2D string array into the csv file
-                for (int i = 0; i < csvData.length; i++) {
+                for (int i = 0; i < csvData.length - 1; i++) {
                     StringBuilder line = new StringBuilder();
                     for (int j = 0; j < csvData[i].length; j++) {
                         line.append(csvData[i][j]);
@@ -399,7 +416,9 @@ public class SimpleDatabase {
     /**
      * Update Data Function
      * @param file: The file that want to update
-     * @param contactID: The user ID
+     * @param classDataAttribute: The first row (class data attribute name) of the file
+     * @param contactID: The class ID
+     * @param newData: The new data that needs to replace the original data
      * @exception IOException: The IOException for File operation
      */
     private void update(File file, String[] classDataAttribute, int contactID, String[] newData) throws IOException {

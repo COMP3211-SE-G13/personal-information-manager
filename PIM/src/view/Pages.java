@@ -20,7 +20,7 @@ public class Pages {
         System.out.println("- [2] Signup");
         System.out.println("- [-1] Exit System");
         System.out.println();
-        System.out.print(">>> Please select the above options x in [x]:");
+        System.out.print(">>> Please select the above options x in [x]: ");
     }
 
     public static void loginPage() {
@@ -63,7 +63,7 @@ public class Pages {
         System.out.println("- [7] Export .PIM File");
         System.out.println("- [-1] Exit System");
         System.out.println();
-        System.out.print(">>> Please select the above options x in [x]:");
+        System.out.print(">>> Please select the above options x in [x]: ");
     }
 
 
@@ -82,7 +82,7 @@ public class Pages {
         System.out.println("- [5] Remove Note");
         System.out.println("- [-1] Back to last page");
         System.out.println();
-        System.out.print(">>> Please select the above options x in [x]:");
+        System.out.print(">>> Please select the above options x in [x]: ");
     }
 
     public static void noteTitle() {
@@ -94,27 +94,39 @@ public class Pages {
         System.out.println("----------------------------------------------------------------");
     }
 
+    public static void noteLastModifyTime() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.print("Note last modify time: ");
+    }
+
     public static void newNotePage() {
         System.out.println("----------------------------------------------------------------");
         System.out.println();
         System.out.println("- [1] Save Note");
         System.out.println("- [2] Discard Note");
-        System.out.print(">>> Please select the above options x in [x]:");
+        System.out.print(">>> Please select the above options x in [x]: ");
     }
 
-    public static void readNotePage() {
+    public static void noteList() {
         System.out.println("----------------------------------------------------------------");
-        System.out.println();
         System.out.println("Your List of Notes: ");
         System.out.println("Note ID        Note Title");
-        for (int i = 0; i < Objects.requireNonNull(Note.getAllNotes()).length - 1; i++){
-            if (Auth.getUserId() == Integer.parseInt(Note.getAllNotes()[i][1])) {
-                System.out.printf("%-15s %-30s\n", Note.getAllNotes()[i][0], Note.getAllNotes()[i][2]);
-            }
-        }
-
-
     }
+
+    public static void readPage() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println();
+        System.out.println("- [1] Choose which one to read");
+        System.out.println("- [2] Read All");
+        System.out.println("- [-1] Back to last page");
+        System.out.print(">>> Please select the above options x in [x]: ");
+    }
+
+    public static void readOne() {
+        System.out.print(">>> Please input the note ID you want to read: ");
+    }
+
+
 
     /**
      * The Contact Page
@@ -131,7 +143,7 @@ public class Pages {
         System.out.println("- [5] Remove Contact");
         System.out.println("- [-1] Back to last page");
         System.out.println();
-        System.out.print(">>> Please select the above options x in [x]:");
+        System.out.print(">>> Please select the above options x in [x]: ");
     }
 
     public static void contactFirstName() {
@@ -155,8 +167,15 @@ public class Pages {
         System.out.println();
         System.out.println("- [1] Save Contact");
         System.out.println("- [2] Discard Contact");
-        System.out.print(">>> Please select the above options x in [x]:");
+        System.out.print(">>> Please select the above options x in [x]: ");
     }
+
+    public static void contactList() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("Your List of Contacts: ");
+        System.out.println("Contact ID     Contact Name");
+    }
+
 
     /**
      * The To-do List Page
@@ -173,7 +192,7 @@ public class Pages {
         System.out.println("- [5] Remove Task");
         System.out.println("- [-1] Back to last page");
         System.out.println();
-        System.out.print(">>> Please select the above options x in [x]:");
+        System.out.print(">>> Please select the above options x in [x]: ");
     }
 
     public static void todoName() {
@@ -193,7 +212,13 @@ public class Pages {
         System.out.println();
         System.out.println("- [1] Save Task");
         System.out.println("- [2] Discard Task");
-        System.out.print(">>> Please select the above options x in [x]:");
+        System.out.print(">>> Please select the above options x in [x]: ");
+    }
+
+    public static void todoList() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("Your List of Tasks: ");
+        System.out.println("Task ID        Task Title");
     }
 
 
@@ -212,7 +237,7 @@ public class Pages {
         System.out.println("- [5] Remove Event");
         System.out.println("- [-1] Back to last page");
         System.out.println();
-        System.out.print(">>> Please select the above options x in [x]:");
+        System.out.print(">>> Please select the above options x in [x]: ");
     }
 
     public static void eventName() {
@@ -237,7 +262,39 @@ public class Pages {
         System.out.println();
         System.out.println("- [1] Save Event");
         System.out.println("- [2] Discard Event");
-        System.out.print(">>> Please select the above options x in [x]:");
+        System.out.print(">>> Please select the above options x in [x]: ");
     }
+
+    public static void eventList() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("Your List of Events: ");
+        System.out.println("Event ID       Event Title");
+    }
+
+
+    public static void searchPage() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("                           Search");
+        System.out.print("Searching Keyword(s): ");
+    }
+
+    public static void removePage() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("                            Remove");
+        System.out.println();
+        System.out.println("- [1] Choose which one to remove");
+        System.out.println("- [-1] Back to last page");
+        System.out.print(">>> Please select the above options x in [x]: ");
+    }
+
+    public static void exportPage() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("                           Export");
+        System.out.println();
+        System.out.println("- [1] Confirm export to .PIM File");
+        System.out.println("- [-1] Back to last page");
+        System.out.print(">>> Please select the above options x in [x]: ");
+    }
+
 
 }

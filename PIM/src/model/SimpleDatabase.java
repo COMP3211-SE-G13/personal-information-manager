@@ -537,7 +537,7 @@ public class SimpleDatabase {
             //String[][] results = new String[0][];  //store the search result
             for (int j = 0; j < data.length - 1; j++){
                 for(int k = 0; k < data[j].length; k++){
-                    if (data[j][k].contains(keyword)){
+                    if (data[j][k].toLowerCase().contains(keyword.toLowerCase())){
                         results = appendToResults(results, data[j]);
                         break;
                     }

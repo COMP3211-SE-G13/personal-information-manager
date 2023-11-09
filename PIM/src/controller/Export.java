@@ -34,7 +34,12 @@ public class Export {
             exportFile.write("Contacts\n");
             for (int i = 0; i < contactsData.length - 1; i++) {
                 for (int j = 0; j < contactsData[i].length; j++) {
-                    exportFile.write(contactsData[i][j] + " ");
+                    if (j == 0)
+                        exportFile.write(contactsData[i][j]);
+                    else if (j == contactsData[i].length - 1)
+                        exportFile.write("," + contactsData[i][j]);
+                    else
+                        exportFile.write("," + contactsData[i][j]);
                 }
                 exportFile.write("\n");
             }
@@ -42,7 +47,12 @@ public class Export {
             exportFile.write("Notes\n");
             for (int i = 0; i < notesData.length - 1; i++) {
                 for (int j = 0; j < notesData[i].length; j++) {
-                    exportFile.write(notesData[i][j] + " ");
+                    if (j == 0)
+                        exportFile.write(notesData[i][j]);
+                    else if (j == notesData[i].length - 1)
+                        exportFile.write("," + notesData[i][j]);
+                    else
+                        exportFile.write("," + notesData[i][j]);
                 }
                 exportFile.write("\n");
             }
@@ -50,7 +60,12 @@ public class Export {
             exportFile.write("Events\n");
             for (int i = 0; i < eventsData.length - 1; i++) {
                 for (int j = 0; j < eventsData[i].length; j++) {
-                    exportFile.write(eventsData[i][j] + " ");
+                    if (j == 0)
+                        exportFile.write(eventsData[i][j]);
+                    else if (j == eventsData[i].length - 1)
+                        exportFile.write("," + eventsData[i][j]);
+                    else
+                        exportFile.write("," + eventsData[i][j]);
                 }
                 exportFile.write("\n");
             }
@@ -58,7 +73,12 @@ public class Export {
             exportFile.write("Tasks\n");
             for (int i = 0; i < tasksData.length - 1; i++) {
                 for (int j = 0; j < tasksData[i].length; j++) {
-                    exportFile.write(tasksData[i][j] + " ");
+                    if (j == 0)
+                        exportFile.write(tasksData[i][j]);
+                    else if (j == tasksData[i].length - 1)
+                        exportFile.write("," + tasksData[i][j]);
+                    else
+                        exportFile.write("," + tasksData[i][j]);
                 }
                 exportFile.write("\n");
             }

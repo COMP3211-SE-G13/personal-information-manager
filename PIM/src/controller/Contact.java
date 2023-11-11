@@ -123,7 +123,7 @@ public class Contact {
     private static void modifyContact(String firstName, String lastName, String phoneNumber, String address, int userId, String contactId) {
         try {
             String[] dataWantUpdate = {contactId, String.valueOf(userId), firstName, lastName, phoneNumber, address};
-            new SimpleDatabase("update", "notes.csv", Integer.parseInt(contactId), dataWantUpdate);
+            new SimpleDatabase("update", "contacts.csv", Integer.parseInt(contactId), dataWantUpdate);
             System.out.println("Update Successfully!");
 
         } catch (Exception e) {

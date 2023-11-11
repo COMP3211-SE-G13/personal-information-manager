@@ -193,6 +193,45 @@ public class ProjectTest {
         }
     }
 
+    /**
+     * Test Update contact from Contact Controller
+     */
+    @Test
+    public void test3_2() {
+        try {
+            Auth.login("david", "1234");
+
+            Contact contactInfo = new Contact("Sandy", "Disney", "62481823", "128 SH Street");
+            Contact.modifyContact(contactInfo, "2");
+
+            String dataString = "";
+            String resultString = "";
+
+            String[] data = Contact.getOneContact("2");
+
+            String[] result = new String[] {"2", "2", "Sandy", "Disney", "62481823", "128 SH Street"};
+
+            StringBuilder dataTempStr = new StringBuilder();
+            for (int i = 0; i < data.length; i++) {
+                dataTempStr.append(data[i]);
+            }
+            dataString = dataTempStr.toString();
+
+            StringBuilder resultTempStr = new StringBuilder();
+            for (int i = 0; i < result.length; i++) {
+                resultTempStr.append(result[i]);
+            }
+            resultString = resultTempStr.toString();
+
+            assertEquals(resultString, dataString);
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
+
 
     /**
      * Test Remove contact from Contact Controller
@@ -244,7 +283,7 @@ public class ProjectTest {
     public void test4_1() {
         try {
             Auth.login("david", "1234");
-            Note noteInfo1 = new Note("Note 1", "Here is Note 1");
+            Note noteInfo1 = new Note("Note 1", "Here is Note 1. Hello World!");
             Note noteInfo2 = new Note("Note 2", "Here is Note 2");
 
             Note.createNote(noteInfo1);
@@ -259,7 +298,7 @@ public class ProjectTest {
 
             String[][] dataGetAll = Note.getAllNotes();
             String[] dataGetOne = Note.getOneNote("2");
-            String[][] resultGetAll = new String[][] {{"1", "2", "Note 1", "Here is Note 1", date}, {"2", "2", "Note 2", "Here is Note 2", date}};
+            String[][] resultGetAll = new String[][] {{"1", "2", "Note 1", "Here is Note 1. Hello World!", date}, {"2", "2", "Note 2", "Here is Note 2", date}};
             String[][] resultGetOne = new String[][] {{"2", "2", "Note 2", "Here is Note 2", date}};
 
             StringBuilder dataGetAllTempStr = new StringBuilder();
@@ -320,7 +359,7 @@ public class ProjectTest {
             String[][] data = Note.getAllNotes();
 
             String date = String.valueOf(LocalDate.now());
-            String[][] result = new String[][] {{"1", "2", "Note 1", "Here is Note 1", date}, {"2", "2", "Note 2", "Hello World for Note 2", date}};
+            String[][] result = new String[][] {{"1", "2", "Note 1", "Here is Note 1. Hello World!", date}, {"2", "2", "Note 2", "Hello World for Note 2", date}};
 
             StringBuilder dataTempStr = new StringBuilder();
             for (int i = 0; i < data.length - 1; i++) {
@@ -362,7 +401,49 @@ public class ProjectTest {
             String[][] data = Note.getAllNotes();
 
             String date = String.valueOf(LocalDate.now());
-            String[][] result = new String[][] {{"1", "2", "Note 1", "Here is Note 1", date}};
+            String[][] result = new String[][] {{"1", "2", "Note 1", "Here is Note 1. Hello World!", date}};
+
+            StringBuilder dataTempStr = new StringBuilder();
+            for (int i = 0; i < data.length - 1; i++) {
+                for (int j = 0; j < data[i].length; j++){
+                    dataTempStr.append(data[i][j]);
+                }
+            }
+            dataString = dataTempStr.toString();
+
+            StringBuilder resultTempStr = new StringBuilder();
+            for (int i = 0; i < result.length; i++) {
+                for (int j = 0; j < result[i].length; j++){
+                    resultTempStr.append(result[i][j]);
+                }
+            }
+            resultString = resultTempStr.toString();
+
+            assertEquals(resultString, dataString);
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
+
+    /**
+     * Test Search note from Note Controller
+     */
+    @Test
+    public void test4_4() {
+        try {
+            Auth.login("david", "1234");
+            Search.search("hello world", "notes");
+
+            String dataString = "";
+            String resultString = "";
+
+            String[][] data = Note.getAllNotes();
+
+            String date = String.valueOf(LocalDate.now());
+            String[][] result = new String[][] {{"1", "2", "Note 1", "Here is Note 1. Hello World!", date}};
 
             StringBuilder dataTempStr = new StringBuilder();
             for (int i = 0; i < data.length - 1; i++) {
@@ -448,6 +529,49 @@ public class ProjectTest {
 
             assertEquals(resultGetAllString, dataGetAllString);
             assertEquals(resultGetOneString, dataGetOneString);
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
+
+    /**
+     * Test Update task from Todo Controller
+     */
+    @Test
+    public void test5_2() {
+        try {
+            Auth.login("david", "1234");
+
+            Todo taskInfo = new Todo("Task 2", "2023-12-01", "To finish task 2 and also update the all the task info");
+            Todo.modifyTask(taskInfo, "2");
+
+            String dataString = "";
+            String resultString = "";
+
+            String[][] data = Todo.getAllTasks();
+
+            String[][] result = new String[][] {{"1", "2", "Task 1", "2023-11-25", "To finish task 1"}, {"2", "2", "Task 2", "2023-12-01", "To finish task 2 and also update the all the task info"}};
+
+            StringBuilder dataTempStr = new StringBuilder();
+            for (int i = 0; i < data.length - 1; i++) {
+                for (int j = 0; j < data[i].length; j++){
+                    dataTempStr.append(data[i][j]);
+                }
+            }
+            dataString = dataTempStr.toString();
+
+            StringBuilder resultTempStr = new StringBuilder();
+            for (int i = 0; i < result.length; i++) {
+                for (int j = 0; j < result[i].length; j++){
+                    resultTempStr.append(result[i][j]);
+                }
+            }
+            resultString = resultTempStr.toString();
+
+            assertEquals(resultString, dataString);
 
         } catch (Exception e) {
             System.out.println("Error: " + e);
@@ -570,11 +694,36 @@ public class ProjectTest {
     }
 
     /**
-     * Test Update event from Event Controller
+     * Test Update task from Todo Controller
      */
     @Test
     public void test6_2() {
         try {
+            Auth.login("david", "1234");
+
+            Event eventInfo = new Event("Event 1", "2023-11-27 19:30:00", "5h", "Join the event 1");
+            Event.modifyEvent(eventInfo, "1");
+
+            String dataString = "";
+            String resultString = "";
+
+            String[] data = Event.getOneEvent("1");
+
+            String[] result = new String[] {"1", "2", "Event 1", "Join the event 1", "2023-11-27 19:30:00", "5h"};
+
+            StringBuilder dataTempStr = new StringBuilder();
+            for (int i = 0; i < data.length; i++) {
+                dataTempStr.append(data[i]);
+            }
+            dataString = dataTempStr.toString();
+
+            StringBuilder resultTempStr = new StringBuilder();
+            for (int i = 0; i < result.length; i++) {
+                resultTempStr.append(result[i]);
+            }
+            resultString = resultTempStr.toString();
+
+            assertEquals(resultString, dataString);
 
         } catch (Exception e) {
             System.out.println("Error: " + e);
@@ -597,7 +746,7 @@ public class ProjectTest {
             String resultString = "";
 
             String[][] data = Event.getAllEvents();
-            String[][] result = new String[][] {{"1", "2", "Event 1", "Join the event 1", "2023-11-20 19:30:00", "5h"}};
+            String[][] result = new String[][] {{"1", "2", "Event 1", "Join the event 1", "2023-11-27 19:30:00", "5h"}};
 
             StringBuilder dataTempStr = new StringBuilder();
             for (int i = 0; i < data.length - 1; i++) {

@@ -123,7 +123,7 @@ public class Event {
      */
     private static void modifyEvent(String eventName, String eventStartTime, String eventAlarm, String eventDescription, int userId, String eventId) {
         try{
-            String [] dataWantUpdate = {eventId, String.valueOf(userId), eventName, eventStartTime, eventAlarm, eventDescription};
+            String [] dataWantUpdate = {eventId, String.valueOf(userId), eventName, eventDescription, eventStartTime, eventAlarm};
             new SimpleDatabase("update", "events.csv", Integer.parseInt(eventId), dataWantUpdate);
             System.out.println("Update Successfully!");
         }catch (Exception e) {

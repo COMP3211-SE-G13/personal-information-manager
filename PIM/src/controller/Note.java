@@ -26,6 +26,13 @@ public class Note {
         this.userId = getUserId();
     }
 
+    public Note(String noteTitle, String noteContent, String lastModifyTime) {
+        this.noteTitle = noteTitle;
+        this.noteContent = noteContent;
+        this.lastModifyTime = lastModifyTime;
+        this.userId = getUserId();
+    }
+
     /**
      * Create Note Function (Public)
      * @param noteInfo: the note info

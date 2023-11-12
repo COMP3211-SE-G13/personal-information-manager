@@ -41,8 +41,9 @@ public class Export {
                     else
                         exportFile.write("," + contactsData[i][j]);
                 }
+                exportFile.write("\n");
             }
-            exportFile.write("\nEnd of Contacts");
+            exportFile.write("End of Contacts");
             exportFile.write("\n");
             exportFile.write("Notes\n");
             for (int i = 0; i < notesData.length - 1; i++) {
@@ -54,8 +55,9 @@ public class Export {
                     else
                         exportFile.write("," + notesData[i][j]);
                 }
+                exportFile.write("\n");
             }
-            exportFile.write("\nEnd of Notes");
+            exportFile.write("End of Notes");
             exportFile.write("\n");
             exportFile.write("Events\n");
             for (int i = 0; i < eventsData.length - 1; i++) {
@@ -67,9 +69,9 @@ public class Export {
                     else
                         exportFile.write("," + eventsData[i][j]);
                 }
-
+                exportFile.write("\n");
             }
-            exportFile.write("\nEnd of Events");
+            exportFile.write("End of Events");
             exportFile.write("\n");
             exportFile.write("Tasks\n");
             for (int i = 0; i < tasksData.length - 1; i++) {
@@ -81,8 +83,9 @@ public class Export {
                     else
                         exportFile.write("," + tasksData[i][j]);
                 }
+                exportFile.write("\n");
             }
-            exportFile.write("\nEnd of Tasks");
+            exportFile.write("End of Tasks");
             exportFile.write("\n");
             exportFile.close();
 

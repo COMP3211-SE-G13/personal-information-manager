@@ -1,9 +1,7 @@
 package model;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.List;
 
 
@@ -35,20 +33,15 @@ public class SimpleDatabase {
         String[] eventsData = {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"};
 
         if (mode.equals("insert")) {
-            try {
-                isDatabaseExist();
-                File file = new File(fileBasePath + fileName);
-                // FileWriter fileWriter = new FileWriter(file, true);
-                if (fileName.contains("events")) {
-                    String[][] tempFile = get(fileName);
-                    FileWriter fileWriter = new FileWriter(file);
-                    insertEvent(fileWriter, data, eventsData, tempFile);
-                } else {
-                    FileWriter fileWriter = new FileWriter(file, true);
-                    insert(fileWriter, data);
-                }
-            } catch (Exception e) {
-                System.err.println(e);
+            isDatabaseExist();
+            File file = new File(fileBasePath + fileName);
+            if (fileName.contains("events")) {
+                String[][] tempFile = get(fileName);
+                FileWriter fileWriter = new FileWriter(file);
+                insertEvent(fileWriter, data, eventsData, tempFile);
+            } else {
+                FileWriter fileWriter = new FileWriter(file, true);
+                insert(fileWriter, data);
             }
         }
     }
@@ -74,9 +67,7 @@ public class SimpleDatabase {
 
         if (mode.equals("update")) {
             File file = new File(fileBasePath + fileName);
-            if (fileName.contains("user")) {
-                update(file, userData, classID, data);
-            } else if (fileName.contains("contacts")) {
+            if (fileName.contains("contacts")) {
                 update(file, contactsData, classID, data);
             } else if (fileName.contains("notes")) {
                 update(file, notesData, classID, data);
@@ -129,7 +120,6 @@ public class SimpleDatabase {
         try {
             Path path = Paths.get("./src/data");
             Files.createDirectories(path);
-            System.out.println("Data Folder is created!");
 
             String fileBasePath = "./src/data/";
 
@@ -315,22 +305,11 @@ public class SimpleDatabase {
     private void insertEvent(FileWriter fileWriter, String[][] newData, String[] classDataAttribute, String[][] tempFile) {
         try{
             // If the csv file is null, we write the new data into the csv file directly.
-            // String[][] tempFile = get(fileName);
-//            System.out.println(tempFile.length);
-//            System.out.println();
-//            System.out.println("----------------------------------------------------------------");
-//            for (int i = 0; i < tempFile.length; i++) {
-//                for (int j = 0; j < tempFile[i].length; j++) {
-//                    System.out.println(tempFile[i][j]);
-//                }
-//            }
-//            System.out.println("----------------------------------------------------------------");
             if (tempFile.length <= 1) {
                 String[][] tempData = new String[1+newData.length][];
                 tempData[0] = classDataAttribute;
 
                 System.arraycopy(newData, 0, tempData, 1, newData.length);
-//                FileWriter fileWriter = new FileWriter(file, true);
                 for (String[] data : tempData) {
                     StringBuilder line = new StringBuilder();
                     for (int i = 0; i < data.length; i++) {
@@ -344,36 +323,22 @@ public class SimpleDatabase {
                 }
                 fileWriter.close();
             } else {
-//                FileWriter fileWriter = new FileWriter(file);
                 int newIndex = 0;
-//                System.out.println("----------------------------------------------------------------");
-//                for (int i = 0; i < get(fileName).length; i++) {
-//                    for (int j = 0; j < get(fileName)[i].length; j++) {
-//                        System.out.println(get(fileName)[i][j]);
-//                    }
-//                }
-//                System.out.println("----------------------------------------------------------------");
                 // Find the index of the new data (which position in the csv file it should be inserted)
                 for (int i = 0; i < tempFile.length - 1; i++) {
                     if (Integer.parseInt(newData[0][1]) < Integer.parseInt(tempFile[i][1])) {
-//                        System.out.println("test1");
                         break;
                     } else if (Integer.parseInt(newData[0][1]) == Integer.parseInt(tempFile[i][1])) {
-//                        System.out.println(newData[0][4].compareTo(tempFile[i][4]));
-//                        System.out.println();
                         if (newData[0][4].compareTo(tempFile[i][4]) <= 0){
                             break;
                         } else {
                             newIndex++;
                         }
                     } else {
-//                        System.out.println("test2");
                         newIndex++;
                     }
                 }
 
-//                System.out.println(newIndex);
-//                System.out.println();
                 // Insert the new data into the read 2D string array
                 String[][] temp1 = new String[1+newIndex][];
                 temp1[0] = classDataAttribute;
@@ -388,11 +353,6 @@ public class SimpleDatabase {
                 if (newIndex < (tempFile.length - 1)) {
                     System.arraycopy(tempFile, newIndex, csvData, newIndex + 2, tempFile.length - newIndex - 1);
                 }
-//                for (int i = 0; i < csvData.length - 1; i++) {
-//                    for (int j = 0; j < csvData[i].length; j++) {
-//                        System.out.println(csvData[i][j]);
-//                    }
-//                }
 
                 // Write the integrated 2D string array into the csv file
                 for (int i = 0; i < csvData.length - 1; i++) {
@@ -534,7 +494,6 @@ public class SimpleDatabase {
 
         try{
             String[][] data = SimpleDatabase.get(type);
-            //String[][] results = new String[0][];  //store the search result
             for (int j = 0; j < data.length - 1; j++){
                 for(int k = 0; k < data[j].length; k++){
                     if (data[j][k].toLowerCase().contains(keyword.toLowerCase())){
@@ -545,7 +504,6 @@ public class SimpleDatabase {
             }
             return results;
         } catch (Exception e){
-            System.out.println("Error: " + e);
             System.out.println("Please try again!");
             return new String[0][];
         }

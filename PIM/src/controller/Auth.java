@@ -10,8 +10,8 @@ public class Auth {
      * @param userName: the username of account
      * @param password: the password of account
      */
-    public static void login(String userName, String password) {
-        verifyAccount(userName, password);
+    public static boolean login(String userName, String password) {
+        return verifyAccount(userName, password);
     }
 
     /**
@@ -19,23 +19,24 @@ public class Auth {
      * @param userName: the username of account
      * @param password: the password of account
      */
-    private static void verifyAccount(String userName, String password) {
+    private static boolean verifyAccount(String userName, String password) {
         try {
             String[][] data = SimpleDatabase.get("user.csv");
             for (int i = 0; i < data.length; i++) {
-                System.out.println(data[i][1] + " " + data[i][2]);
                 if (data[i][1].equals(userName) && data[i][2].equals(password)) {
                     System.out.println("Login Success!");
-                    System.out.println("ID: " + data[i][0]);
                     userId = Integer.parseInt(data[i][0]);
                     username = userName;
-                    return;
+                    return true;
                 }
             }
         } catch (Exception e) {
-            System.out.println("Error: " + e);
-            System.out.println("Please try again!");
+            System.out.println("An error occurred while verifying the account:");
+//            e.printStackTrace();
+            System.out.println("Please try again or contact support.");
+            return false;
         }
+        return false;
     }
 
     /**
@@ -64,7 +65,6 @@ public class Auth {
 
         } catch (Exception e) {
             System.out.println("Error: " + e);
-            System.out.println("testing");
             System.out.println("Please try again!");
         }
     }

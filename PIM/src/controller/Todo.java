@@ -99,6 +99,11 @@ public class Todo {
         return null;
     }
 
+    /**
+     * Modify Task Function (Public)
+     * @param taskInfo: the task info
+     * @param taskId:  the id of task
+     */
     public static void modifyTask(Todo taskInfo, String taskId) {
         modifyTask(taskInfo.taskName, taskInfo.taskDDL, taskInfo.taskDescription, taskInfo.userId, taskId);
     }

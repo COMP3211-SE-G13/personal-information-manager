@@ -3,21 +3,47 @@ package controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Import {
-    public static File importPIMFile(String fileName) {
+    /**
+     * Import Function
+     * @param fileName: the name of the file to be imported
+     */
+    public static void importPIMFile(String fileName) {
         try {
             File file = new File("./src/input/" + fileName);
-            return file;
+            load(file);
         } catch (Exception e) {
             System.out.println("Error: " + e);
             System.out.println("Please try again!");
-            return null;
         }
     }
 
+    /**
+     * getFilsInInputFolder Function
+     * @return the arraylist of files
+     */
+    public static ArrayList<String> getFilsInInputFolder() {
+        ArrayList<String> files = new ArrayList<>();
+
+        File folder = new File("./src/input/");
+        File[] listOfFiles = folder.listFiles();
+        System.out.println("Files in input folder:");
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+                files.add(file.getName());
+            }
+        }
+        return files;
+    }
+
+
+    /**
+     * Load Function
+     * @param file: the file to be loaded
+     * @throws FileNotFoundException: the file not found exception
+     */
     private static void load(File file) throws FileNotFoundException {
         ArrayList<String[]> userData = new ArrayList<>();
         ArrayList<String[]> contactsArray = new ArrayList<>();
@@ -115,5 +141,7 @@ public class Import {
             Event eventData = new Event(tempArray[2], tempArray[3], tempArray[4], tempArray[5]);
             Event.createEvent(eventData);
         }
+
+        System.out.println("Import successfully!");
     }
 }

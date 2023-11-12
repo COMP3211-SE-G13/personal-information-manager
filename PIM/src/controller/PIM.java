@@ -1,14 +1,14 @@
-import controller.*;
+package controller;
+
 import model.SimpleDatabase;
 import java.io.*;
 import java.util.Objects;
 
-public class Main {
+public class PIM {
     public static void main(String[] args) throws IOException {
         SimpleDatabase.isDatabaseExist();
         view.Pages.startPage();
         Input.setInput();
-        System.out.println(Input.getInput());
         if (Input.getInput().equals("1")) {
             mainConnector();
         } else if (Input.getInput().equals("2")) {
@@ -21,6 +21,10 @@ public class Main {
         }
     }
 
+    /**
+     * Login or Signup Connector Function
+     * @return the login or signup input
+     */
     public static String[] loginSignupConnector() {
         view.Pages.userNameInput();
         Input.setInput();
@@ -34,6 +38,10 @@ public class Main {
         };
     }
 
+    /**
+     * Note Connector Function
+     * @param loginSignupInput: the login or signup input
+     */
     public static void NoteConnector(String[] loginSignupInput) {
         while (true) {
             view.Pages.notePage(loginSignupInput[0]);
@@ -107,7 +115,37 @@ public class Main {
                 }
                 System.out.println();
             } else if (noteChoice.equals("4")) {
-
+                view.Pages.updatePage();
+                Input.setInput();
+                String updateChoice = Input.getInput();
+                if (updateChoice.equals("1")) {
+                    view.Pages.noteList();
+                    for (int i = 0; i < Objects.requireNonNull(Note.getAllNotes()).length - 1; i++) {
+                        if (Auth.getUserId() == Integer.parseInt(Note.getAllNotes()[i][1])) {
+                            System.out.printf("%-15s%-30s\n", Note.getAllNotes()[i][0], Note.getAllNotes()[i][2]);
+                        }
+                    }
+                    view.Pages.updateChoicePage();
+                    Input.setInput();
+                    String updateId = Input.getInput();
+                    String[] note = Note.getOneNote(updateId);
+                    view.Pages.noteTitle();
+                    System.out.println(Objects.requireNonNull(note)[2]);
+                    view.Pages.noteContent();
+                    System.out.println(note[3]);
+                    view.Pages.noteLastModifyTime();
+                    System.out.println(note[4]);
+                    view.Pages.noteTitle();
+                    Input.setInput();
+                    String noteTitle = Input.getInput();
+                    view.Pages.noteContent();
+                    Input.setInput();
+                    String noteContent = Input.getInput();
+                    Note noteInfo = new Note(noteTitle, noteContent);
+                    Note.modifyNote(noteInfo, updateId);
+                } else if (updateChoice.equals("-1")) {
+                    break;
+                }
             } else if (noteChoice.equals("5")) {
                 while(true) {
                     view.Pages.removePage();
@@ -136,6 +174,10 @@ public class Main {
         }
     }
 
+    /**
+     * Contact Connector Function
+     * @param loginSignupInput: the login or signup input
+     */
     public static void ContactConnector(String[] loginSignupInput) {
         while(true) {
             view.Pages.contactPage(loginSignupInput[0]);
@@ -164,38 +206,42 @@ public class Main {
                 }
             } else if (Input.getInput().equals("2")) {
                 while (true){
-                    view.Pages.readPage();
+                    view.Pages.lookForPage();
                     Input.setInput();
-                    String readChoice = Input.getInput();
-                    if (readChoice.equals("1")) {
+                    String lookForChoice = Input.getInput();
+                    if (lookForChoice.equals("1")) {
                         view.Pages.contactList();
-                        for (int i = 0; i < Objects.requireNonNull(Note.getAllNotes()).length - 1; i++) {
-                            if (Auth.getUserId() == Integer.parseInt(Note.getAllNotes()[i][1])) {
-                                System.out.printf("%-15s%-30s\n", Note.getAllNotes()[i][0], Note.getAllNotes()[i][2]);
+                        for (int i = 0; i < Objects.requireNonNull(Contact.getAllContacts()).length - 1; i++) {
+                            if (Auth.getUserId() == Integer.parseInt(Contact.getAllContacts()[i][1])) {
+                                System.out.printf("%-15s%-30s\n", Contact.getAllContacts()[i][0], Contact.getAllContacts()[i][3] + " " + Contact.getAllContacts()[i][2]);
                             }
                         }
-                        view.Pages.readOne();
+                        view.Pages.lookForOne();
                         Input.setInput();
                         String contactID = Input.getInput();
                         String[] contact = Contact.getOneContact(contactID);
-                        view.Pages.noteTitle();
+                        view.Pages.contactFirstName();
                         System.out.println(Objects.requireNonNull(contact)[2]);
-                        view.Pages.noteContent();
+                        view.Pages.contactLastName();
                         System.out.println(contact[3]);
-                        view.Pages.noteLastModifyTime();
+                        view.Pages.contactPhoneNumber();
                         System.out.println(contact[4]);
-                    } else if (readChoice.equals("2")) {
-                        String[][] allNote = Note.getAllNotes();
-                        for (int i = 0; i < Objects.requireNonNull(allNote).length - 1; i++) {
-                            view.Pages.noteTitle();
-                            System.out.println(Objects.requireNonNull(allNote)[i][2]);
-                            view.Pages.noteContent();
-                            System.out.println(allNote[i][3]);
-                            view.Pages.noteLastModifyTime();
-                            System.out.println(allNote[i][4]);
+                        view.Pages.contactAddress();
+                        System.out.println(contact[5]);
+                    } else if (lookForChoice.equals("2")) {
+                        String[][] allContact = Contact.getAllContacts();
+                        for (int i = 0; i < Objects.requireNonNull(allContact).length - 1; i++) {
+                            view.Pages.contactFirstName();
+                            System.out.println(Objects.requireNonNull(allContact)[i][2]);
+                            view.Pages.contactLastName();
+                            System.out.println(allContact[i][3]);
+                            view.Pages.contactPhoneNumber();
+                            System.out.println(allContact[i][4]);
+                            view.Pages.contactAddress();
+                            System.out.println(allContact[i][5]);
                             System.out.println();
                         }
-                    } else if (readChoice.equals("-1")) {
+                    } else if (lookForChoice.equals("-1")) {
                         break;
                     }
                 }
@@ -214,7 +260,46 @@ public class Main {
                 }
                 System.out.println();
             } else if (Input.getInput().equals("4")) {
-
+                view.Pages.updatePage();
+                Input.setInput();
+                String updateChoice = Input.getInput();
+                if (updateChoice.equals("1")) {
+                    view.Pages.contactList();
+                    for (int i = 0; i < Objects.requireNonNull(Contact.getAllContacts()).length - 1; i++) {
+                        if (Auth.getUserId() == Integer.parseInt(Contact.getAllContacts()[i][1])) {
+                            System.out.printf("%-15s%-30s\n", Contact.getAllContacts()[i][0], Contact.getAllContacts()[i][2] + " " +Contact.getAllContacts()[i][3]);
+                        }
+                    }
+                    view.Pages.updateChoicePage();
+                    Input.setInput();
+                    String updateId = Input.getInput();
+                    String[] contact = Contact.getOneContact(updateId);
+                    view.Pages.contactFirstName();
+                    System.out.println(Objects.requireNonNull(contact)[2]);
+                    view.Pages.contactLastName();
+                    System.out.println(contact[3]);
+                    view.Pages.contactPhoneNumber();
+                    System.out.println(contact[4]);
+                    view.Pages.contactAddress();
+                    System.out.println(contact[5]);
+                    view.Pages.contactFirstName();
+                    Input.setInput();
+                    String contactFirstName = Input.getInput();
+                    view.Pages.contactLastName();
+                    Input.setInput();
+                    String contactLastName = Input.getInput();
+                    String contactName = Input.getInput();
+                    view.Pages.contactPhoneNumber();
+                    Input.setInput();
+                    String contactPhoneNumber = Input.getInput();
+                    view.Pages.contactAddress();
+                    Input.setInput();
+                    String contactAddress = Input.getInput();
+                    Contact contactInfo = new Contact(contactFirstName, contactLastName, contactPhoneNumber, contactAddress);
+                    Contact.modifyContact(contactInfo, updateId);
+                } else if (updateChoice.equals("-1")) {
+                    break;
+                }
             } else if (Input.getInput().equals("5")) {
                 while(true) {
                     view.Pages.removePage();
@@ -243,6 +328,10 @@ public class Main {
         }
     }
 
+    /**
+     * Task Connector Function
+     * @param loginSignupInput: the login or signup input
+     */
     public static void TodoConnector(String[] loginSignupInput) {
         while(true) {
             view.Pages.todoPage(loginSignupInput[0]);
@@ -266,7 +355,42 @@ public class Main {
                     view.Pages.todoPage(loginSignupInput[0]);
                 }
             } else if (Input.getInput().equals("2")) {
-
+                while (true){
+                    view.Pages.lookForPage();
+                    Input.setInput();
+                    String lookForChoice = Input.getInput();
+                    if (lookForChoice.equals("1")) {
+                        view.Pages.todoList();
+                        for (int i = 0; i < Objects.requireNonNull(Todo.getAllTasks()).length - 1; i++) {
+                            if (Auth.getUserId() == Integer.parseInt(Todo.getAllTasks()[i][1])) {
+                                System.out.printf("%-15s%-30s\n", Todo.getAllTasks()[i][0], Todo.getAllTasks()[i][2]);
+                            }
+                        }
+                        view.Pages.lookForOne();
+                        Input.setInput();
+                        String taskID = Input.getInput();
+                        String[] task = Todo.getOneTask(taskID);
+                        view.Pages.todoName();
+                        System.out.println(Objects.requireNonNull(task)[2]);
+                        view.Pages.todoDescription();
+                        System.out.println(task[3]);
+                        view.Pages.todoDDL();
+                        System.out.println(task[4]);
+                    } else if (lookForChoice.equals("2")) {
+                        String[][] allTask = Todo.getAllTasks();
+                        for (int i = 0; i < Objects.requireNonNull(allTask).length - 1; i++) {
+                            view.Pages.todoName();
+                            System.out.println(Objects.requireNonNull(allTask)[i][2]);
+                            view.Pages.todoDescription();
+                            System.out.println(allTask[i][3]);
+                            view.Pages.todoDDL();
+                            System.out.println(allTask[i][4]);
+                            System.out.println();
+                        }
+                    } else if (lookForChoice.equals("-1")) {
+                        break;
+                    }
+                }
             } else if (Input.getInput().equals("3")) {
                 view.Pages.searchPage();
                 Input.setInput();
@@ -282,7 +406,40 @@ public class Main {
                 }
                 System.out.println();
             } else if (Input.getInput().equals("4")) {
-
+                view.Pages.updatePage();
+                Input.setInput();
+                String updateChoice = Input.getInput();
+                if (updateChoice.equals("1")) {
+                    view.Pages.todoList();
+                    for (int i = 0; i < Objects.requireNonNull(Todo.getAllTasks()).length - 1; i++) {
+                        if (Auth.getUserId() == Integer.parseInt(Todo.getAllTasks()[i][1])) {
+                            System.out.printf("%-15s%-30s\n", Todo.getAllTasks()[i][0], Todo.getAllTasks()[i][2]);
+                        }
+                    }
+                    view.Pages.updateChoicePage();
+                    Input.setInput();
+                    String updateId = Input.getInput();
+                    String[] tasks = Todo.getOneTask(updateId);
+                    view.Pages.todoName();
+                    System.out.println(Objects.requireNonNull(tasks)[2]);
+                    view.Pages.todoDDL();
+                    System.out.println(tasks[3]);
+                    view.Pages.todoDescription();
+                    System.out.println(tasks[4]);
+                    view.Pages.todoName();
+                    Input.setInput();
+                    String todoName = Input.getInput();
+                    view.Pages.todoDDL();
+                    Input.setInput();
+                    String todoDDL = Input.getInput();
+                    view.Pages.todoDescription();
+                    Input.setInput();
+                    String todoDescription = Input.getInput();
+                    Todo taskInfo = new Todo(todoName, todoDDL, todoDescription);
+                    Todo.modifyTask(taskInfo, updateId);
+                } else if (updateChoice.equals("-1")) {
+                    break;
+                }
             } else if (Input.getInput().equals("5")) {
                 while(true) {
                     view.Pages.removePage();
@@ -311,7 +468,10 @@ public class Main {
         }
     }
 
-
+    /**
+     * Event Connector Function
+     * @param loginSignupInput: the login or signup input
+     */
     public static void EventConnector(String[] loginSignupInput) {
         while(true) {
             view.Pages.eventPage(loginSignupInput[0]);
@@ -338,7 +498,46 @@ public class Main {
                     view.Pages.eventPage(loginSignupInput[0]);
                 }
             } else if (Input.getInput().equals("2")) {
-
+                while (true){
+                    view.Pages.lookForPage();
+                    Input.setInput();
+                    String lookForChoice = Input.getInput();
+                    if (lookForChoice.equals("1")) {
+                        view.Pages.eventList();
+                        for (int i = 0; i < Event.getAllEvents().length - 1; i++) {
+                            if (Auth.getUserId() == Integer.parseInt(Event.getAllEvents()[i][1])) {
+                                System.out.printf("%-15s%-30s\n", Event.getAllEvents()[i][0], Event.getAllEvents()[i][2]);
+                            }
+                        }
+                        view.Pages.lookForOne();
+                        Input.setInput();
+                        String eventID = Input.getInput();
+                        String[] event = Event.getOneEvent(eventID);
+                        view.Pages.eventName();
+                        System.out.println(event[2]);
+                        view.Pages.eventDescription();
+                        System.out.println(event[3]);
+                        view.Pages.eventStartTime();
+                        System.out.println(event[4]);
+                        view.Pages.eventAlarm();
+                        System.out.println(event[5]);
+                    } else if (lookForChoice.equals("2")) {
+                        String[][] allEvent = Event.getAllEvents();
+                        for (int i = 0; i < allEvent.length - 1; i++) {
+                            view.Pages.eventName();
+                            System.out.println(allEvent[i][2]);
+                            view.Pages.eventDescription();
+                            System.out.println(allEvent[i][3]);
+                            view.Pages.eventStartTime();
+                            System.out.println(allEvent[i][4]);
+                            view.Pages.eventAlarm();
+                            System.out.println(allEvent[i][5]);
+                            System.out.println();
+                        }
+                    } else if (lookForChoice.equals("-1")) {
+                        break;
+                    }
+                }
             } else if (Input.getInput().equals("3")) {
                 view.Pages.searchPage();
                 Input.setInput();
@@ -354,7 +553,45 @@ public class Main {
                 }
                 System.out.println();
             } else if (Input.getInput().equals("4")) {
-
+                view.Pages.updatePage();
+                Input.setInput();
+                String updateChoice = Input.getInput();
+                if (updateChoice.equals("1")) {
+                    view.Pages.eventList();
+                    for (int i = 0; i < Objects.requireNonNull(Event.getAllEvents()).length - 1; i++) {
+                        if (Auth.getUserId() == Integer.parseInt(Event.getAllEvents()[i][1])) {
+                            System.out.printf("%-15s%-30s\n", Event.getAllEvents()[i][0], Event.getAllEvents()[i][2]);
+                        }
+                    }
+                    view.Pages.updateChoicePage();
+                    Input.setInput();
+                    String updateId = Input.getInput();
+                    String[] events = Event.getOneEvent(updateId);
+                    view.Pages.eventName();
+                    System.out.println(Objects.requireNonNull(events)[2]);
+                    view.Pages.eventStartTime();
+                    System.out.println(events[3]);
+                    view.Pages.eventAlarm();
+                    System.out.println(events[4]);
+                    view.Pages.eventDescription();
+                    System.out.println(events[5]);
+                    view.Pages.eventName();
+                    Input.setInput();
+                    String eventName = Input.getInput();
+                    view.Pages.eventStartTime();
+                    Input.setInput();
+                    String eventStartTime = Input.getInput();
+                    view.Pages.eventAlarm();
+                    Input.setInput();
+                    String eventAlarm = Input.getInput();
+                    view.Pages.eventDescription();
+                    Input.setInput();
+                    String eventDescription = Input.getInput();
+                    Event eventInfo = new Event(eventName, eventStartTime, eventAlarm, eventDescription);
+                    Event.modifyEvent(eventInfo, updateId);
+                } else if (updateChoice.equals("-1")) {
+                    break;
+                }
             } else if (Input.getInput().equals("5")) {
                 while(true) {
                     view.Pages.removePage();
@@ -383,6 +620,29 @@ public class Main {
         }
     }
 
+    /**
+     * Import Connector Function
+     */
+    public static void importConnector() {
+        while(true) {
+            view.Pages.importPage();
+            Input.setInput();
+            String importChoice = Input.getInput();
+            if (importChoice.equals("1")) {
+                view.Pages.importFileNamePage();
+                Input.setInput();
+                String fileName = Input.getInput();
+                Import.importPIMFile(fileName);
+                break;
+            } else if (importChoice.equals("-1")) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Export Connector Function
+     */
     public static void exportConnector() {
         while(true) {
             view.Pages.exportPage();
@@ -398,6 +658,10 @@ public class Main {
         }
     }
 
+    /**
+     * Menu Connector Function
+     * @param loginSignupInput: the login or signup input
+     */
     public static void MenuConnector(String[] loginSignupInput) {
         while(true) {
             view.Pages.mainPage(loginSignupInput[0]);
@@ -424,18 +688,18 @@ public class Main {
                 EventConnector(loginSignupInput);
             }
 
-            // Search
-            else if (menuChoice.equals("5")) {
-
-            }
-
             // Load .PIM File
-            else if (menuChoice.equals("6")) {
-
+            else if (menuChoice.equals("5")) {
+                try {
+                    importConnector();
+                } catch (Exception e) {
+                    System.out.println("Error: " + e);
+                    e.printStackTrace();
+                }
             }
 
             // Export .PIM File
-            else if (menuChoice.equals("7")) {
+            else if (menuChoice.equals("6")) {
                 try {
                     exportConnector();
                 } catch (Exception e) {
@@ -456,12 +720,18 @@ public class Main {
         }
     }
 
+    /**
+     * Main Connector Function
+     */
     public static void mainConnector() {
         view.Pages.loginPage();
         String[] loginSignupInput = loginSignupConnector();
-        Auth.login(loginSignupInput[0], loginSignupInput[1]);
-        MenuConnector(loginSignupInput);
-    }
+        if (Auth.login(loginSignupInput[0], loginSignupInput[1])) {
+            MenuConnector(loginSignupInput);
+        } else {
+            System.out.println("Login Failed!");
+        }
 
+    }
 
 }

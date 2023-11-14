@@ -5,19 +5,22 @@ function display_help {
     echo "Usage: $0 [options]"
     echo "Options:"
     echo "  -h, --help       Display this help and exit"
-    echo "  -c, --compile    Compile PIM Java files"
+    echo "  -c, --compile    Compile PIM Java files to the 'out' directory"
     echo "  -r, --run        Run the PIM Java program"
 }
 
-# Function to compile Java files
+# Function to compile Java files to the 'out' directory
 function compile_java {
-    cd ./PIM/src/
-    javac controller/*.java model/*.java view/*.java
+    # Create the 'out' directory if it doesn't exist
+    mkdir -p ./PIM/out/production/PIM
+
+    # Compile Java files and place the compiled classes in the 'out' directory
+    javac -d ./PIM/out/production/PIM ./PIM/src/controller/*.java ./PIM/src/model/*.java ./PIM/src/view/*.java
 }
 
 # Function to run the Java program
 function run_java {
-    cd ./PIM/src/
+    cd ./PIM/out/production/PIM
     java controller.PIM
 }
 

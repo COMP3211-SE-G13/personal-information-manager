@@ -63,21 +63,21 @@ A personal information manager that can write notes & add contacts & create some
     ./PIM.sh
     ```
 
-    <img src="/Users/davidjiang/Library/CloudStorage/OneDrive-Personal/HKPolyU/3 Strengthening Year/Sem 1/COMP3211 - Software Engineering/Project/img/1.png" alt="1" style="zoom:60%;" />
+    <img src="./img/1.png" alt="1" style="zoom:60%;" />
 
 - IntelliJ IDEA
 
   - PIM Compile & Running
 
-    <img src="/Users/davidjiang/Library/CloudStorage/OneDrive-Personal/HKPolyU/3 Strengthening Year/Sem 1/COMP3211 - Software Engineering/Project/img/2.png" alt="2" style="zoom:55%;" />
+    <img src="./img/2.png" alt="2" style="zoom:55%;" />
 
-    <img src="/Users/davidjiang/Library/CloudStorage/OneDrive-Personal/HKPolyU/3 Strengthening Year/Sem 1/COMP3211 - Software Engineering/Project/img/3.png" alt="3" style="zoom:50%;" />
+    <img src="./img/3.png" alt="3" style="zoom:50%;" />
 
   - Unit Test
 
-    <img src="/Users/davidjiang/Library/CloudStorage/OneDrive-Personal/HKPolyU/3 Strengthening Year/Sem 1/COMP3211 - Software Engineering/Project/img/4.png" alt="4" style="zoom:48%;" />
+    <img src="./img/4.png" alt="4" style="zoom:48%;" />
 
-    <img src="/Users/davidjiang/Library/CloudStorage/OneDrive-Personal/HKPolyU/3 Strengthening Year/Sem 1/COMP3211 - Software Engineering/Project/img/5.png" alt="5" style="zoom:41%;" />
+    <img src="./img/5.png" alt="5" style="zoom:41%;" />
 
 ## File Database Design
 

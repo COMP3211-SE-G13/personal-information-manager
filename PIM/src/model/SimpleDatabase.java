@@ -2,6 +2,7 @@ package model;
 
 import java.io.*;
 import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -522,6 +523,66 @@ public class SimpleDatabase {
         return newResult;
     }
 
+    public static String[][] searchByTime(String fileName, String time, String operator) throws IOException {
+        List<String[]> results = new ArrayList<>();
+        String[][] data = get(fileName);
+        int timeColumnIndex = findTimeColumnIndex(fileName);
+
+        for (String[] row : data) {
+            if (compareTime(row[timeColumnIndex], time, operator)) {
+                results.add(row);
+            }
+        }
+
+        return results.toArray(new String[0][]);
+    }
+
+    private static boolean compareTime(String rowTime, String compareTime, String operator) {
+        switch (operator) {
+            case "<":
+                return rowTime.compareTo(compareTime) < 0;
+            case ">":
+                return rowTime.compareTo(compareTime) > 0;
+            case "=":
+                return rowTime.compareTo(compareTime) == 0;
+            default:
+                return false;
+        }
+    }
+
+    private static int findTimeColumnIndex(String fileName) {
+        // Return the index of the column containing the time based on the file name
+        // This method should be implemented according to the specific structure of each CSV file
+        if (fileName.contains("events")) {
+            return 4; // Replace with the actual index of 'eventStartTime' in your events CSV
+        } else if (fileName.contains("tasks")) {
+            return 4; // Replace with the actual index of 'taskDDL' in your tasks CSV
+        }
+        // ... Add additional else if blocks for other file types as needed
+
+        // If the file name does not match any known type, return -1 or throw an exception
+        return -1;
+    }
+
+    public static String[][] searchWithLogic(String fileName, String[][] conditions) throws IOException {
+        List<String[]> results = new ArrayList<>();
+        String[][] data = get(fileName);
+
+        for (String[] row : data) {
+            if (evaluateConditions(row, conditions)) {
+                results.add(row);
+            }
+        }
+
+        return results.toArray(new String[0][]);
+    }
+
+    private static boolean evaluateConditions(String[] row, String[][] conditions) {
+        boolean result = false;
+        // Implement logic to evaluate conditions with &&, ||, and !
+        // This will involve parsing the conditions array and applying the logical operations
+        return result;
+    }
 
 }
 

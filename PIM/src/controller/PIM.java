@@ -102,18 +102,28 @@ public class PIM {
                 }
             } else if (noteChoice.equals("3")) {
                 view.Pages.searchPage();
-                Input.setInput();
-                String keyword = Input.getInput();
-                String[][] searchResult = Search.search(keyword, "notes");
-                System.out.println("Search Result:");
-                System.out.println("----------------------------------------------------------------");
-                for (String[] x : searchResult) {
-                    for (int i = 2; i < x.length; i++) {
-                        System.out.print(x[i] + " ");
+                if (Input.getInput().equals("1")) {
+                    view.Pages.searchByKeywordPage();
+                    Input.setInput();
+                    String keyword = Input.getInput();
+                    String[][] searchResult = Search.search(keyword, "notes");
+                    System.out.println("Search Result:");
+                    System.out.println("----------------------------------------------------------------");
+                    for (String[] x : searchResult) {
+                        for (int i = 2; i < x.length; i++) {
+                            System.out.print(x[i] + " ");
+                        }
+                        System.out.println();
                     }
                     System.out.println();
+                } else if (Input.getInput().equals("2")) {
+                    view.Pages.searchByDatePage();
+                } else if (Input.getInput().equals("3")) {
+                    view.Pages.searchWithOperatorPage();
+                } else if (Input.getInput().equals("-1")) {
+                    break;
                 }
-                System.out.println();
+
             } else if (noteChoice.equals("4")) {
                 view.Pages.updatePage();
                 Input.setInput();

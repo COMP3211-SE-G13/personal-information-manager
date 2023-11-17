@@ -943,7 +943,7 @@ public class ProjectTest {
     public void test6_5() {
         try {
             if (Auth.login("david", "1234")) {
-                Search.searchByTime("=2023-11-27", "events");
+                Search.searchByDate("= 2023-11-27", "events");
 
                 String dataString = "";
                 String resultString = "";
@@ -986,7 +986,7 @@ public class ProjectTest {
                 Event eventInfo4 = new Event("Event 4", "2023-12-01", "1", "Join the event 4");
                 Event.createEvent(eventInfo4);
 
-                Search.searchByTime("=2023-11-27", "events");
+                Search.searchByDate("= 2023-11-27", "events");
 
                 String dataString = "";
                 String resultString = "";

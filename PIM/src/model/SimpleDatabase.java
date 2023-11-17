@@ -525,146 +525,61 @@ public class SimpleDatabase {
         return newResult;
     }
 
-    /**
-     * Compares two dates as strings.
-     * @param date1: date string in format "yyyy-MM-dd"
-     * @param date2: date string in format "yyyy-MM-dd"
-     * @return positive if date1 is after date2, negative if before, 0 if equal
-     */
-    private static int compareDates(String date1, String date2) {
-        return date1.compareTo(date2);
-    }
+
+
 
     /**
-     * Search by time function
-     * @param timeComparison: the comparison string such as ">1"
-     * @param type: the type of search, either "tasks" or "events"
+     * Search by date in a specific file type with given comparison operator
+     * @param inputDate: the input date string with format "operator yyyy-mm-dd"
+     * @param type: the type of file to search in (notes, tasks, events)
      * @return the search result
      */
-    public static String[][] searchByTime(String timeComparison, String type) {
-        String[][] results = new String[0][]; // Store the search result
-        // We should get the current date string in "yyyy-MM-dd" format from somewhere. Assuming we have it:
-        String currentDateString = getCurrentDateString();
+    public static String[][] searchByDate(String inputDate, String type) {
+        String[][] results = new String[0][];  // store the search results
 
-        // Determine the file type
-        String fileName = type.equals("tasks") ? "tasks.csv" : "events.csv";
-
-        try {
-            String[][] data = SimpleDatabase.get(fileName);
-            for (String[] row : data) {
-                String dateToCompare = row[4]; // Due date for tasks or event start for events
-
-                // For events, we need to calculate the future date based on the alarm
-                if (type.equals("events")) {
-                    String alarmDaysString = row[5]; // Alarm days as a string, e.g., "1", "2"
-                    dateToCompare = calculateFutureDate(currentDateString, alarmDaysString);
-                }
-
-                int comparisonResult = compareDates(dateToCompare, currentDateString);
-
-                // Parse the operator and the value from the timeComparison string, e.g., ">1"
-                char operator = timeComparison.charAt(0);
-                int value = Integer.parseInt(timeComparison.substring(1));
-
-                boolean matchesCondition = false;
-                switch (operator) {
-                    case '>':
-                        matchesCondition = comparisonResult > value;
-                        break;
-                    case '<':
-                        matchesCondition = comparisonResult < value;
-                        break;
-                    case '=':
-                        matchesCondition = comparisonResult == value;
-                        break;
-                }
-
-                if (matchesCondition) {
-                    results = appendToResults(results, row);
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Error during search by time: " + e.getMessage());
+        // Check if the input date is valid
+        if (inputDate == null || (!inputDate.startsWith("> ") && !inputDate.startsWith("< ") && !inputDate.startsWith("= "))) {
+            System.out.println("Invalid date format or operator.");
+            return results;
         }
-        return results;
-    }
+        char operator = inputDate.charAt(0);
+        String dateString = inputDate.substring(2);
 
-    /**
-     * Calculates a future date based on the current date and the number of days to add.
-     * @param currentDate: the current date string in format "yyyy-MM-dd"
-     * @param daysToAddStr: the number of days to add as a string
-     * @return the future date string in format "yyyy-MM-dd"
-     */
-    private static String calculateFutureDate(String currentDate, String daysToAddStr) {
-        // Simple implementation, needs to be replaced with actual date calculation logic
-        int daysToAdd = Integer.parseInt(daysToAddStr);
-        // Split the current date into parts
-        String[] parts = currentDate.split("-");
-        int year = Integer.parseInt(parts[0]);
-        int month = Integer.parseInt(parts[1]);
-        int day = Integer.parseInt(parts[2]) + daysToAdd;
-
-        // Adjust the day and month values, simple logic not considering different month lengths or leap years
-        while (day > 30) {
-            month++;
-            day -= 30;
-        }
-        while (month > 12) {
-            year++;
-            month -= 12;
-        }
-
-        // Format the new date into a string and return
-        return String.format("%04d-%02d-%02d", year, month, day);
-    }
-
-    /**
-     * Gets the current date string in "yyyy-MM-dd" format.
-     * @return the current date string
-     */
-    private static String getCurrentDateString() {
-        LocalDate currentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return currentDate.format(formatter);
-    }
-
-    /**
-     * Search with logical connectors function
-     * @param conditionA: first condition result set
-     * @param conditionB: second condition result set
-     * @param connector: logical connector (&&, ||, !)
-     * @return the search result
-     */
-    public static String[][] searchWithLogicalConnectors(String[][] conditionA, String[][] conditionB, String connector) {
-        Set<String[]> resultSet = new HashSet<>();
-
-        // Convert arrays to sets for easier manipulation
-        Set<String[]> setA = new HashSet<>(Arrays.asList(conditionA));
-        Set<String[]> setB = new HashSet<>(Arrays.asList(conditionB));
-
-        switch (connector) {
-            case "&&":
-                // Intersection - records that are present in both sets
-                setA.retainAll(setB);
-                resultSet = setA;
+        // Determine the file to search based on the type
+        String fileType;
+        switch (type.toLowerCase()) {
+            case "notes":
+                fileType = "notes.csv";
                 break;
-            case "||":
-                // Union - all records from both sets
-                setA.addAll(setB);
-                resultSet = setA;
+            case "tasks":
+                fileType = "tasks.csv";
                 break;
-            case "!":
-                // Difference - records from conditionA and not in conditionB
-                setA.removeAll(setB);
-                resultSet = setA;
+            case "events":
+                fileType = "events.csv";
                 break;
             default:
-                throw new IllegalArgumentException("Invalid logical connector: " + connector);
+                System.out.println("Invalid type provided.");
+                return results;
         }
 
-        // Convert the result set back to a 2D array
-        String[][] resultArray = new String[resultSet.size()][];
-        return resultSet.toArray(resultArray);
+        try {
+            String[][] data = SimpleDatabase.get(fileType);
+            for (int i = 0; i < data.length; i++) {
+                String dateInFile = data[i][4];  // Assuming the date is at the 5th column (index 4)
+
+                // Compare dates as strings based on the operator
+                int comparison = dateInFile.compareTo(dateString);
+                if ((operator == '>' && comparison > 0) ||
+                        (operator == '<' && comparison < 0) ||
+                        (operator == '=' && comparison == 0)) {
+                    results = appendToResults(results, data[i]);
+                }
+            }
+            return results;
+        } catch (Exception e) {
+            System.out.println("Error occurred during searching.");
+            return new String[0][];
+        }
     }
 
 

@@ -1,7 +1,6 @@
-import model.SimpleDatabase;
 import controller.*;
-
-import org.junit.jupiter.api.Test;
+import model.SimpleDatabase;
+import org.junit.Test;
 
 import java.time.LocalDate;
 
@@ -748,9 +747,9 @@ public class ProjectTest {
     public void test6_1() {
         try {
             if (Auth.login("david", "1234")) {
-                Event eventInfo1 = new Event("Event 1", "2023-11-20 19:30:00", "5h", "Join the event 1");
-                Event eventInfo2 = new Event("Event 3", "2023-11-30 14:00:00", "10h", "Join the event 3");
-                Event eventInfo3 = new Event("Event 2", "2023-11-25 10:00:00", "24h", "Join the event 2");
+                Event eventInfo1 = new Event("Event 1", "2023-11-20", "1", "Join the event 1");
+                Event eventInfo2 = new Event("Event 3", "2023-11-30", "2", "Join the event 3");
+                Event eventInfo3 = new Event("Event 2", "2023-11-25", "1", "Join the event 2");
 
                 Event.createEvent(eventInfo1);
                 Event.createEvent(eventInfo2);
@@ -764,11 +763,11 @@ public class ProjectTest {
                 String[][] dataGetAll = Event.getAllEvents();
                 String[] dataGetOne = Event.getOneEvent("3");
                 String[][] resultGetAll = new String[][]{
-                        {"1", "2", "Event 1", "Join the event 1", "2023-11-20 19:30:00", "5h"},
-                        {"3", "2", "Event 2", "Join the event 2", "2023-11-25 10:00:00", "24h"},
-                        {"2", "2", "Event 3", "Join the event 3", "2023-11-30 14:00:00", "10h"}
+                        {"1", "2", "Event 1", "Join the event 1", "2023-11-20", "1"},
+                        {"3", "2", "Event 2", "Join the event 2", "2023-11-25", "1"},
+                        {"2", "2", "Event 3", "Join the event 3", "2023-11-30", "2"}
                 };
-                String[][] resultGetOne = new String[][]{{"3", "2", "Event 2", "Join the event 2", "2023-11-25 10:00:00", "24h"}};
+                String[][] resultGetOne = new String[][]{{"3", "2", "Event 2", "Join the event 2", "2023-11-25", "1"}};
 
                 StringBuilder dataGetAllTempStr = new StringBuilder();
                 for (int i = 0; i < dataGetAll.length - 1; i++) {
@@ -814,14 +813,14 @@ public class ProjectTest {
     }
 
     /**
-     * Test Update task from Todo Controller
+     * Test Update Event from Event Controller
      */
     @Test
     public void test6_2() {
         try {
             if (Auth.login("david", "1234")) {
 
-                Event eventInfo = new Event("Event 1", "2023-11-27 19:30:00", "5h", "Join the event 1");
+                Event eventInfo = new Event("Event 1", "2023-11-27", "1", "Join the event 1");
                 Event.modifyEvent(eventInfo, "1");
 
                 String dataString = "";
@@ -829,7 +828,7 @@ public class ProjectTest {
 
                 String[] data = Event.getOneEvent("1");
 
-                String[] result = new String[]{"1", "2", "Event 1", "Join the event 1", "2023-11-27 19:30:00", "5h"};
+                String[] result = new String[]{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length; i++) {
@@ -868,7 +867,7 @@ public class ProjectTest {
                 String resultString = "";
 
                 String[][] data = Event.getAllEvents();
-                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27 19:30:00", "5h"}};
+                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -898,7 +897,7 @@ public class ProjectTest {
     }
 
     /**
-     * Test Search task from Todo Controller
+     * Test Search events from Event Controller
      */
     @Test
     public void test6_4() {
@@ -911,7 +910,90 @@ public class ProjectTest {
 
                 String[][] data = Event.getAllEvents();
 
-                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27 19:30:00", "5h"}};
+                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"}};
+
+                StringBuilder dataTempStr = new StringBuilder();
+                for (int i = 0; i < data.length - 1; i++) {
+                    for (int j = 0; j < data[i].length; j++) {
+                        dataTempStr.append(data[i][j]);
+                    }
+                }
+                dataString = dataTempStr.toString();
+
+                StringBuilder resultTempStr = new StringBuilder();
+                for (int i = 0; i < result.length; i++) {
+                    for (int j = 0; j < result[i].length; j++) {
+                        resultTempStr.append(result[i][j]);
+                    }
+                }
+                resultString = resultTempStr.toString();
+
+                assertEquals(resultString, dataString);
+            } else {
+                fail();
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
+
+    @Test
+    public void test6_5() {
+        try {
+            if (Auth.login("david", "1234")) {
+                Search.searchByTime("=2023-11-27", "events");
+
+                String dataString = "";
+                String resultString = "";
+
+                String[][] data = Event.getAllEvents();
+
+                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"}};
+
+                StringBuilder dataTempStr = new StringBuilder();
+                for (int i = 0; i < data.length - 1; i++) {
+                    for (int j = 0; j < data[i].length; j++) {
+                        dataTempStr.append(data[i][j]);
+                    }
+                }
+                dataString = dataTempStr.toString();
+
+                StringBuilder resultTempStr = new StringBuilder();
+                for (int i = 0; i < result.length; i++) {
+                    for (int j = 0; j < result[i].length; j++) {
+                        resultTempStr.append(result[i][j]);
+                    }
+                }
+                resultString = resultTempStr.toString();
+
+                assertEquals(resultString, dataString);
+            } else {
+                fail();
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
+
+    @Test
+    public void test6_6() {
+        try {
+            if (Auth.login("david", "1234")) {
+                Event eventInfo4 = new Event("Event 4", "2023-12-01", "1", "Join the event 4");
+                Event.createEvent(eventInfo4);
+
+                Search.searchByTime("=2023-11-27", "events");
+
+                String dataString = "";
+                String resultString = "";
+
+                String[][] data = Event.getAllEvents();
+
+                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {

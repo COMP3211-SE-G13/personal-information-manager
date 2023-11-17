@@ -393,14 +393,44 @@ public class Pages {
         System.out.println("Event ID       Event Title");
     }
 
-
     /**
-     * The Search Page
+     * The search Page
      */
     public static void searchPage() {
         System.out.println("----------------------------------------------------------------");
         System.out.println("                           Search");
+        System.out.println("- [1] Search by Keyword");
+        System.out.println("- [2] Search with Operator");
+        System.out.println("- [3] Search by Date");
+        System.out.print(">>> Please select the above options x in [x]: ");
+    }
+
+
+    /**
+     * The search By Keyword Page
+     */
+    public static void searchByKeywordPage() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("                           Search");
         System.out.print("Searching Keyword(s): ");
+    }
+
+    /**
+     * The search By Keyword Page
+     */
+    public static void searchWithOperatorPage() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("                           Search");
+        System.out.print("Searching with operator(s): ");
+    }
+
+    /**
+     * The search By Keyword Page
+     */
+    public static void searchByDatePage() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("                           Search");
+        System.out.print("Searching by Date: ");
     }
 
     /**

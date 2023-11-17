@@ -11,26 +11,25 @@ public class Search {
         return model.SimpleDatabase.search(keyword, type);
     }
 
-    public String[][] handleSearchByTimeRequest(String fileName, String time, String operator) {
-        try {
-            return model.SimpleDatabase.searchByTime(fileName, time, operator);
-        } catch (Exception e) {
-            System.err.println(e);
-            return new String[0][];
-        }
+    /**
+     * Search by time (Public)
+     * @param timeComparison: the comparison string such as ">1"
+     * @param type:           the type of search, either "tasks" or "events"
+     * @return the result of search
+     */
+    public static String[][] searchByTime(String timeComparison, String type) {
+        return model.SimpleDatabase.searchByTime(timeComparison, type);
     }
 
-    public String[][] handleSearchWithLogicRequest(String fileName, String[][] conditions) {
-        try {
-            return model.SimpleDatabase.searchWithLogic(fileName, conditions);
-        } catch (Exception e) {
-            System.err.println(e);
-            return new String[0][];
-        }
+    /**
+     * Search with logical connectors (Public)
+     * @param conditionA: first condition result set
+     * @param conditionB: second condition result set
+     * @param connector:  logical connector (&&, ||, !)
+     * @return the result of search
+     */
+    public static String[][] searchWithLogicalConnectors(String[][] conditionA, String[][] conditionB, String connector) {
+        return model.SimpleDatabase.searchWithLogicalConnectors(conditionA, conditionB, connector);
     }
-//    public static String[][] search(String type, String keyword, String timeCompare, String compareTime){
-//        return model.SimpleDatabase.search(type, keyword, timeCompare, compareTime);
-//
-//    }
 
 }

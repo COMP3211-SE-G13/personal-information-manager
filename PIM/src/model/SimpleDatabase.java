@@ -2,8 +2,10 @@ package model;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 /**
@@ -523,66 +525,149 @@ public class SimpleDatabase {
         return newResult;
     }
 
-    public static String[][] searchByTime(String fileName, String time, String operator) throws IOException {
-        List<String[]> results = new ArrayList<>();
-        String[][] data = get(fileName);
-        int timeColumnIndex = findTimeColumnIndex(fileName);
-
-        for (String[] row : data) {
-            if (compareTime(row[timeColumnIndex], time, operator)) {
-                results.add(row);
-            }
-        }
-
-        return results.toArray(new String[0][]);
+    /**
+     * Compares two dates as strings.
+     * @param date1: date string in format "yyyy-MM-dd"
+     * @param date2: date string in format "yyyy-MM-dd"
+     * @return positive if date1 is after date2, negative if before, 0 if equal
+     */
+    private static int compareDates(String date1, String date2) {
+        return date1.compareTo(date2);
     }
 
-    private static boolean compareTime(String rowTime, String compareTime, String operator) {
-        switch (operator) {
-            case "<":
-                return rowTime.compareTo(compareTime) < 0;
-            case ">":
-                return rowTime.compareTo(compareTime) > 0;
-            case "=":
-                return rowTime.compareTo(compareTime) == 0;
+    /**
+     * Search by time function
+     * @param timeComparison: the comparison string such as ">1"
+     * @param type: the type of search, either "tasks" or "events"
+     * @return the search result
+     */
+    public static String[][] searchByTime(String timeComparison, String type) {
+        String[][] results = new String[0][]; // Store the search result
+        // We should get the current date string in "yyyy-MM-dd" format from somewhere. Assuming we have it:
+        String currentDateString = getCurrentDateString();
+
+        // Determine the file type
+        String fileName = type.equals("tasks") ? "tasks.csv" : "events.csv";
+
+        try {
+            String[][] data = SimpleDatabase.get(fileName);
+            for (String[] row : data) {
+                String dateToCompare = row[4]; // Due date for tasks or event start for events
+
+                // For events, we need to calculate the future date based on the alarm
+                if (type.equals("events")) {
+                    String alarmDaysString = row[5]; // Alarm days as a string, e.g., "1", "2"
+                    dateToCompare = calculateFutureDate(currentDateString, alarmDaysString);
+                }
+
+                int comparisonResult = compareDates(dateToCompare, currentDateString);
+
+                // Parse the operator and the value from the timeComparison string, e.g., ">1"
+                char operator = timeComparison.charAt(0);
+                int value = Integer.parseInt(timeComparison.substring(1));
+
+                boolean matchesCondition = false;
+                switch (operator) {
+                    case '>':
+                        matchesCondition = comparisonResult > value;
+                        break;
+                    case '<':
+                        matchesCondition = comparisonResult < value;
+                        break;
+                    case '=':
+                        matchesCondition = comparisonResult == value;
+                        break;
+                }
+
+                if (matchesCondition) {
+                    results = appendToResults(results, row);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error during search by time: " + e.getMessage());
+        }
+        return results;
+    }
+
+    /**
+     * Calculates a future date based on the current date and the number of days to add.
+     * @param currentDate: the current date string in format "yyyy-MM-dd"
+     * @param daysToAddStr: the number of days to add as a string
+     * @return the future date string in format "yyyy-MM-dd"
+     */
+    private static String calculateFutureDate(String currentDate, String daysToAddStr) {
+        // Simple implementation, needs to be replaced with actual date calculation logic
+        int daysToAdd = Integer.parseInt(daysToAddStr);
+        // Split the current date into parts
+        String[] parts = currentDate.split("-");
+        int year = Integer.parseInt(parts[0]);
+        int month = Integer.parseInt(parts[1]);
+        int day = Integer.parseInt(parts[2]) + daysToAdd;
+
+        // Adjust the day and month values, simple logic not considering different month lengths or leap years
+        while (day > 30) {
+            month++;
+            day -= 30;
+        }
+        while (month > 12) {
+            year++;
+            month -= 12;
+        }
+
+        // Format the new date into a string and return
+        return String.format("%04d-%02d-%02d", year, month, day);
+    }
+
+    /**
+     * Gets the current date string in "yyyy-MM-dd" format.
+     * @return the current date string
+     */
+    private static String getCurrentDateString() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return currentDate.format(formatter);
+    }
+
+    /**
+     * Search with logical connectors function
+     * @param conditionA: first condition result set
+     * @param conditionB: second condition result set
+     * @param connector: logical connector (&&, ||, !)
+     * @return the search result
+     */
+    public static String[][] searchWithLogicalConnectors(String[][] conditionA, String[][] conditionB, String connector) {
+        Set<String[]> resultSet = new HashSet<>();
+
+        // Convert arrays to sets for easier manipulation
+        Set<String[]> setA = new HashSet<>(Arrays.asList(conditionA));
+        Set<String[]> setB = new HashSet<>(Arrays.asList(conditionB));
+
+        switch (connector) {
+            case "&&":
+                // Intersection - records that are present in both sets
+                setA.retainAll(setB);
+                resultSet = setA;
+                break;
+            case "||":
+                // Union - all records from both sets
+                setA.addAll(setB);
+                resultSet = setA;
+                break;
+            case "!":
+                // Difference - records from conditionA and not in conditionB
+                setA.removeAll(setB);
+                resultSet = setA;
+                break;
             default:
-                return false;
-        }
-    }
-
-    private static int findTimeColumnIndex(String fileName) {
-        // Return the index of the column containing the time based on the file name
-        // This method should be implemented according to the specific structure of each CSV file
-        if (fileName.contains("events")) {
-            return 4; // Replace with the actual index of 'eventStartTime' in your events CSV
-        } else if (fileName.contains("tasks")) {
-            return 4; // Replace with the actual index of 'taskDDL' in your tasks CSV
-        }
-        // ... Add additional else if blocks for other file types as needed
-
-        // If the file name does not match any known type, return -1 or throw an exception
-        return -1;
-    }
-
-    public static String[][] searchWithLogic(String fileName, String[][] conditions) throws IOException {
-        List<String[]> results = new ArrayList<>();
-        String[][] data = get(fileName);
-
-        for (String[] row : data) {
-            if (evaluateConditions(row, conditions)) {
-                results.add(row);
-            }
+                throw new IllegalArgumentException("Invalid logical connector: " + connector);
         }
 
-        return results.toArray(new String[0][]);
+        // Convert the result set back to a 2D array
+        String[][] resultArray = new String[resultSet.size()][];
+        return resultSet.toArray(resultArray);
     }
 
-    private static boolean evaluateConditions(String[] row, String[][] conditions) {
-        boolean result = false;
-        // Implement logic to evaluate conditions with &&, ||, and !
-        // This will involve parsing the conditions array and applying the logical operations
-        return result;
-    }
+
 
 }
 

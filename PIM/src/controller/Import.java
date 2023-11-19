@@ -12,7 +12,7 @@ public class Import {
      */
     public static void importPIMFile(String fileName) {
         try {
-            File file = new File("./src/input/" + fileName);
+            File file = new File("./src/pim_file/" + fileName);
             load(file);
         } catch (Exception e) {
             System.out.println("Error: " + e);

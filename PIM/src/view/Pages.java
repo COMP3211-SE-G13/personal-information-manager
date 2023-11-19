@@ -448,7 +448,7 @@ public class Pages {
         System.out.println("----------------------------------------------------------------");
         System.out.println("                            Remove");
         System.out.println();
-        System.out.println("- [1] Choose which one to remove");
+        System.out.println("- [1 or ID] Choose which one to remove");
         System.out.println("- [-1] Back to last page");
         System.out.print(">>> Please select the above options x in [x]: ");
     }

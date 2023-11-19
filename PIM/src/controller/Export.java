@@ -4,6 +4,9 @@ import model.SimpleDatabase;
 
 import java.io.FileWriter;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Export {
     /**
@@ -23,8 +26,11 @@ public class Export {
             String[][] eventsData = SimpleDatabase.get(events);
             String[][] tasksData = SimpleDatabase.get(tasks);
 
-            String exportBaseUrl = "./src/output/";
-            File file = new File(exportBaseUrl + userName + "_export.pim");
+            String exportBaseUrl = "./src/pim_file";
+            File dir = new File(exportBaseUrl);
+            if (!dir.exists()) dir.mkdirs();
+
+            File file = new File(exportBaseUrl + "/" + userName + "_export.pim");
 
             if (!file.exists()) {
                 file.createNewFile();

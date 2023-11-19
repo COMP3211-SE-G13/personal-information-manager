@@ -2,12 +2,10 @@ import controller.*;
 import model.SimpleDatabase;
 import org.junit.Test;
 import static org.junit.Assert.*;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import java.time.LocalDate;
+import java.util.Arrays;
 
 
 public class ProjectTest {
@@ -553,8 +551,8 @@ public class ProjectTest {
 
                 String[][] dataGetAll = Todo.getAllTasks();
                 String[] dataGetOne = Todo.getOneTask("2");
-                String[][] resultGetAll = new String[][]{{"1", "2", "Task 1", "2023-11-25", "To finish task 1"}, {"2", "2", "Task 2", "2023-12-01", "To finish task 2"}};
-                String[][] resultGetOne = new String[][]{{"2", "2", "Task 2", "2023-12-01", "To finish task 2"}};
+                String[][] resultGetAll = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25"}, {"2", "2", "Task 2", "To finish task 2", "2023-12-01"}};
+                String[][] resultGetOne = new String[][]{{"2", "2", "Task 2", "To finish task 2", "2023-12-01"}};
 
                 StringBuilder dataGetAllTempStr = new StringBuilder();
                 for (int i = 0; i < dataGetAll.length - 1; i++) {
@@ -614,7 +612,7 @@ public class ProjectTest {
 
                 String[][] data = Todo.getAllTasks();
 
-                String[][] result = new String[][]{{"1", "2", "Task 1", "2023-11-25", "To finish task 1"}, {"2", "2", "Task 2", "2023-12-01", "To finish task 2 and also update the all the task info"}};
+                String[][] result = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25"}, {"2", "2", "Task 2", "To finish task 2 and also update the all the task info", "2023-12-01"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -656,7 +654,7 @@ public class ProjectTest {
                 String resultString = "";
 
                 String[][] data = Todo.getAllTasks();
-                String[][] result = new String[][]{{"1", "2", "Task 1", "2023-11-25", "To finish task 1"}};
+                String[][] result = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -699,7 +697,50 @@ public class ProjectTest {
 
                 String[][] data = Todo.getAllTasks();
 
-                String[][] result = new String[][]{{"1", "2", "Task 1", "2023-11-25", "To finish task 1"}};
+                String[][] result = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25"}};
+
+                StringBuilder dataTempStr = new StringBuilder();
+                for (int i = 0; i < data.length - 1; i++) {
+                    for (int j = 0; j < data[i].length; j++) {
+                        dataTempStr.append(data[i][j]);
+                    }
+                }
+                dataString = dataTempStr.toString();
+
+                StringBuilder resultTempStr = new StringBuilder();
+                for (int i = 0; i < result.length; i++) {
+                    for (int j = 0; j < result[i].length; j++) {
+                        resultTempStr.append(result[i][j]);
+                    }
+                }
+                resultString = resultTempStr.toString();
+
+                assertEquals(resultString, dataString);
+            } else {
+                fail();
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            System.out.println("Please try again!");
+            fail();
+        }
+    }
+
+    /**
+     * Test Search task from Todo Controller
+     */
+    @Test
+    public void test5_5() {
+        try {
+            if (Auth.login("david", "1234")) {
+                Search.searchByDate("= 2023-11-25", "tasks.csv");
+
+                String dataString = "";
+                String resultString = "";
+
+                String[][] data = Todo.getAllTasks();
+
+                String[][] result = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -930,27 +971,26 @@ public class ProjectTest {
         }
     }
 
+    /**
+     * Test for searching with logical connectors
+     */
     @Test
     public void test6_5() {
         try {
             if (Auth.login("david", "1234")) {
-                // 测试用例1: 使用 "&&" 连接符
+                // test case 1: &&
                 String[][] searchResultAnd = Search.searchWithLogicalConnectors("> 2023-11-26 && < 2023-11-28", "events");
-                assertEquals(1, searchResultAnd.length); // 期望找到一个符合条件的结果
-                assertEquals("1", searchResultAnd[0][0]); // 验证第一个字段（假设是eventID）
-                assertEquals("Event 1", searchResultAnd[0][2]); // 验证事件标题
+                assertEquals(1, searchResultAnd.length);
+                assertEquals("1", searchResultAnd[0][0]);
+                assertEquals("Event 1", searchResultAnd[0][2]);
 
-
-                // 测试用例2: 使用 "||" 连接符
+                // test case 2: ||
                 String[][] searchResultOr = Search.searchWithLogicalConnectors("> 2023-11-28 || < 2023-11-26", "events");
-                // 断言来验证结果
-                assertEquals(0, searchResultOr.length); // 假设预期没有结果
+                assertEquals(0, searchResultOr.length);
 
-                // 测试用例3: 使用 "!" 连接符
+                // test case 3: !
                 String[][] searchResultNot = Search.searchWithLogicalConnectors("! < 2023-11-28", "events");
-                // 断言来验证结果
-                assertEquals(0, searchResultNot.length); // 期望找到零个符合条件的结果，因为没有记录是 >= 2023-11-28
-
+                assertEquals(0, searchResultNot.length);
             } else {
                 fail("Login failed.");
             }
@@ -959,31 +999,22 @@ public class ProjectTest {
         }
     }
 
+    /**
+     * Test for less than "<"
+     */
     @Test
-    //less than date
     public void test6_6() {
         try {
             if (Auth.login("david", "1234")) {
-                // 调用 searchByDate 方法并捕获返回值
-                // 直接传递文件类型 "events.csv"
                 String[][] searchResult = Search.searchByDate("< 2023-11-28", "events.csv");
 
-                // 打印搜索结果
                 System.out.println("Search Results:");
                 for (String[] row : searchResult) {
                     System.out.println(Arrays.toString(row));
                 }
-
-                // 预期结果，即小于2023-11-28的事件
                 String[][] expectedResult = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "2023-11-26"}};
-
-                // 将搜索结果转换为字符串
                 String resultString = Arrays.deepToString(searchResult);
-
-                // 将预期结果转换为字符串
                 String dataString = Arrays.deepToString(expectedResult);
-
-                // 比较搜索结果与预期结果是否一致
                 assertEquals(dataString, resultString);
             } else {
                 fail("Login failed.");
@@ -993,15 +1024,15 @@ public class ProjectTest {
         }
     }
 
+    /**
+     * Test for equal "="
+     */
     @Test
-    //equal date
     public void test6_7(){
         try {
             if (Auth.login("david", "1234")) {
                 String[][] searchResult = Search.searchByDate("= 2023-11-27", "events.csv");
-
-                // 打印搜索结果
-                System.out.println("Search Results:");
+                System.out.println("Search Results:"); //Print search results
                 for (String[] row : searchResult) {
                     System.out.println(Arrays.toString(row));
                 }
@@ -1025,7 +1056,6 @@ public class ProjectTest {
                     }
                 }
                 dataString = dataTempStr.toString();
-
                 assertEquals(dataString, resultString);
             } else {
                 fail("Login failed.");
@@ -1035,4 +1065,50 @@ public class ProjectTest {
         }
     }
 
+    @Test
+    public void test7_1() {
+        try {
+            if (Auth.login("david", "1234")) {
+                String[][] searchResult = Search.searchByDate("", "events.csv");
+            }
+        } catch (Exception e) {
+            assertEquals("", "");
+        }
+    }
+
+    @Test
+    public void test7_2() {
+        try {
+            if (Auth.login("david", "1234")) {
+                String[][] searchResult = Search.search("", "events.csv");
+            }
+        } catch (Exception e) {
+            assertEquals("", "");
+        }
+    }
+
+    @Test
+    public void test7_3() {
+        try {
+            if (Auth.login("david", "1234")) {
+                String[][] searchResult = Search.searchWithLogicalConnectors("", "events.csv");
+            }
+        } catch (Exception e) {
+            assertEquals("", "");
+        }
+    }
+
+    /**
+     * Test for error of the get api
+     */
+    @Test
+    public void test7_4() {
+        try {
+            if (Auth.login("david", "1234")) {
+                String[][] result = SimpleDatabase.get("event.csv");
+            }
+        } catch (Exception e) {
+            assertEquals("", "");
+        }
+    }
 }

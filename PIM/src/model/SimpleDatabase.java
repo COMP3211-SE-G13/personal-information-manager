@@ -407,60 +407,6 @@ public class SimpleDatabase {
         }
     }
 
-//    /**
-//     * Update Data Function
-//     * @param file: The file that want to update
-//     * @param classDataAttribute: The first row (class data attribute name) of the file
-//     * @param contactID: The class ID
-//     * @param newData: The new data that needs to replace the original data
-//     * @exception IOException: The IOException for File operation
-//     */
-//    private void update(File file, String[] classDataAttribute, int contactID, String[] newData) throws IOException {
-//        if (!file.exists() || !file.isFile() || !file.canWrite()) {
-//            System.out.println("Cannot modify the file.");
-//            return;
-//        }
-//        String[][] data = new String[1+get(file.getName()).length][];
-//        data[0] = classDataAttribute;
-//
-//        System.arraycopy(get(file.getName()), 0, data, 1, get(file.getName()).length - 1);
-//        String id = Integer.toString(contactID);
-//
-//        // Find the row with the matching ID
-//        int rowIndex = -1;
-//        for (int i = 1; i < data.length; i++) {
-//            if (data[i][0].equals(id)) {
-//                rowIndex = i;
-//                break;
-//            }
-//        }
-//
-//        // If a matching row is found, update the data
-//        if (rowIndex != -1) {
-//            String[] values;
-//            values = newData;
-//            data[rowIndex] = values;
-//        }
-//
-//        // Write the updated data back to the file
-//        try (FileWriter fileWriter = new FileWriter(file)) {
-//
-//            for (int i = 0; i < data.length - 1; i++) {
-//                StringBuilder line = new StringBuilder();
-//                for (int j = 0; j < data[i].length; j++) {
-//                    line.append(data[i][j]);
-//                    if (j != data[i].length - 1) {
-//                        line.append(',');
-//                    }
-//                }
-//                line.append("\n");
-//                fileWriter.append(line.toString());
-//            }
-//            fileWriter.close();
-//        } catch (IOException ex) {
-//            System.out.println("Error reading or writing the file.");
-//        }
-//    }
 
     private void updateSorting(File file, int contactID, String[] newData, String fileName) throws IOException {
         if (!file.exists() || !file.isFile() || !file.canWrite()) {
@@ -599,6 +545,13 @@ public class SimpleDatabase {
         }
     }
 
+
+    /**
+     * Search by keyword in a specific file type.
+     * @param keyword: the keyword to search for.
+     * @param fileType: the type of file to search in (notes, tasks, events).
+     * @return: the search result as a String[][]
+     */
     public static String[][] search(String keyword, String fileType) {
         String[][] results = new String[0][];
         if (keyword == null || fileType == null) {
@@ -626,7 +579,6 @@ public class SimpleDatabase {
             System.out.println("Error occurred during searching.");
             return new String[0][];
         }
-
         return results;
     }
 
@@ -664,29 +616,49 @@ public class SimpleDatabase {
 
         try {
             String[][] data = SimpleDatabase.get(fileType);
-            for (int i = 0; i < data.length; i++) {
-                if (data[i] == null || data[i][4] == null) {
-                    continue;
+            for (String[] row : data) {
+                if (row == null) continue;
+
+                boolean match = false; //choose the list number by checking the file type
+                //if the file is events, then check list 5 and 6
+                if ("events.csv".equals(fileType) && row.length >= 6) {
+                    match = matchDate(operator, row[4], dateString) || matchDate(operator, row[5], dateString);
+                } else if (row.length >= 5) { //else only check list 5
+                    match = matchDate(operator, row[4], dateString);
                 }
 
-                int comparison = data[i][4].compareTo(dateString);
-                if ((operator == '>' && comparison > 0) ||
-                        (operator == '<' && comparison < 0) ||
-                        (operator == '=' && comparison == 0)) {
-                    results = appendToResults(results, data[i]);
+                if (match) {
+                    results = appendToResults(results, row);
                 }
             }
-//            if (results.length == 0) {
-//                System.out.println("No matching files found for the query.");
-//            }
-//            return results;
+            return results;
         } catch (Exception e) {
-            System.out.println("Error occurred during searching: " + e.getMessage());
+            //System.out.println("Error occurred during searching: " + e.getMessage());
             return new String[0][];
         }
-        return results;
     }
 
+    /**
+     * Check if the date in the file matches the given date string.
+     * @param operator: the comparison operator
+     * @param dateInFile: the date string in the file
+     * @param dateString: the date string to compare with
+     * @return: true if the date in the file matches the given date string
+     */
+    private static boolean matchDate(char operator, String dateInFile, String dateString) {
+        if (dateInFile == null) return false;
+        int comparison = dateInFile.compareTo(dateString);
+        return (operator == '>' && comparison > 0) ||
+                (operator == '<' && comparison < 0) ||
+                (operator == '=' && comparison == 0);
+    }
+
+    /**
+     * Search with logical connectors
+     * @param expression: the expression to search for
+     * @param type: the type of file to search in (notes, tasks, events)
+     * @return: the search result as a String[][]
+     */
     public static String[][] searchWithLogicalConnectors(String expression, String type) {
         String fileType = determineFileType(type);
         if (fileType == null) {
@@ -714,14 +686,15 @@ public class SimpleDatabase {
         } else {
             combinedResults = performSearch(expression, fileType);
         }
-        // 打印搜索结果
-        //System.out.println("Search results for '" + expression + "': \n" + Arrays.deepToString(combinedResults));
-//        if (combinedResults.length == 0 && !expression.isEmpty()) {
-//            System.out.println("No matching files found for the query.");
-//        }
         return combinedResults;
     }
 
+    /**
+     * Perform search on the given query and file type.
+     * @param query: the query to search for
+     * @param fileType: the type of file to search in (notes, tasks, events)
+     * @return: the search result as a String[][]
+     */
     private static String[][] performSearch(String query, String fileType) {
         //System.out.println("Performing search with query: " + query + " on fileType: " + fileType);
         if (query.matches("([<>]=?|=)\\s\\d{4}-\\d{2}-\\d{2}")) {
@@ -731,12 +704,17 @@ public class SimpleDatabase {
             //System.out.println("Detected date query. Operator: " + operator + ", Date: " + date);
             return searchByDate(operator + " " + date, fileType);
         } else {
-            // 其他类型的查询
+            // Other queries are treated as keyword search
             //System.out.println("Performing keyword search.");
             return search(query, fileType);
         }
     }
 
+    /**
+     * Determine the file type from the given type string.
+     * @param type: the type string
+     * @return: the file name of the file type
+     */
     private static String determineFileType(String type) {
         switch (type.toLowerCase()) {
             case "contacts":
@@ -752,6 +730,12 @@ public class SimpleDatabase {
         }
     }
 
+    /**
+     * Find the difference between two results.
+     * @param results: the results to find the difference of
+     * @param fileType: the type of file to search in (notes, tasks, events)
+     * @return: the difference of the two results
+     */
     private static String[][] negateResults(String[][] results, String fileType) {
         try {
             Set<List<String>> resultSet = Arrays.stream(results)
@@ -762,7 +746,7 @@ public class SimpleDatabase {
             return Arrays.stream(fullData)
                     .filter(row -> {
                         if (row == null || Arrays.stream(row).allMatch(Objects::isNull)) {
-                            // 跳过全 null 行
+                            // Skip null rows
                             return false;
                         }
                         return !resultSet.contains(Arrays.asList(row));
@@ -773,8 +757,12 @@ public class SimpleDatabase {
         }
     }
 
-
-    // 找到两个结果集的交集
+    /**
+     * Find the intersection of two results.
+     * @param results1: the first result
+     * @param results2: the second result
+     * @return: the intersection of the two results
+     */
     private static String[][] intersectResults(String[][] results1, String[][] results2) {
         Set<String[]> resultSet = new HashSet<>();
         Set<Set<String>> set1 = Arrays.stream(results1)
@@ -791,7 +779,13 @@ public class SimpleDatabase {
         return resultSet.toArray(new String[0][]);
     }
 
-    // 合并两个结果集
+
+    /**
+     * Find the union of two results.
+     * @param results1: the first result
+     * @param results2: the second result
+     * @return: the union of the two results
+     */
     private static String[][] unionResults(String[][] results1, String[][] results2) {
         Set<List<String>> resultSet = new LinkedHashSet<>();
         Stream.concat(Arrays.stream(results1), Arrays.stream(results2))

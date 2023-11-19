@@ -18,6 +18,10 @@ public class Search {
         return model.SimpleDatabase.searchByDate(inputDate, type);
     }
 
+    public static  String [][] searchWithLogicalConnectors(String expression, String type){
+        return model.SimpleDatabase.searchWithLogicalConnectors(expression, type);
+    }
+
 
 
 }

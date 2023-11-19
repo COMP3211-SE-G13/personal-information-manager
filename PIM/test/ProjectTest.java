@@ -1,11 +1,18 @@
 import controller.*;
 import model.SimpleDatabase;
 import org.junit.Test;
+//
+import static org.junit.Assert.*;
+
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+
+//import static org.junit.jupiter.api.Assertions.*;
+
 
 public class ProjectTest {
 
@@ -71,7 +78,8 @@ public class ProjectTest {
     @Test
     public void test1_3() {
         try {
-            int id = SimpleDatabase.getNewID("users");
+            int id = SimpleDatabase.getNewID("user.csv");
+            assertEquals(2, id);
         } catch (Exception e) {
             System.out.println("Error: " + e);
             System.out.println("Please try again!");
@@ -299,39 +307,26 @@ public class ProjectTest {
     public void test3_4() {
         try {
             if (Auth.login("david", "1234")) {
-                Search.search("Tom", "contacts");
+                // 执行搜索操作
+                String[][] searchResults = Search.search("Tom", "contacts.csv");
 
-                String dataString = "";
-                String resultString = "";
-
-                String[][] data = Contact.getAllContacts();
-
-                String[][] result = new String[][]{{"1", "2", "Tom", "Smith", "31283425", "HK Street"}};
-
-                StringBuilder dataTempStr = new StringBuilder();
-                for (int i = 0; i < data.length - 1; i++) {
-                    for (int j = 0; j < data[i].length; j++) {
-                        dataTempStr.append(data[i][j]);
-                    }
+                // 打印搜索结果的长度和内容
+                System.out.println("Search results length: " + searchResults.length);
+                for (String[] row : searchResults) {
+                    System.out.println("Row found: " + Arrays.toString(row));
                 }
-                dataString = dataTempStr.toString();
 
-                StringBuilder resultTempStr = new StringBuilder();
-                for (int i = 0; i < result.length; i++) {
-                    for (int j = 0; j < result[i].length; j++) {
-                        resultTempStr.append(result[i][j]);
-                    }
-                }
-                resultString = resultTempStr.toString();
+                // 预期结果
+                String[][] expectedResults = new String[][]{{"1", "2", "Tom", "Smith", "31283425", "HK Street"}};
 
-                assertEquals(resultString, dataString);
+                // 检查搜索结果是否与预期一致
+                assertTrue("Search results do not match expected results.", Arrays.deepEquals(expectedResults, searchResults));
             } else {
-                fail();
+                fail("Login failed.");
             }
         } catch (Exception e) {
-            System.out.println("Error: " + e);
-            System.out.println("Please try again!");
-            fail();
+            e.printStackTrace();
+            fail("Test failed due to an exception: " + e.getMessage());
         }
     }
 
@@ -502,7 +497,7 @@ public class ProjectTest {
     public void test4_4() {
         try {
             if (Auth.login("david", "1234")) {
-                Search.search("hello world", "notes");
+                Search.search("hello world", "notes.csv");
 
                 String dataString = "";
                 String resultString = "";
@@ -701,7 +696,7 @@ public class ProjectTest {
     public void test5_4() {
         try {
             if (Auth.login("david", "1234")) {
-                Search.search("task 1", "tasks");
+                Search.search("task 1", "tasks.csv");
 
                 String dataString = "";
                 String resultString = "";
@@ -903,7 +898,7 @@ public class ProjectTest {
     public void test6_4() {
         try {
             if (Auth.login("david", "1234")) {
-                Search.search("event 1", "events");
+                Search.search("event 1", "events.csv");
 
                 String dataString = "";
                 String resultString = "";
@@ -943,82 +938,104 @@ public class ProjectTest {
     public void test6_5() {
         try {
             if (Auth.login("david", "1234")) {
-                Search.searchByDate("= 2023-11-27", "events");
+                // 测试用例1: 使用 "&&" 连接符
+                String[][] searchResultAnd = Search.searchWithLogicalConnectors("> 2023-11-26 && < 2023-11-28", "events");
+                assertEquals(1, searchResultAnd.length); // 期望找到一个符合条件的结果
+                assertEquals("1", searchResultAnd[0][0]); // 验证第一个字段（假设是eventID）
+                assertEquals("Event 1", searchResultAnd[0][2]); // 验证事件标题
 
-                String dataString = "";
-                String resultString = "";
 
-                String[][] data = Event.getAllEvents();
+                // 测试用例2: 使用 "||" 连接符
+                String[][] searchResultOr = Search.searchWithLogicalConnectors("> 2023-11-28 || < 2023-11-26", "events");
+                // 断言来验证结果
+                assertEquals(0, searchResultOr.length); // 假设预期没有结果
 
-                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"}};
+                // 测试用例3: 使用 "!" 连接符
+                String[][] searchResultNot = Search.searchWithLogicalConnectors("! < 2023-11-28", "events");
+                // 断言来验证结果
+                assertEquals(0, searchResultNot.length); // 期望找到零个符合条件的结果，因为没有记录是 >= 2023-11-28
 
-                StringBuilder dataTempStr = new StringBuilder();
-                for (int i = 0; i < data.length - 1; i++) {
-                    for (int j = 0; j < data[i].length; j++) {
-                        dataTempStr.append(data[i][j]);
-                    }
-                }
-                dataString = dataTempStr.toString();
-
-                StringBuilder resultTempStr = new StringBuilder();
-                for (int i = 0; i < result.length; i++) {
-                    for (int j = 0; j < result[i].length; j++) {
-                        resultTempStr.append(result[i][j]);
-                    }
-                }
-                resultString = resultTempStr.toString();
-
-                assertEquals(resultString, dataString);
             } else {
-                fail();
+                fail("Login failed.");
             }
         } catch (Exception e) {
-            System.out.println("Error: " + e);
-            System.out.println("Please try again!");
-            fail();
+            fail("Test failed due to an exception: " + e.getMessage());
         }
     }
 
     @Test
+    //less than date
     public void test6_6() {
         try {
             if (Auth.login("david", "1234")) {
-                Event eventInfo4 = new Event("Event 4", "2023-12-01", "1", "Join the event 4");
-                Event.createEvent(eventInfo4);
+                // 调用 searchByDate 方法并捕获返回值
+                // 直接传递文件类型 "events.csv"
+                String[][] searchResult = Search.searchByDate("< 2023-11-28", "events.csv");
 
-                Search.searchByDate("= 2023-11-27", "events");
-
-                String dataString = "";
-                String resultString = "";
-
-                String[][] data = Event.getAllEvents();
-
-                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"}};
-
-                StringBuilder dataTempStr = new StringBuilder();
-                for (int i = 0; i < data.length - 1; i++) {
-                    for (int j = 0; j < data[i].length; j++) {
-                        dataTempStr.append(data[i][j]);
-                    }
+                // 打印搜索结果
+                System.out.println("Search Results:");
+                for (String[] row : searchResult) {
+                    System.out.println(Arrays.toString(row));
                 }
-                dataString = dataTempStr.toString();
+
+                // 预期结果，即小于2023-11-28的事件
+                String[][] expectedResult = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"}};
+
+                // 将搜索结果转换为字符串
+                String resultString = Arrays.deepToString(searchResult);
+
+                // 将预期结果转换为字符串
+                String dataString = Arrays.deepToString(expectedResult);
+
+                // 比较搜索结果与预期结果是否一致
+                assertEquals(dataString, resultString);
+            } else {
+                fail("Login failed.");
+            }
+        } catch (Exception e) {
+            fail("Test failed due to an exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    //equal date
+    public void test6_7(){
+        try {
+            if (Auth.login("david", "1234")) {
+                String[][] searchResult = Search.searchByDate("= 2023-11-27", "events.csv");
+
+                // 打印搜索结果
+                System.out.println("Search Results:");
+                for (String[] row : searchResult) {
+                    System.out.println(Arrays.toString(row));
+                }
+
+                String resultString = "";
+                String[][] expectedResult = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"}};
 
                 StringBuilder resultTempStr = new StringBuilder();
-                for (int i = 0; i < result.length; i++) {
-                    for (int j = 0; j < result[i].length; j++) {
-                        resultTempStr.append(result[i][j]);
+                for (int i = 0; i < searchResult.length; i++) {
+                    for (int j = 0; j < searchResult[i].length; j++) {
+                        resultTempStr.append(searchResult[i][j]);
                     }
                 }
                 resultString = resultTempStr.toString();
 
-                assertEquals(resultString, dataString);
+                String dataString = "";
+                StringBuilder dataTempStr = new StringBuilder();
+                for (int i = 0; i < expectedResult.length; i++) {
+                    for (int j = 0; j < expectedResult[i].length; j++) {
+                        dataTempStr.append(expectedResult[i][j]);
+                    }
+                }
+                dataString = dataTempStr.toString();
+
+                assertEquals(dataString, resultString);
             } else {
-                fail();
+                fail("Login failed.");
             }
         } catch (Exception e) {
-            System.out.println("Error: " + e);
-            System.out.println("Please try again!");
-            fail();
+            fail("Test failed due to an exception: " + e.getMessage());
         }
     }
 

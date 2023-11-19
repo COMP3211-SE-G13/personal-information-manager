@@ -6,6 +6,8 @@ import java.util.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -468,49 +470,39 @@ public class SimpleDatabase {
         }
     }
 
-    /**
-     * Search Function
-     * @param keyword: the keyword of search
-     * @param type: the type of search
-     * @return the search result
-     */
-    public static String[][] search(String keyword, String type){
-        String[][] results = new String[0][];   //store the search result
-
-        if (type.equals("notes")){
-            type = "notes.csv";
-        } else if (type.equals("contacts")){
-            type = "contacts.csv";
-        } else if (type.equals("tasks")){
-            type = "tasks.csv";
-        } else if (type.equals("events")){
-            type = "events.csv";
-        } else {
-            System.out.println("Invalid type provided.");
+    public static String[][] search(String keyword, String fileType) {
+        String[][] results = new String[0][];
+        if (keyword == null || fileType == null) {
+            System.out.println("Invalid keyword or file type provided.");
             return results;
         }
 
-        if (keyword == null || type == null) {
-            System.out.println("Invalid keyword provided.");
-            return results;
-        }
-
-        try{
-            String[][] data = SimpleDatabase.get(type);
-            for (int j = 0; j < data.length - 1; j++){
-                for(int k = 0; k < data[j].length; k++){
-                    if (data[j][k].toLowerCase().contains(keyword.toLowerCase())){
+        try {
+            String[][] data = SimpleDatabase.get(fileType);
+            System.out.println("Searching in data of length: " + data.length);
+            for (int j = 0; j < data.length; j++) {
+                for (int k = 0; k < data[j].length; k++) {
+                    if (data[j][k] != null && data[j][k].toLowerCase().contains(keyword.toLowerCase())) {
+                        System.out.println("Match found in row: " + j + ", col: " + k + ", value: " + data[j][k]);
                         results = appendToResults(results, data[j]);
                         break;
                     }
                 }
             }
-            return results;
-        } catch (Exception e){
-            System.out.println("Please try again!");
+            System.out.println("Search results length: " + results.length);
+            for (String[] row : results) {
+                System.out.println(Arrays.toString(row));
+            }
+        } catch (Exception e) {
+            System.out.println("Error occurred during searching.");
+            e.printStackTrace();
             return new String[0][];
         }
+
+        return results;
     }
+
+
 
     /**
      * Append the new row to the results
@@ -526,60 +518,173 @@ public class SimpleDatabase {
     }
 
 
-
-
     /**
-     * Search by date in a specific file type with given comparison operator
-     * @param inputDate: the input date string with format "operator yyyy-mm-dd"
-     * @param type: the type of file to search in (notes, tasks, events)
-     * @return the search result
+     * Search by date in a specific file type with given comparison operator.
+     *
+     * @param inputDate: the input date string with format "operator yyyy-mm-dd".
+     * @param fileType:  the type of file to search in (notes, tasks, events).
+     * @return the search result as a String[][].
      */
-    public static String[][] searchByDate(String inputDate, String type) {
-        String[][] results = new String[0][];  // store the search results
+    public static String[][] searchByDate(String inputDate, String fileType) {
+        String[][] results = new String[0][];
 
-        // Check if the input date is valid
         if (inputDate == null || (!inputDate.startsWith("> ") && !inputDate.startsWith("< ") && !inputDate.startsWith("= "))) {
             System.out.println("Invalid date format or operator.");
             return results;
         }
+
         char operator = inputDate.charAt(0);
         String dateString = inputDate.substring(2);
-
-        // Determine the file to search based on the type
-        String fileType;
-        switch (type.toLowerCase()) {
-            case "notes":
-                fileType = "notes.csv";
-                break;
-            case "tasks":
-                fileType = "tasks.csv";
-                break;
-            case "events":
-                fileType = "events.csv";
-                break;
-            default:
-                System.out.println("Invalid type provided.");
-                return results;
-        }
 
         try {
             String[][] data = SimpleDatabase.get(fileType);
             for (int i = 0; i < data.length; i++) {
-                String dateInFile = data[i][4];  // Assuming the date is at the 5th column (index 4)
+                if (data[i] == null || data[i][4] == null) {
+                    continue;
+                }
 
-                // Compare dates as strings based on the operator
-                int comparison = dateInFile.compareTo(dateString);
+                int comparison = data[i][4].compareTo(dateString);
                 if ((operator == '>' && comparison > 0) ||
                         (operator == '<' && comparison < 0) ||
                         (operator == '=' && comparison == 0)) {
                     results = appendToResults(results, data[i]);
                 }
             }
-            return results;
+
+//            if (results.length == 0) {
+//                System.out.println("No matching files found for the query.");
+//            }
+//            return results;
         } catch (Exception e) {
-            System.out.println("Error occurred during searching.");
+            System.out.println("Error occurred during searching: " + e.getMessage());
             return new String[0][];
         }
+        return results;
+
+    }
+
+    public static String[][] searchWithLogicalConnectors(String expression, String type) {
+        String fileType = determineFileType(type);
+        if (fileType == null) {
+            return new String[0][];
+        }
+
+        String[][] combinedResults = new String[0][];
+        String[] parts;
+        if (expression.contains("&&")) {
+            parts = expression.split("&&");
+            String[][] results1 = performSearch(parts[0].trim(), fileType);
+            String[][] results2 = performSearch(parts[1].trim(), fileType);
+            combinedResults = intersectResults(results1, results2);
+        } else if (expression.contains("||")) {
+            parts = expression.split("\\|\\|");
+            String[][] results1 = performSearch(parts[0].trim(), fileType);
+            String[][] results2 = performSearch(parts[1].trim(), fileType);
+            combinedResults = unionResults(results1, results2);
+        } else if (expression.contains("!")) {
+            parts = new String[]{expression.replace("!", "").trim()};
+            combinedResults = negateResults(performSearch(parts[0], fileType), fileType);
+        } else {
+            combinedResults = performSearch(expression, fileType);
+        }
+
+        // 打印搜索结果
+        System.out.println("Search results for '" + expression + "': \n" + Arrays.deepToString(combinedResults));
+
+//        if (combinedResults.length == 0 && !expression.isEmpty()) {
+//            System.out.println("No matching files found for the query.");
+//        }
+
+        return combinedResults;
+    }
+
+
+    private static String[][] performSearch(String query, String fileType) {
+        if (query.matches("([<>]=?)\\s\\d{4}-\\d{2}-\\d{2}")) {
+            String[] parts = query.split("\\s");
+            if (parts.length == 2) {
+                String operator = parts[0];
+                String date = parts[1];
+                return searchByDate(operator + " " + date, fileType);
+            }
+        } else {
+            return search(query, fileType);
+        }
+        return new String[0][];
+    }
+
+
+    private static String determineFileType(String type) {
+        switch (type.toLowerCase()) {
+            case "contacts":
+                return "contacts.csv";
+            case "notes":
+                return "notes.csv";
+            case "tasks":
+                return "tasks.csv";
+            case "events":
+                return "events.csv";
+            default:
+                return null;
+        }
+    }
+
+
+
+    // 反转结果
+    private static String[][] negateResults(String[][] results, String fileType) {
+        try {
+            Set<List<String>> resultSet = Arrays.stream(results)
+                    .map(Arrays::asList)
+                    .collect(Collectors.toSet());
+            String[][] fullData = SimpleDatabase.get(fileType);
+
+            return Arrays.stream(fullData)
+                    .filter(row -> {
+                        if (row == null || Arrays.stream(row).allMatch(Objects::isNull)) {
+                            // 跳过全 null 行
+                            return false;
+                        }
+                        boolean isIncluded = !resultSet.contains(Arrays.asList(row));
+                        if (isIncluded) {
+                            System.out.println("Including row: " + Arrays.toString(row));
+                        }
+                        return isIncluded;
+                    })
+                    .toArray(String[][]::new);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new String[0][];
+        }
+    }
+
+    // 找到两个结果集的交集
+    private static String[][] intersectResults(String[][] results1, String[][] results2) {
+        Set<String[]> resultSet = new HashSet<>();
+        Set<Set<String>> set1 = Arrays.stream(results1)
+                .map(Arrays::asList)
+                .map(HashSet::new)
+                .collect(Collectors.toSet());
+
+        for (String[] row : results2) {
+            Set<String> rowSet = new HashSet<>(Arrays.asList(row));
+            if (set1.contains(rowSet)) {
+                resultSet.add(row);
+            }
+        }
+        return resultSet.toArray(new String[0][]);
+    }
+
+    // 合并两个结果集
+    private static String[][] unionResults(String[][] results1, String[][] results2) {
+        Set<Set<String>> resultSet = new HashSet<>();
+        Stream.concat(Arrays.stream(results1), Arrays.stream(results2))
+                .map(Arrays::asList)
+                .map(HashSet::new)
+                .forEach(resultSet::add);
+        return resultSet.stream()
+                .map(set -> set.toArray(new String[0]))
+                .toArray(String[][]::new);
     }
 
 

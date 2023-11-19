@@ -1065,6 +1065,9 @@ public class ProjectTest {
         }
     }
 
+    /**
+     * Test for greater than ">"
+     */
     @Test
     public void test7_1() {
         try {
@@ -1076,6 +1079,9 @@ public class ProjectTest {
         }
     }
 
+    /**
+     * Test for error of the search api
+     */
     @Test
     public void test7_2() {
         try {
@@ -1087,6 +1093,9 @@ public class ProjectTest {
         }
     }
 
+    /**
+     * Test for error of the searchWithLogicalConnectors api
+     */
     @Test
     public void test7_3() {
         try {

@@ -473,7 +473,7 @@ public class Pages {
         System.out.println("                           Import");
         System.out.println();
         System.out.println("The file(s) in Input folder:");
-        ArrayList<String> files = Import.getFilsInInputFolder();
+        ArrayList<String> files = Import.getFilesInInputFolder();
         for (String file : files) {
             System.out.println(file);
         }

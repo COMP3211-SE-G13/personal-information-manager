@@ -69,11 +69,6 @@ public class SimpleDatabase {
     public SimpleDatabase(String mode, String fileName, int classID, String[] data) throws IOException {
         String fileBasePath = "./src/data/";
 
-//        String[] contactsData = {"contactID", "userID", "firstName", "lastName", "phoneNumber", "address"};
-//        String[] notesData = {"noteID", "userID", "noteTitle", "noteContent", "lastModifyTime"};
-//        String[] tasksData = {"taskID", "userID", "taskTitle", "taskDescription", "taskDDL"};
-//        String[] eventsData = {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"};
-
         if (mode.equals("update")) {
             File file = new File(fileBasePath + fileName);
             updateSorting(file, classID, data, fileName);
@@ -105,6 +100,10 @@ public class SimpleDatabase {
     public static void isDatabaseExist() {
         String dirPath = "./src/data/";
         String[] dataFilePaths = {dirPath + "user.csv", dirPath + "contacts.csv", dirPath + "notes.csv", dirPath + "tasks.csv", dirPath + "events.csv"};
+
+        String PimFileBaseUrl = "./src/pim_file";
+        File dir = new File(PimFileBaseUrl);
+        if (!dir.exists()) dir.mkdirs();
 
         for (String filePath : dataFilePaths) {
             if (!Files.exists(Path.of(filePath))) {

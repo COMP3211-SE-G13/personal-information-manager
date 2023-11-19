@@ -12,7 +12,11 @@ public class Import {
      */
     public static void importPIMFile(String fileName) {
         try {
-            File file = new File("./src/pim_file/" + fileName);
+            String BaseUrl = "./src/pim_file";
+            File dir = new File(BaseUrl);
+            if (!dir.exists()) dir.mkdirs();
+
+            File file = new File(BaseUrl + "/" + fileName);
             load(file);
         } catch (Exception e) {
             System.out.println("Error: " + e);
@@ -21,13 +25,13 @@ public class Import {
     }
 
     /**
-     * getFilsInInputFolder Function
+     * getFilesInInputFolder Function
      * @return the arraylist of files
      */
-    public static ArrayList<String> getFilsInInputFolder() {
+    public static ArrayList<String> getFilesInInputFolder() {
         ArrayList<String> files = new ArrayList<>();
 
-        File folder = new File("./src/input/");
+        File folder = new File("./src/pim_file/");
         File[] listOfFiles = folder.listFiles();
         System.out.println("Files in input folder:");
         for (File file : listOfFiles) {

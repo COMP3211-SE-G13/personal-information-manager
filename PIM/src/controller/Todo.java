@@ -49,7 +49,7 @@ public class Todo {
             int taskId = SimpleDatabase.getNewID("tasks.csv");
 
             String[][] newTaskData = {
-                    {String.valueOf(taskId), String.valueOf(userId), taskName, taskDDL, taskDescription}
+                    {String.valueOf(taskId), String.valueOf(userId), taskName, taskDescription, taskDDL}
             };
 
             new SimpleDatabase("insert", "tasks.csv", newTaskData);
@@ -118,7 +118,7 @@ public class Todo {
      */
     private static void modifyTask(String taskName, String taskDDL, String taskDescription, int userId, String taskId) {
         try {
-            String[] dataWantUpdate = {taskId, String.valueOf(userId), taskName, taskDDL, taskDescription};
+            String[] dataWantUpdate = {taskId, String.valueOf(userId), taskName, taskDescription, taskDDL};
 
             new SimpleDatabase("update", "tasks.csv", Integer.parseInt(taskId), dataWantUpdate);
             System.out.println("Update Successfully!");

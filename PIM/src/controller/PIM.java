@@ -299,7 +299,7 @@ public class PIM {
                     view.Pages.searchWithLogicConnectorPage();
                     Input.setInput();
                     String logicStatement = Input.getInput();
-                    String[][] searchResult = Search.searchWithLogicalConnectors(logicStatement, "contacts.csv");
+                    String[][] searchResult = Search.searchWithLogicalConnectors(logicStatement, "contacts");
                     System.out.println("Search Result:");
                     System.out.println("----------------------------------------------------------------");
                     for (String[] x : searchResult) {
@@ -478,7 +478,7 @@ public class PIM {
                     view.Pages.searchWithLogicConnectorPage();
                     Input.setInput();
                     String logicStatement = Input.getInput();
-                    String[][] searchResult = Search.searchWithLogicalConnectors(logicStatement, "notes");
+                    String[][] searchResult = Search.searchWithLogicalConnectors(logicStatement, "tasks");
                     System.out.println("Search Result:");
                     System.out.println("----------------------------------------------------------------");
                     for (String[] x : searchResult) {
@@ -658,7 +658,7 @@ public class PIM {
                     view.Pages.searchWithLogicConnectorPage();
                     Input.setInput();
                     String logicStatement = Input.getInput();
-                    String[][] searchResult = Search.searchWithLogicalConnectors(logicStatement, "events.csv");
+                    String[][] searchResult = Search.searchWithLogicalConnectors(logicStatement, "events");
                     System.out.println("Search Result:");
                     System.out.println("----------------------------------------------------------------");
                     for (String[] x : searchResult) {

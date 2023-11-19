@@ -23,6 +23,11 @@ import java.util.stream.Stream;
  *  - get(String fileName)
  */
 public class SimpleDatabase {
+    String[] contactsData = {"contactID", "userID", "firstName", "lastName", "phoneNumber", "address"};
+    String[] notesData = {"noteID", "userID", "noteTitle", "noteContent", "lastModifyTime"};
+    String[] tasksData = {"taskID", "userID", "taskTitle", "taskDescription", "taskDDL"};
+    String[] eventsData = {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"};
+
     /**
      * SimpleDatabase Contract
      * Operations:
@@ -35,18 +40,18 @@ public class SimpleDatabase {
     public SimpleDatabase(String mode, String fileName, String[][] data) throws IOException {
         String fileBasePath = "./src/data/";
 
-        String[] eventsData = {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"};
+        //String[] eventsData = {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"};
 
         if (mode.equals("insert")) {
             isDatabaseExist();
             File file = new File(fileBasePath + fileName);
-            if (fileName.contains("events")) {
-                String[][] tempFile = get(fileName);
-                FileWriter fileWriter = new FileWriter(file);
-                insertEvent(fileWriter, data, eventsData, tempFile);
-            } else {
+            if (fileName.contains("user")) {
                 FileWriter fileWriter = new FileWriter(file, true);
                 insert(fileWriter, data);
+            } else {
+                String[][] tempFile = get(fileName);
+                FileWriter fileWriter = new FileWriter(file);
+                insertSorting(fileWriter, data, tempFile, fileName);
             }
         }
     }
@@ -64,23 +69,14 @@ public class SimpleDatabase {
     public SimpleDatabase(String mode, String fileName, int classID, String[] data) throws IOException {
         String fileBasePath = "./src/data/";
 
-        String[] userData = {"userID", "userName", "password"};
-        String[] contactsData = {"contactID", "userID", "firstName", "lastName", "phoneNumber", "address"};
-        String[] notesData = {"noteID", "userID", "noteTitle", "noteContent", "lastModifyTime"};
-        String[] tasksData = {"taskID", "userID", "taskTitle", "taskDescription", "taskDDL"};
-        String[] eventsData = {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"};
+//        String[] contactsData = {"contactID", "userID", "firstName", "lastName", "phoneNumber", "address"};
+//        String[] notesData = {"noteID", "userID", "noteTitle", "noteContent", "lastModifyTime"};
+//        String[] tasksData = {"taskID", "userID", "taskTitle", "taskDescription", "taskDDL"};
+//        String[] eventsData = {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"};
 
         if (mode.equals("update")) {
             File file = new File(fileBasePath + fileName);
-            if (fileName.contains("contacts")) {
-                update(file, contactsData, classID, data);
-            } else if (fileName.contains("notes")) {
-                update(file, notesData, classID, data);
-            } else if (fileName.contains("tasks")) {
-                update(file, tasksData, classID, data);
-            } else if (fileName.contains("events")) {
-                updateEvent(file, eventsData, classID, data);
-            }
+            updateSorting(file, classID, data, fileName);
         }
     }
 
@@ -303,16 +299,23 @@ public class SimpleDatabase {
      * Insert Event Data Function in sequence of user ID and event start time
      * @param fileWriter: The filewrite pointer of the file
      * @param newData: The data of the user want to insert
-     * @param classDataAttribute: The first row (class data attribute name) of the file
      * @param tempFile: The data get from the file by using the get function
      * @exception Exception: The Exception for File operation
      */
-    private void insertEvent(FileWriter fileWriter, String[][] newData, String[] classDataAttribute, String[][] tempFile) {
+    private void insertSorting(FileWriter fileWriter, String[][] newData, String[][] tempFile, String fileName) {
         try{
             // If the csv file is null, we write the new data into the csv file directly.
             if (tempFile.length <= 1) {
                 String[][] tempData = new String[1+newData.length][];
-                tempData[0] = classDataAttribute;
+                if (fileName.contains("contacts")) {
+                    tempData[0] = contactsData;
+                } else if (fileName.contains("notes")) {
+                    tempData[0] = notesData;
+                } else if (fileName.contains("tasks")) {
+                    tempData[0] = tasksData;
+                } else if (fileName.contains("events")) {
+                    tempData[0] = eventsData;
+                }
 
                 System.arraycopy(newData, 0, tempData, 1, newData.length);
                 for (String[] data : tempData) {
@@ -330,23 +333,49 @@ public class SimpleDatabase {
             } else {
                 int newIndex = 0;
                 // Find the index of the new data (which position in the csv file it should be inserted)
-                for (int i = 0; i < tempFile.length - 1; i++) {
-                    if (Integer.parseInt(newData[0][1]) < Integer.parseInt(tempFile[i][1])) {
-                        break;
-                    } else if (Integer.parseInt(newData[0][1]) == Integer.parseInt(tempFile[i][1])) {
-                        if (newData[0][4].compareTo(tempFile[i][4]) <= 0){
+                if (fileName.contains("contacts")) {
+                    for (int i = 0; i < tempFile.length - 1; i++) {
+                        if (Integer.parseInt(newData[0][1]) < Integer.parseInt(tempFile[i][1])) {
                             break;
                         } else {
                             newIndex++;
                         }
-                    } else {
-                        newIndex++;
+                    }
+                } else {
+                    for (int i = 0; i < tempFile.length - 1; i++) {
+                        if (Integer.parseInt(newData[0][1]) < Integer.parseInt(tempFile[i][1])) {
+                            break;
+                        } else if (Integer.parseInt(newData[0][1]) == Integer.parseInt(tempFile[i][1])) {
+                            if (fileName.contains("notes")) {
+                                if (newData[0][4].compareTo(tempFile[i][4]) > 0) {
+                                    break;
+                                } else {
+                                    newIndex++;
+                                }
+                            } else {
+                                if (newData[0][4].compareTo(tempFile[i][4]) < 0) {
+                                    break;
+                                } else {
+                                    newIndex++;
+                                }
+                            }
+                        } else {
+                            newIndex++;
+                        }
                     }
                 }
 
                 // Insert the new data into the read 2D string array
                 String[][] temp1 = new String[1+newIndex][];
-                temp1[0] = classDataAttribute;
+                if (fileName.contains("contacts")) {
+                    temp1[0] = contactsData;
+                } else if (fileName.contains("notes")) {
+                    temp1[0] = notesData;
+                } else if (fileName.contains("tasks")) {
+                    temp1[0] = tasksData;
+                } else if (fileName.contains("events")) {
+                    temp1[0] = eventsData;
+                }
                 if (newIndex > 0) {
                     System.arraycopy(tempFile, 0, temp1, 1, newIndex);
                 }
@@ -378,62 +407,62 @@ public class SimpleDatabase {
         }
     }
 
-    /**
-     * Update Data Function
-     * @param file: The file that want to update
-     * @param classDataAttribute: The first row (class data attribute name) of the file
-     * @param contactID: The class ID
-     * @param newData: The new data that needs to replace the original data
-     * @exception IOException: The IOException for File operation
-     */
-    private void update(File file, String[] classDataAttribute, int contactID, String[] newData) throws IOException {
-        if (!file.exists() || !file.isFile() || !file.canWrite()) {
-            System.out.println("Cannot modify the file.");
-            return;
-        }
-        String[][] data = new String[1+get(file.getName()).length][];
-        data[0] = classDataAttribute;
+//    /**
+//     * Update Data Function
+//     * @param file: The file that want to update
+//     * @param classDataAttribute: The first row (class data attribute name) of the file
+//     * @param contactID: The class ID
+//     * @param newData: The new data that needs to replace the original data
+//     * @exception IOException: The IOException for File operation
+//     */
+//    private void update(File file, String[] classDataAttribute, int contactID, String[] newData) throws IOException {
+//        if (!file.exists() || !file.isFile() || !file.canWrite()) {
+//            System.out.println("Cannot modify the file.");
+//            return;
+//        }
+//        String[][] data = new String[1+get(file.getName()).length][];
+//        data[0] = classDataAttribute;
+//
+//        System.arraycopy(get(file.getName()), 0, data, 1, get(file.getName()).length - 1);
+//        String id = Integer.toString(contactID);
+//
+//        // Find the row with the matching ID
+//        int rowIndex = -1;
+//        for (int i = 1; i < data.length; i++) {
+//            if (data[i][0].equals(id)) {
+//                rowIndex = i;
+//                break;
+//            }
+//        }
+//
+//        // If a matching row is found, update the data
+//        if (rowIndex != -1) {
+//            String[] values;
+//            values = newData;
+//            data[rowIndex] = values;
+//        }
+//
+//        // Write the updated data back to the file
+//        try (FileWriter fileWriter = new FileWriter(file)) {
+//
+//            for (int i = 0; i < data.length - 1; i++) {
+//                StringBuilder line = new StringBuilder();
+//                for (int j = 0; j < data[i].length; j++) {
+//                    line.append(data[i][j]);
+//                    if (j != data[i].length - 1) {
+//                        line.append(',');
+//                    }
+//                }
+//                line.append("\n");
+//                fileWriter.append(line.toString());
+//            }
+//            fileWriter.close();
+//        } catch (IOException ex) {
+//            System.out.println("Error reading or writing the file.");
+//        }
+//    }
 
-        System.arraycopy(get(file.getName()), 0, data, 1, get(file.getName()).length - 1);
-        String id = Integer.toString(contactID);
-
-        // Find the row with the matching ID
-        int rowIndex = -1;
-        for (int i = 1; i < data.length; i++) {
-            if (data[i][0].equals(id)) {
-                rowIndex = i;
-                break;
-            }
-        }
-
-        // If a matching row is found, update the data
-        if (rowIndex != -1) {
-            String[] values;
-            values = newData;
-            data[rowIndex] = values;
-        }
-
-        // Write the updated data back to the file
-        try (FileWriter fileWriter = new FileWriter(file)) {
-
-            for (int i = 0; i < data.length - 1; i++) {
-                StringBuilder line = new StringBuilder();
-                for (int j = 0; j < data[i].length; j++) {
-                    line.append(data[i][j]);
-                    if (j != data[i].length - 1) {
-                        line.append(',');
-                    }
-                }
-                line.append("\n");
-                fileWriter.append(line.toString());
-            }
-            fileWriter.close();
-        } catch (IOException ex) {
-            System.out.println("Error reading or writing the file.");
-        }
-    }
-
-    private void updateEvent(File file, String[] classDataAttribute, int contactID, String[] newData) throws IOException {
+    private void updateSorting(File file, int contactID, String[] newData, String fileName) throws IOException {
         if (!file.exists() || !file.isFile() || !file.canWrite()) {
             System.out.println("Cannot modify the file.");
             return;
@@ -458,23 +487,49 @@ public class SimpleDatabase {
         }
 
         int newIndex = 0;
-        for (int i = 0; i < tempFile.length - 1; i++) {
-            if (Integer.parseInt(newData[1]) < Integer.parseInt(tempFile[i][1])) {
-                break;
-            } else if (Integer.parseInt(newData[1]) == Integer.parseInt(tempFile[i][1])) {
-                if (newData[4].compareTo(tempFile[i][4]) <= 0){
+        if (fileName.contains("contacts")) {
+            for (int i = 0; i < tempFile.length - 1; i++) {
+                if (Integer.parseInt(newData[1]) < Integer.parseInt(tempFile[i][1])) {
                     break;
                 } else {
                     newIndex++;
                 }
-            } else {
-                newIndex++;
+            }
+        } else {
+            for (int i = 0; i < tempFile.length - 1; i++) {
+                if (Integer.parseInt(newData[1]) < Integer.parseInt(tempFile[i][1])) {
+                    break;
+                } else if (Integer.parseInt(newData[1]) == Integer.parseInt(tempFile[i][1])) {
+                    if (fileName.contains("notes")) {
+                        if (newData[4].compareTo(tempFile[i][4]) > 0) {
+                            break;
+                        } else {
+                            newIndex++;
+                        }
+                    } else {
+                        if (newData[4].compareTo(tempFile[i][4]) < 0) {
+                            break;
+                        } else {
+                            newIndex++;
+                        }
+                    }
+                } else {
+                    newIndex++;
+                }
             }
         }
 
         // Insert the new data into the read 2D string array
         String[][] temp1 = new String[1+newIndex][];
-        temp1[0] = classDataAttribute;
+        if (fileName.contains("contacts")) {
+            temp1[0] = contactsData;
+        } else if (fileName.contains("notes")) {
+            temp1[0] = notesData;
+        } else if (fileName.contains("tasks")) {
+            temp1[0] = tasksData;
+        } else if (fileName.contains("events")) {
+            temp1[0] = eventsData;
+        }
         if (newIndex > 0) {
             System.arraycopy(tempFile, 0, temp1, 1, newIndex);
         }
@@ -575,8 +630,6 @@ public class SimpleDatabase {
         return results;
     }
 
-
-
     /**
      * Append the new row to the results
      * @param results: the current results
@@ -646,7 +699,10 @@ public class SimpleDatabase {
             parts = expression.split("&&");
             String[][] results1 = performSearch(parts[0].trim(), fileType);
             String[][] results2 = performSearch(parts[1].trim(), fileType);
+//            System.out.println("Results from first part: \n" + Arrays.deepToString(results1));
+//            System.out.println("Results from second part: \n" + Arrays.deepToString(results2));
             combinedResults = intersectResults(results1, results2);
+            //System.out.println("Combined results: \n" + Arrays.deepToString(combinedResults));
         } else if (expression.contains("||")) {
             parts = expression.split("\\|\\|");
             String[][] results1 = performSearch(parts[0].trim(), fileType);
@@ -666,21 +722,20 @@ public class SimpleDatabase {
         return combinedResults;
     }
 
-
     private static String[][] performSearch(String query, String fileType) {
-        if (query.matches("([<>]=?)\\s\\d{4}-\\d{2}-\\d{2}")) {
-            String[] parts = query.split("\\s");
-            if (parts.length == 2) {
-                String operator = parts[0];
-                String date = parts[1];
-                return searchByDate(operator + " " + date, fileType);
-            }
+        //System.out.println("Performing search with query: " + query + " on fileType: " + fileType);
+        if (query.matches("([<>]=?|=)\\s\\d{4}-\\d{2}-\\d{2}")) {
+            int spaceIndex = query.indexOf(' ');
+            String operator = query.substring(0, spaceIndex).trim();
+            String date = query.substring(spaceIndex).trim();
+            //System.out.println("Detected date query. Operator: " + operator + ", Date: " + date);
+            return searchByDate(operator + " " + date, fileType);
         } else {
+            // 其他类型的查询
+            //System.out.println("Performing keyword search.");
             return search(query, fileType);
         }
-        return new String[0][];
     }
-
 
     private static String determineFileType(String type) {
         switch (type.toLowerCase()) {
@@ -697,7 +752,6 @@ public class SimpleDatabase {
         }
     }
 
-    // 反转结果
     private static String[][] negateResults(String[][] results, String fileType) {
         try {
             Set<List<String>> resultSet = Arrays.stream(results)
@@ -711,17 +765,14 @@ public class SimpleDatabase {
                             // 跳过全 null 行
                             return false;
                         }
-                        boolean isIncluded = !resultSet.contains(Arrays.asList(row));
-                        if (isIncluded) {
-                            System.out.println("Including row: " + Arrays.toString(row));
-                        }
-                        return isIncluded;
+                        return !resultSet.contains(Arrays.asList(row));
                     })
                     .toArray(String[][]::new);
         } catch (Exception e) {
             return new String[0][];
         }
     }
+
 
     // 找到两个结果集的交集
     private static String[][] intersectResults(String[][] results1, String[][] results2) {
@@ -742,13 +793,13 @@ public class SimpleDatabase {
 
     // 合并两个结果集
     private static String[][] unionResults(String[][] results1, String[][] results2) {
-        Set<Set<String>> resultSet = new HashSet<>();
+        Set<List<String>> resultSet = new LinkedHashSet<>();
         Stream.concat(Arrays.stream(results1), Arrays.stream(results2))
                 .map(Arrays::asList)
-                .map(HashSet::new)
                 .forEach(resultSet::add);
+
         return resultSet.stream()
-                .map(set -> set.toArray(new String[0]))
+                .map(list -> list.toArray(new String[0]))
                 .toArray(String[][]::new);
     }
 }

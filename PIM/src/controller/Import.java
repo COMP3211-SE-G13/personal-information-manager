@@ -138,7 +138,7 @@ public class Import {
             if (tempArray == null) {
                 continue;
             }
-            Event eventData = new Event(tempArray[2], tempArray[3], tempArray[4], tempArray[5]);
+            Event eventData = new Event(tempArray[2], tempArray[4], tempArray[5], tempArray[3]);
             Event.createEvent(eventData);
         }
 

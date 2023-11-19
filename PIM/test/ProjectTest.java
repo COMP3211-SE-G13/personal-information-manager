@@ -1,17 +1,13 @@
 import controller.*;
 import model.SimpleDatabase;
 import org.junit.Test;
-//
 import static org.junit.Assert.*;
-
 
 import java.time.LocalDate;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-
-//import static org.junit.jupiter.api.Assertions.*;
 
 
 public class ProjectTest {
@@ -742,9 +738,9 @@ public class ProjectTest {
     public void test6_1() {
         try {
             if (Auth.login("david", "1234")) {
-                Event eventInfo1 = new Event("Event 1", "2023-11-20", "1", "Join the event 1");
-                Event eventInfo2 = new Event("Event 3", "2023-11-30", "2", "Join the event 3");
-                Event eventInfo3 = new Event("Event 2", "2023-11-25", "1", "Join the event 2");
+                Event eventInfo1 = new Event("Event 1", "2023-11-20", "2023-11-19", "Join the event 1");
+                Event eventInfo2 = new Event("Event 3", "2023-11-30", "2023-11-28", "Join the event 3");
+                Event eventInfo3 = new Event("Event 2", "2023-11-25", "2023-11-24", "Join the event 2");
 
                 Event.createEvent(eventInfo1);
                 Event.createEvent(eventInfo2);
@@ -758,11 +754,11 @@ public class ProjectTest {
                 String[][] dataGetAll = Event.getAllEvents();
                 String[] dataGetOne = Event.getOneEvent("3");
                 String[][] resultGetAll = new String[][]{
-                        {"1", "2", "Event 1", "Join the event 1", "2023-11-20", "1"},
-                        {"3", "2", "Event 2", "Join the event 2", "2023-11-25", "1"},
-                        {"2", "2", "Event 3", "Join the event 3", "2023-11-30", "2"}
+                        {"1", "2", "Event 1", "Join the event 1", "2023-11-20", "2023-11-19"},
+                        {"3", "2", "Event 2", "Join the event 2", "2023-11-25", "2023-11-24"},
+                        {"2", "2", "Event 3", "Join the event 3", "2023-11-30", "2023-11-28"}
                 };
-                String[][] resultGetOne = new String[][]{{"3", "2", "Event 2", "Join the event 2", "2023-11-25", "1"}};
+                String[][] resultGetOne = new String[][]{{"3", "2", "Event 2", "Join the event 2", "2023-11-25", "2023-11-24"}};
 
                 StringBuilder dataGetAllTempStr = new StringBuilder();
                 for (int i = 0; i < dataGetAll.length - 1; i++) {
@@ -815,7 +811,7 @@ public class ProjectTest {
         try {
             if (Auth.login("david", "1234")) {
 
-                Event eventInfo = new Event("Event 1", "2023-11-27", "1", "Join the event 1");
+                Event eventInfo = new Event("Event 1", "2023-11-27", "2023-11-26", "Join the event 1");
                 Event.modifyEvent(eventInfo, "1");
 
                 String dataString = "";
@@ -823,7 +819,7 @@ public class ProjectTest {
 
                 String[] data = Event.getOneEvent("1");
 
-                String[] result = new String[]{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"};
+                String[] result = new String[]{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "2023-11-26"};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length; i++) {
@@ -862,7 +858,7 @@ public class ProjectTest {
                 String resultString = "";
 
                 String[][] data = Event.getAllEvents();
-                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"}};
+                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "2023-11-26"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -905,7 +901,7 @@ public class ProjectTest {
 
                 String[][] data = Event.getAllEvents();
 
-                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"}};
+                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "2023-11-26"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -979,7 +975,7 @@ public class ProjectTest {
                 }
 
                 // 预期结果，即小于2023-11-28的事件
-                String[][] expectedResult = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"}};
+                String[][] expectedResult = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "2023-11-26"}};
 
                 // 将搜索结果转换为字符串
                 String resultString = Arrays.deepToString(searchResult);
@@ -1011,7 +1007,7 @@ public class ProjectTest {
                 }
 
                 String resultString = "";
-                String[][] expectedResult = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "1"}};
+                String[][] expectedResult = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "2023-11-26"}};
 
                 StringBuilder resultTempStr = new StringBuilder();
                 for (int i = 0; i < searchResult.length; i++) {

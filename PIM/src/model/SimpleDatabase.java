@@ -79,7 +79,7 @@ public class SimpleDatabase {
             } else if (fileName.contains("tasks")) {
                 update(file, tasksData, classID, data);
             } else if (fileName.contains("events")) {
-                update(file, eventsData, classID, data);
+                updateEvent(file, eventsData, classID, data);
             }
         }
     }
@@ -433,6 +433,80 @@ public class SimpleDatabase {
         }
     }
 
+    private void updateEvent(File file, String[] classDataAttribute, int contactID, String[] newData) throws IOException {
+        if (!file.exists() || !file.isFile() || !file.canWrite()) {
+            System.out.println("Cannot modify the file.");
+            return;
+        }
+        String id = Integer.toString(contactID);
+
+        // Find the row with the matching ID
+        int rowIndex = -1;
+        for (int i = 0; i < get(file.getName()).length - 1; i++) {
+            if (get(file.getName())[i][0].equals(id)) {
+                rowIndex = i;
+                break;
+            }
+        }
+
+        String[][] tempFile = new String[get(file.getName()).length-1][];
+        if (rowIndex > 0) {
+            System.arraycopy(get(file.getName()), 0, tempFile, 0, rowIndex);
+        }
+        if (get(file.getName()).length-rowIndex-1 > 0) {
+            System.arraycopy(get(file.getName()), rowIndex + 1, tempFile, rowIndex, get(file.getName()).length - rowIndex - 1);
+        }
+
+        int newIndex = 0;
+        for (int i = 0; i < tempFile.length - 1; i++) {
+            if (Integer.parseInt(newData[1]) < Integer.parseInt(tempFile[i][1])) {
+                break;
+            } else if (Integer.parseInt(newData[1]) == Integer.parseInt(tempFile[i][1])) {
+                if (newData[4].compareTo(tempFile[i][4]) <= 0){
+                    break;
+                } else {
+                    newIndex++;
+                }
+            } else {
+                newIndex++;
+            }
+        }
+
+        // Insert the new data into the read 2D string array
+        String[][] temp1 = new String[1+newIndex][];
+        temp1[0] = classDataAttribute;
+        if (newIndex > 0) {
+            System.arraycopy(tempFile, 0, temp1, 1, newIndex);
+        }
+        String[][] temp2 = new String[2+newIndex][];
+        System.arraycopy(temp1, 0, temp2, 0, newIndex + 1);
+        temp2[newIndex+1] = newData;
+        //System.arraycopy(newData, 0, temp2, newIndex + 1, 1);
+        String[][] csvData = new String[2+tempFile.length][];
+        System.arraycopy(temp2, 0, csvData, 0, newIndex + 2);
+        if (newIndex < (tempFile.length - 1)) {
+            System.arraycopy(tempFile, newIndex, csvData, newIndex + 2, tempFile.length - newIndex - 1);
+        }
+
+        // Write the updated data back to the file
+        try (FileWriter fileWriter = new FileWriter(file)) {
+
+            for (int i = 0; i < csvData.length - 1; i++) {
+                StringBuilder line = new StringBuilder();
+                for (int j = 0; j < csvData[i].length; j++) {
+                    line.append(csvData[i][j]);
+                    if (j != csvData[i].length - 1) {
+                        line.append(',');
+                    }
+                }
+                line.append("\n");
+                fileWriter.append(line.toString());
+            }
+            fileWriter.close();
+        } catch (IOException ex) {
+            System.out.println("Error reading or writing the file.");
+        }
+    }
 
     /**
      * Remove Data Function
@@ -473,29 +547,28 @@ public class SimpleDatabase {
     public static String[][] search(String keyword, String fileType) {
         String[][] results = new String[0][];
         if (keyword == null || fileType == null) {
-            System.out.println("Invalid keyword or file type provided.");
+            //System.out.println("Invalid keyword or file type provided.");
             return results;
         }
 
         try {
             String[][] data = SimpleDatabase.get(fileType);
-            System.out.println("Searching in data of length: " + data.length);
+            //System.out.println("Searching in data of length: " + data.length);
             for (int j = 0; j < data.length; j++) {
                 for (int k = 0; k < data[j].length; k++) {
                     if (data[j][k] != null && data[j][k].toLowerCase().contains(keyword.toLowerCase())) {
-                        System.out.println("Match found in row: " + j + ", col: " + k + ", value: " + data[j][k]);
+                        //System.out.println("Match found in row: " + j + ", col: " + k + ", value: " + data[j][k]);
                         results = appendToResults(results, data[j]);
                         break;
                     }
                 }
             }
-            System.out.println("Search results length: " + results.length);
-            for (String[] row : results) {
-                System.out.println(Arrays.toString(row));
-            }
+            //System.out.println("Search results length: " + results.length);
+//            for (String[] row : results) {
+//                System.out.println(Arrays.toString(row));
+//            }
         } catch (Exception e) {
             System.out.println("Error occurred during searching.");
-            e.printStackTrace();
             return new String[0][];
         }
 
@@ -550,7 +623,6 @@ public class SimpleDatabase {
                     results = appendToResults(results, data[i]);
                 }
             }
-
 //            if (results.length == 0) {
 //                System.out.println("No matching files found for the query.");
 //            }
@@ -560,7 +632,6 @@ public class SimpleDatabase {
             return new String[0][];
         }
         return results;
-
     }
 
     public static String[][] searchWithLogicalConnectors(String expression, String type) {
@@ -587,14 +658,11 @@ public class SimpleDatabase {
         } else {
             combinedResults = performSearch(expression, fileType);
         }
-
         // 打印搜索结果
-        System.out.println("Search results for '" + expression + "': \n" + Arrays.deepToString(combinedResults));
-
+        //System.out.println("Search results for '" + expression + "': \n" + Arrays.deepToString(combinedResults));
 //        if (combinedResults.length == 0 && !expression.isEmpty()) {
 //            System.out.println("No matching files found for the query.");
 //        }
-
         return combinedResults;
     }
 
@@ -629,8 +697,6 @@ public class SimpleDatabase {
         }
     }
 
-
-
     // 反转结果
     private static String[][] negateResults(String[][] results, String fileType) {
         try {
@@ -653,7 +719,6 @@ public class SimpleDatabase {
                     })
                     .toArray(String[][]::new);
         } catch (Exception e) {
-            e.printStackTrace();
             return new String[0][];
         }
     }
@@ -686,8 +751,5 @@ public class SimpleDatabase {
                 .map(set -> set.toArray(new String[0]))
                 .toArray(String[][]::new);
     }
-
-
-
 }
 

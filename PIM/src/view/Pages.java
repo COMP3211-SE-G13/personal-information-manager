@@ -400,8 +400,16 @@ public class Pages {
         System.out.println("----------------------------------------------------------------");
         System.out.println("                           Search");
         System.out.println("- [1] Search by Keyword");
-        System.out.println("- [2] Search with Operator");
-        System.out.println("- [3] Search by Date");
+        System.out.println("- [2] Search by Date");
+        System.out.println("- [3] Search with Logic Connector");
+        System.out.print(">>> Please select the above options x in [x]: ");
+    }
+
+    public static void searchCotactOnlyPage() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("                           Search");
+        System.out.println("- [1] Search by Keyword");
+        System.out.println("- [2] Search with Logic Connector");
         System.out.print(">>> Please select the above options x in [x]: ");
     }
 
@@ -418,10 +426,10 @@ public class Pages {
     /**
      * The search By Keyword Page
      */
-    public static void searchWithOperatorPage() {
+    public static void searchWithLogicConnectorPage() {
         System.out.println("----------------------------------------------------------------");
         System.out.println("                           Search");
-        System.out.print("Searching with operator(s): ");
+        System.out.print("Searching with logic connector(s): ");
     }
 
     /**

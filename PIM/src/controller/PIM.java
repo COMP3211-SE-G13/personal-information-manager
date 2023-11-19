@@ -94,7 +94,6 @@ public class PIM {
                             System.out.println(allNote[i][3]);
                             view.Pages.noteLastModifyTime();
                             System.out.println(allNote[i][4]);
-                            System.out.println();
                         }
                     } else if (readChoice.equals("-1")) {
                         break;
@@ -102,11 +101,12 @@ public class PIM {
                 }
             } else if (noteChoice.equals("3")) {
                 view.Pages.searchPage();
+                Input.setInput();
                 if (Input.getInput().equals("1")) {
                     view.Pages.searchByKeywordPage();
                     Input.setInput();
                     String keyword = Input.getInput();
-                    String[][] searchResult = Search.search(keyword, "notes");
+                    String[][] searchResult = Search.search(keyword, "notes.csv");
                     System.out.println("Search Result:");
                     System.out.println("----------------------------------------------------------------");
                     for (String[] x : searchResult) {
@@ -118,8 +118,32 @@ public class PIM {
                     System.out.println();
                 } else if (Input.getInput().equals("2")) {
                     view.Pages.searchByDatePage();
+                    Input.setInput();
+                    String date = Input.getInput();
+                    String[][] searchResult = Search.searchByDate(date, "notes.csv");
+                    System.out.println("Search Result:");
+                    System.out.println("----------------------------------------------------------------");
+                    for (String[] x : searchResult) {
+                        for (int i = 2; i < x.length; i++) {
+                            System.out.print(x[i] + " ");
+                        }
+                        System.out.println();
+                    }
+                    System.out.println();
                 } else if (Input.getInput().equals("3")) {
-                    view.Pages.searchWithOperatorPage();
+                    view.Pages.searchWithLogicConnectorPage();
+                    Input.setInput();
+                    String logicStatement = Input.getInput();
+                    String[][] searchResult = Search.searchWithLogicalConnectors(logicStatement, "notes");
+                    System.out.println("Search Result:");
+                    System.out.println("----------------------------------------------------------------");
+                    for (String[] x : searchResult) {
+                        for (int i = 2; i < x.length; i++) {
+                            System.out.print(x[i] + " ");
+                        }
+                        System.out.println();
+                    }
+                    System.out.println();
                 } else if (Input.getInput().equals("-1")) {
                     break;
                 }
@@ -249,26 +273,45 @@ public class PIM {
                             System.out.println(allContact[i][4]);
                             view.Pages.contactAddress();
                             System.out.println(allContact[i][5]);
-                            System.out.println();
                         }
                     } else if (lookForChoice.equals("-1")) {
                         break;
                     }
                 }
             } else if (Input.getInput().equals("3")) {
-                view.Pages.searchPage();
+                view.Pages.searchCotactOnlyPage();
                 Input.setInput();
-                String keyword = Input.getInput();
-                String[][] searchResult = Search.search(keyword, "contacts");
-                System.out.println("Search Result:");
-                System.out.println("----------------------------------------------------------------");
-                for (String[] x : searchResult) {
-                    for (int i = 2; i < x.length; i++) {
-                        System.out.print(x[i] + " ");
+                if (Input.getInput().equals("1")) {
+                    view.Pages.searchByKeywordPage();
+                    Input.setInput();
+                    String keyword = Input.getInput();
+                    String[][] searchResult = Search.search(keyword, "contacts.csv");
+                    System.out.println("Search Result:");
+                    System.out.println("----------------------------------------------------------------");
+                    for (String[] x : searchResult) {
+                        for (int i = 2; i < x.length; i++) {
+                            System.out.print(x[i] + " ");
+                        }
+                        System.out.println();
                     }
                     System.out.println();
+                } else if (Input.getInput().equals("2")) {
+                    view.Pages.searchWithLogicConnectorPage();
+                    Input.setInput();
+                    String logicStatement = Input.getInput();
+                    String[][] searchResult = Search.searchWithLogicalConnectors(logicStatement, "contacts.csv");
+                    System.out.println("Search Result:");
+                    System.out.println("----------------------------------------------------------------");
+                    for (String[] x : searchResult) {
+                        for (int i = 2; i < x.length; i++) {
+                            System.out.print(x[i] + " ");
+                        }
+                        System.out.println();
+                    }
+                    System.out.println();
+                } else if (Input.getInput().equals("-1")) {
+                    break;
                 }
-                System.out.println();
             } else if (Input.getInput().equals("4")) {
                 view.Pages.updatePage();
                 Input.setInput();
@@ -395,7 +438,6 @@ public class PIM {
                             System.out.println(allTask[i][3]);
                             view.Pages.todoDDL();
                             System.out.println(allTask[i][4]);
-                            System.out.println();
                         }
                     } else if (lookForChoice.equals("-1")) {
                         break;
@@ -404,17 +446,51 @@ public class PIM {
             } else if (Input.getInput().equals("3")) {
                 view.Pages.searchPage();
                 Input.setInput();
-                String keyword = Input.getInput();
-                String[][] searchResult = Search.search(keyword, "tasks");
-                System.out.println("Search Result:");
-                System.out.println("----------------------------------------------------------------");
-                for (String[] x : searchResult) {
-                    for (int i = 2; i < x.length; i++) {
-                        System.out.print(x[i] + " ");
+                if (Input.getInput().equals("1")) {
+                    view.Pages.searchByKeywordPage();
+                    Input.setInput();
+                    String keyword = Input.getInput();
+                    String[][] searchResult = Search.search(keyword, "tasks.csv");
+                    System.out.println("Search Result:");
+                    System.out.println("----------------------------------------------------------------");
+                    for (String[] x : searchResult) {
+                        for (int i = 2; i < x.length; i++) {
+                            System.out.print(x[i] + " ");
+                        }
+                        System.out.println();
                     }
                     System.out.println();
+                } else if (Input.getInput().equals("2")) {
+                    view.Pages.searchByDatePage();
+                    Input.setInput();
+                    String date = Input.getInput();
+                    String[][] searchResult = Search.searchByDate(date, "tasks.csv");
+                    System.out.println("Search Result:");
+                    System.out.println("----------------------------------------------------------------");
+                    for (String[] x : searchResult) {
+                        for (int i = 2; i < x.length; i++) {
+                            System.out.print(x[i] + " ");
+                        }
+                        System.out.println();
+                    }
+                    System.out.println();
+                } else if (Input.getInput().equals("3")) {
+                    view.Pages.searchWithLogicConnectorPage();
+                    Input.setInput();
+                    String logicStatement = Input.getInput();
+                    String[][] searchResult = Search.searchWithLogicalConnectors(logicStatement, "notes");
+                    System.out.println("Search Result:");
+                    System.out.println("----------------------------------------------------------------");
+                    for (String[] x : searchResult) {
+                        for (int i = 2; i < x.length; i++) {
+                            System.out.print(x[i] + " ");
+                        }
+                        System.out.println();
+                    }
+                    System.out.println();
+                } else if (Input.getInput().equals("-1")) {
+                    break;
                 }
-                System.out.println();
             } else if (Input.getInput().equals("4")) {
                 view.Pages.updatePage();
                 Input.setInput();
@@ -525,24 +601,23 @@ public class PIM {
                         String[] event = Event.getOneEvent(eventID);
                         view.Pages.eventName();
                         System.out.println(event[2]);
-                        view.Pages.eventDescription();
-                        System.out.println(event[3]);
                         view.Pages.eventStartTime();
                         System.out.println(event[4]);
                         view.Pages.eventAlarm();
                         System.out.println(event[5]);
+                        view.Pages.eventDescription();
+                        System.out.println(event[3]);
                     } else if (lookForChoice.equals("2")) {
                         String[][] allEvent = Event.getAllEvents();
                         for (int i = 0; i < allEvent.length - 1; i++) {
                             view.Pages.eventName();
                             System.out.println(allEvent[i][2]);
-                            view.Pages.eventDescription();
-                            System.out.println(allEvent[i][3]);
                             view.Pages.eventStartTime();
                             System.out.println(allEvent[i][4]);
                             view.Pages.eventAlarm();
                             System.out.println(allEvent[i][5]);
-                            System.out.println();
+                            view.Pages.eventDescription();
+                            System.out.println(allEvent[i][3]);
                         }
                     } else if (lookForChoice.equals("-1")) {
                         break;
@@ -551,17 +626,51 @@ public class PIM {
             } else if (Input.getInput().equals("3")) {
                 view.Pages.searchPage();
                 Input.setInput();
-                String keyword = Input.getInput();
-                String[][] searchResult = Search.search(keyword, "events");
-                System.out.println("Search Result:");
-                System.out.println("----------------------------------------------------------------");
-                for (String[] x : searchResult) {
-                    for (int i = 2; i < x.length; i++) {
-                        System.out.print(x[i] + " ");
+                if (Input.getInput().equals("1")) {
+                    view.Pages.searchByKeywordPage();
+                    Input.setInput();
+                    String keyword = Input.getInput();
+                    String[][] searchResult = Search.search(keyword, "events.csv");
+                    System.out.println("Search Result:");
+                    System.out.println("----------------------------------------------------------------");
+                    for (String[] x : searchResult) {
+                        for (int i = 2; i < x.length; i++) {
+                            System.out.print(x[i] + " ");
+                        }
+                        System.out.println();
                     }
                     System.out.println();
+                } else if (Input.getInput().equals("2")) {
+                    view.Pages.searchByDatePage();
+                    Input.setInput();
+                    String date = Input.getInput();
+                    String[][] searchResult = Search.searchByDate(date, "events.csv");
+                    System.out.println("Search Result:");
+                    System.out.println("----------------------------------------------------------------");
+                    for (String[] x : searchResult) {
+                        for (int i = 2; i < x.length; i++) {
+                            System.out.print(x[i] + " ");
+                        }
+                        System.out.println();
+                    }
+                    System.out.println();
+                } else if (Input.getInput().equals("3")) {
+                    view.Pages.searchWithLogicConnectorPage();
+                    Input.setInput();
+                    String logicStatement = Input.getInput();
+                    String[][] searchResult = Search.searchWithLogicalConnectors(logicStatement, "events.csv");
+                    System.out.println("Search Result:");
+                    System.out.println("----------------------------------------------------------------");
+                    for (String[] x : searchResult) {
+                        for (int i = 2; i < x.length; i++) {
+                            System.out.print(x[i] + " ");
+                        }
+                        System.out.println();
+                    }
+                    System.out.println();
+                } else if (Input.getInput().equals("-1")) {
+                    break;
                 }
-                System.out.println();
             } else if (Input.getInput().equals("4")) {
                 view.Pages.updatePage();
                 Input.setInput();

@@ -2,6 +2,9 @@ package controller;
 
 import model.SimpleDatabase;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 public class PIM {
@@ -18,6 +21,21 @@ public class PIM {
             mainConnector();
         } else {
             System.out.println("Exit System!");
+        }
+    }
+
+    /**
+     * Check Date Format Function
+     * @param date: the date to be checked
+     * @return: the boolean value of the date format is correct or not
+     */
+    private static Boolean checkDateFormat(String date) {
+        try {
+            LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+            return true;
+        } catch (DateTimeParseException e) {
+            System.out.println("Please input the correct date format!");
+            return false;
         }
     }
 
@@ -402,6 +420,9 @@ public class PIM {
                 view.Pages.newTodoPage();
                 Input.setInput();
                 if (Input.getInput().equals("1")) {
+                    if (!checkDateFormat(todoDDL)) {
+                        continue;
+                    }
                     Todo taskInfo = new Todo(todoName, todoDDL, todoDescription);
                     Todo.createTask(taskInfo);
                 } else if (Input.getInput().equals("2")) {
@@ -578,6 +599,9 @@ public class PIM {
                 view.Pages.newEventPage();
                 Input.setInput();
                 if (Input.getInput().equals("1")) {
+                    if (!checkDateFormat(eventStartTime) || !checkDateFormat(eventAlarm)) {
+                        continue;
+                    }
                     Event eventInfo = new Event(eventName, eventStartTime, eventAlarm, eventDescription);
                     Event.createEvent(eventInfo);
                 } else if (Input.getInput().equals("2")) {

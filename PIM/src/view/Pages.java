@@ -295,7 +295,7 @@ public class Pages {
      * todo ddl
      */
     public static void todoDDL() {
-        System.out.print("Task Deadline: ");
+        System.out.print("Task Deadline (YYYY-MM-DD): ");
     }
 
     /**
@@ -355,14 +355,14 @@ public class Pages {
      * event start time
      */
     public static void eventStartTime() {
-        System.out.print("Event Start Time: ");
+        System.out.print("Event Start Time (YYYY-MM-DD): ");
     }
 
     /**
      * event alarm
      */
     public static void eventAlarm() {
-        System.out.print("Event Alarm: ");
+        System.out.print("Event Alarm (YYYY-MM-DD): ");
     }
 
     /**

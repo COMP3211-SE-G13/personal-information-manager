@@ -13,13 +13,13 @@ public class Search {
 
 
     /**
-     * Search By Date Function (Public)
-     * @param inputDate: the date of search
+     * Search By Time Function (Public)
+     * @param inputTime: the date of search
      * @param type: the type of search
      * @return: the result of search
      */
-    public static String[][] searchByDate(String inputDate, String type) {
-        return model.SimpleDatabase.searchByDate(inputDate, type);
+    public static String[][] searchByTime(String inputTime, String type) {
+        return model.SimpleDatabase.searchByTime(inputTime, type);
     }
 
     /**

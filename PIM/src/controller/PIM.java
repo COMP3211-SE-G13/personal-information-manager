@@ -135,10 +135,10 @@ public class PIM {
                     }
                     System.out.println();
                 } else if (Input.getInput().equals("2")) {
-                    view.Pages.searchByDatePage();
+                    view.Pages.searchByTimePage();
                     Input.setInput();
                     String date = Input.getInput();
-                    String[][] searchResult = Search.searchByDate(date, "notes.csv");
+                    String[][] searchResult = Search.searchByTime(date, "notes.csv");
                     System.out.println("Search Result:");
                     System.out.println("----------------------------------------------------------------");
                     for (String[] x : searchResult) {
@@ -297,7 +297,7 @@ public class PIM {
                     }
                 }
             } else if (Input.getInput().equals("3")) {
-                view.Pages.searchCotactOnlyPage();
+                view.Pages.searchContactOnlyPage();
                 Input.setInput();
                 if (Input.getInput().equals("1")) {
                     view.Pages.searchByKeywordPage();
@@ -482,10 +482,10 @@ public class PIM {
                     }
                     System.out.println();
                 } else if (Input.getInput().equals("2")) {
-                    view.Pages.searchByDatePage();
+                    view.Pages.searchByTimePage();
                     Input.setInput();
                     String date = Input.getInput();
-                    String[][] searchResult = Search.searchByDate(date, "tasks.csv");
+                    String[][] searchResult = Search.searchByTime(date, "tasks.csv");
                     System.out.println("Search Result:");
                     System.out.println("----------------------------------------------------------------");
                     for (String[] x : searchResult) {
@@ -665,10 +665,10 @@ public class PIM {
                     }
                     System.out.println();
                 } else if (Input.getInput().equals("2")) {
-                    view.Pages.searchByDatePage();
+                    view.Pages.searchByTimePage();
                     Input.setInput();
                     String date = Input.getInput();
-                    String[][] searchResult = Search.searchByDate(date, "events.csv");
+                    String[][] searchResult = Search.searchByTime(date, "events.csv");
                     System.out.println("Search Result:");
                     System.out.println("----------------------------------------------------------------");
                     for (String[] x : searchResult) {

@@ -4,7 +4,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import java.util.Arrays;
 
 
@@ -301,19 +303,15 @@ public class ProjectTest {
     public void test3_4() {
         try {
             if (Auth.login("david", "1234")) {
-                // 执行搜索操作
                 String[][] searchResults = Search.search("Tom", "contacts.csv");
 
-                // 打印搜索结果的长度和内容
                 System.out.println("Search results length: " + searchResults.length);
                 for (String[] row : searchResults) {
                     System.out.println("Row found: " + Arrays.toString(row));
                 }
 
-                // 预期结果
                 String[][] expectedResults = new String[][]{{"1", "2", "Tom", "Smith", "31283425", "HK Street"}};
 
-                // 检查搜索结果是否与预期一致
                 assertTrue("Search results do not match expected results.", Arrays.deepEquals(expectedResults, searchResults));
             } else {
                 fail("Login failed.");
@@ -345,12 +343,12 @@ public class ProjectTest {
                 String resultGetAllString = "";
                 String resultGetOneString = "";
 
-                String date = String.valueOf(LocalDate.now());
+                String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss"));
 
                 String[][] dataGetAll = Note.getAllNotes();
                 String[] dataGetOne = Note.getOneNote("2");
-                String[][] resultGetAll = new String[][]{{"1", "2", "Note 1", "Here is Note 1. Hello World!", date}, {"2", "2", "Note 2", "Here is Note 2", date}};
-                String[][] resultGetOne = new String[][]{{"2", "2", "Note 2", "Here is Note 2", date}};
+                String[][] resultGetAll = new String[][]{{"1", "2", "Note 1", "Here is Note 1. Hello World!", dateTime}, {"2", "2", "Note 2", "Here is Note 2", dateTime}};
+                String[][] resultGetOne = new String[][]{{"2", "2", "Note 2", "Here is Note 2", dateTime}};
 
                 StringBuilder dataGetAllTempStr = new StringBuilder();
                 for (int i = 0; i < dataGetAll.length - 1; i++) {
@@ -410,8 +408,8 @@ public class ProjectTest {
 
                 String[][] data = Note.getAllNotes();
 
-                String date = String.valueOf(LocalDate.now());
-                String[][] result = new String[][]{{"1", "2", "Note 1", "Here is Note 1. Hello World!", date}, {"2", "2", "Note 2", "Hello World for Note 2", date}};
+                String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss"));
+                String[][] result = new String[][]{{"1", "2", "Note 1", "Here is Note 1. Hello World!", dateTime}, {"2", "2", "Note 2", "Hello World for Note 2", dateTime}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -454,8 +452,8 @@ public class ProjectTest {
 
                 String[][] data = Note.getAllNotes();
 
-                String date = String.valueOf(LocalDate.now());
-                String[][] result = new String[][]{{"1", "2", "Note 1", "Here is Note 1. Hello World!", date}};
+                String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss"));
+                String[][] result = new String[][]{{"1", "2", "Note 1", "Here is Note 1. Hello World!", dateTime}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -498,8 +496,8 @@ public class ProjectTest {
 
                 String[][] data = Note.getAllNotes();
 
-                String date = String.valueOf(LocalDate.now());
-                String[][] result = new String[][]{{"1", "2", "Note 1", "Here is Note 1. Hello World!", date}};
+                String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss"));
+                String[][] result = new String[][]{{"1", "2", "Note 1", "Here is Note 1. Hello World!", dateTime}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -538,8 +536,8 @@ public class ProjectTest {
     public void test5_1() {
         try {
             if (Auth.login("david", "1234")) {
-                Todo taskInfo1 = new Todo("Task 1", "2023-11-25", "To finish task 1");
-                Todo taskInfo2 = new Todo("Task 2", "2023-12-01", "To finish task 2");
+                Todo taskInfo1 = new Todo("Task 1", "2023-11-25 12:00:00", "To finish task 1");
+                Todo taskInfo2 = new Todo("Task 2", "2023-12-01 12:00:00", "To finish task 2");
 
                 Todo.createTask(taskInfo1);
                 Todo.createTask(taskInfo2);
@@ -551,8 +549,8 @@ public class ProjectTest {
 
                 String[][] dataGetAll = Todo.getAllTasks();
                 String[] dataGetOne = Todo.getOneTask("2");
-                String[][] resultGetAll = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25"}, {"2", "2", "Task 2", "To finish task 2", "2023-12-01"}};
-                String[][] resultGetOne = new String[][]{{"2", "2", "Task 2", "To finish task 2", "2023-12-01"}};
+                String[][] resultGetAll = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25 12:00:00"}, {"2", "2", "Task 2", "To finish task 2", "2023-12-01 12:00:00"}};
+                String[][] resultGetOne = new String[][]{{"2", "2", "Task 2", "To finish task 2", "2023-12-01 12:00:00"}};
 
                 StringBuilder dataGetAllTempStr = new StringBuilder();
                 for (int i = 0; i < dataGetAll.length - 1; i++) {
@@ -604,7 +602,7 @@ public class ProjectTest {
     public void test5_2() {
         try {
             if (Auth.login("david", "1234")) {
-                Todo taskInfo = new Todo("Task 2", "2023-12-01", "To finish task 2 and also update the all the task info");
+                Todo taskInfo = new Todo("Task 2", "2023-12-01 12:00:00", "To finish task 2 and also update the all the task info");
                 Todo.modifyTask(taskInfo, "2");
 
                 String dataString = "";
@@ -612,7 +610,7 @@ public class ProjectTest {
 
                 String[][] data = Todo.getAllTasks();
 
-                String[][] result = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25"}, {"2", "2", "Task 2", "To finish task 2 and also update the all the task info", "2023-12-01"}};
+                String[][] result = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25 12:00:00"}, {"2", "2", "Task 2", "To finish task 2 and also update the all the task info", "2023-12-01 12:00:00"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -654,7 +652,7 @@ public class ProjectTest {
                 String resultString = "";
 
                 String[][] data = Todo.getAllTasks();
-                String[][] result = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25"}};
+                String[][] result = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25 12:00:00"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -697,7 +695,7 @@ public class ProjectTest {
 
                 String[][] data = Todo.getAllTasks();
 
-                String[][] result = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25"}};
+                String[][] result = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25 12:00:00"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -733,14 +731,14 @@ public class ProjectTest {
     public void test5_5() {
         try {
             if (Auth.login("david", "1234")) {
-                Search.searchByDate("= 2023-11-25", "tasks.csv");
+                Search.searchByTime("= 2023-11-25", "tasks.csv");
 
                 String dataString = "";
                 String resultString = "";
 
                 String[][] data = Todo.getAllTasks();
 
-                String[][] result = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25"}};
+                String[][] result = new String[][]{{"1", "2", "Task 1", "To finish task 1", "2023-11-25 12:00:00"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -779,9 +777,9 @@ public class ProjectTest {
     public void test6_1() {
         try {
             if (Auth.login("david", "1234")) {
-                Event eventInfo1 = new Event("Event 1", "2023-11-20", "2023-11-19", "Join the event 1");
-                Event eventInfo2 = new Event("Event 3", "2023-11-30", "2023-11-28", "Join the event 3");
-                Event eventInfo3 = new Event("Event 2", "2023-11-25", "2023-11-24", "Join the event 2");
+                Event eventInfo1 = new Event("Event 1", "2023-11-20 12:00:00", "2023-11-19 12:00:00", "Join the event 1");
+                Event eventInfo2 = new Event("Event 3", "2023-11-30 12:00:00", "2023-11-28 12:00:00", "Join the event 3");
+                Event eventInfo3 = new Event("Event 2", "2023-11-25 12:00:00", "2023-11-24 12:00:00", "Join the event 2");
 
                 Event.createEvent(eventInfo1);
                 Event.createEvent(eventInfo2);
@@ -795,11 +793,11 @@ public class ProjectTest {
                 String[][] dataGetAll = Event.getAllEvents();
                 String[] dataGetOne = Event.getOneEvent("3");
                 String[][] resultGetAll = new String[][]{
-                        {"1", "2", "Event 1", "Join the event 1", "2023-11-20", "2023-11-19"},
-                        {"3", "2", "Event 2", "Join the event 2", "2023-11-25", "2023-11-24"},
-                        {"2", "2", "Event 3", "Join the event 3", "2023-11-30", "2023-11-28"}
+                        {"1", "2", "Event 1", "Join the event 1", "2023-11-20 12:00:00", "2023-11-19 12:00:00"},
+                        {"3", "2", "Event 2", "Join the event 2", "2023-11-25 12:00:00", "2023-11-24 12:00:00"},
+                        {"2", "2", "Event 3", "Join the event 3", "2023-11-30 12:00:00", "2023-11-28 12:00:00"}
                 };
-                String[][] resultGetOne = new String[][]{{"3", "2", "Event 2", "Join the event 2", "2023-11-25", "2023-11-24"}};
+                String[][] resultGetOne = new String[][]{{"3", "2", "Event 2", "Join the event 2", "2023-11-25 12:00:00", "2023-11-24 12:00:00"}};
 
                 StringBuilder dataGetAllTempStr = new StringBuilder();
                 for (int i = 0; i < dataGetAll.length - 1; i++) {
@@ -852,7 +850,7 @@ public class ProjectTest {
         try {
             if (Auth.login("david", "1234")) {
 
-                Event eventInfo = new Event("Event 1", "2023-11-27", "2023-11-26", "Join the event 1");
+                Event eventInfo = new Event("Event 1", "2023-11-27 12:00:00", "2023-11-26 12:00:00", "Join the event 1");
                 Event.modifyEvent(eventInfo, "1");
 
                 String dataString = "";
@@ -860,7 +858,7 @@ public class ProjectTest {
 
                 String[] data = Event.getOneEvent("1");
 
-                String[] result = new String[]{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "2023-11-26"};
+                String[] result = new String[]{"1", "2", "Event 1", "Join the event 1", "2023-11-27 12:00:00", "2023-11-26 12:00:00"};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length; i++) {
@@ -899,7 +897,7 @@ public class ProjectTest {
                 String resultString = "";
 
                 String[][] data = Event.getAllEvents();
-                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "2023-11-26"}};
+                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27 12:00:00", "2023-11-26 12:00:00"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -942,7 +940,7 @@ public class ProjectTest {
 
                 String[][] data = Event.getAllEvents();
 
-                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "2023-11-26"}};
+                String[][] result = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27 12:00:00", "2023-11-26 12:00:00"}};
 
                 StringBuilder dataTempStr = new StringBuilder();
                 for (int i = 0; i < data.length - 1; i++) {
@@ -979,17 +977,17 @@ public class ProjectTest {
         try {
             if (Auth.login("david", "1234")) {
                 // test case 1: &&
-                String[][] searchResultAnd = Search.searchWithLogicalConnectors("> 2023-11-26 && < 2023-11-28", "events");
+                String[][] searchResultAnd = Search.searchWithLogicalConnectors("> 2023-11-26 12:00:00 && < 2023-11-28 12:00:00", "events");
                 assertEquals(1, searchResultAnd.length);
                 assertEquals("1", searchResultAnd[0][0]);
                 assertEquals("Event 1", searchResultAnd[0][2]);
 
                 // test case 2: ||
-                String[][] searchResultOr = Search.searchWithLogicalConnectors("> 2023-11-28 || < 2023-11-26", "events");
+                String[][] searchResultOr = Search.searchWithLogicalConnectors("> 2023-11-28 12:00:00 || < 2023-11-26 12:00:00", "events");
                 assertEquals(0, searchResultOr.length);
 
                 // test case 3: !
-                String[][] searchResultNot = Search.searchWithLogicalConnectors("! < 2023-11-28", "events");
+                String[][] searchResultNot = Search.searchWithLogicalConnectors("! < 2023-11-28 12:00:00", "events");
                 assertEquals(0, searchResultNot.length);
             } else {
                 fail("Login failed.");
@@ -1006,13 +1004,13 @@ public class ProjectTest {
     public void test6_6() {
         try {
             if (Auth.login("david", "1234")) {
-                String[][] searchResult = Search.searchByDate("< 2023-11-28", "events.csv");
+                String[][] searchResult = Search.searchByTime("< 2023-11-28 12:00:00", "events.csv");
 
                 System.out.println("Search Results:");
                 for (String[] row : searchResult) {
                     System.out.println(Arrays.toString(row));
                 }
-                String[][] expectedResult = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "2023-11-26"}};
+                String[][] expectedResult = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27 12:00:00", "2023-11-26 12:00:00"}};
                 String resultString = Arrays.deepToString(searchResult);
                 String dataString = Arrays.deepToString(expectedResult);
                 assertEquals(dataString, resultString);
@@ -1031,14 +1029,14 @@ public class ProjectTest {
     public void test6_7(){
         try {
             if (Auth.login("david", "1234")) {
-                String[][] searchResult = Search.searchByDate("= 2023-11-27", "events.csv");
+                String[][] searchResult = Search.searchByTime("= 2023-11-27 12:00:00", "events.csv");
                 System.out.println("Search Results:"); //Print search results
                 for (String[] row : searchResult) {
                     System.out.println(Arrays.toString(row));
                 }
 
                 String resultString = "";
-                String[][] expectedResult = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27", "2023-11-26"}};
+                String[][] expectedResult = new String[][]{{"1", "2", "Event 1", "Join the event 1", "2023-11-27 12:00:00", "2023-11-26 12:00:00"}};
 
                 StringBuilder resultTempStr = new StringBuilder();
                 for (int i = 0; i < searchResult.length; i++) {
@@ -1072,7 +1070,7 @@ public class ProjectTest {
     public void test7_1() {
         try {
             if (Auth.login("david", "1234")) {
-                String[][] searchResult = Search.searchByDate("", "events.csv");
+                String[][] searchResult = Search.searchByTime("", "events.csv");
             }
         } catch (Exception e) {
             assertEquals("", "");

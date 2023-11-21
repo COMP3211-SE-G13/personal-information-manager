@@ -3,7 +3,9 @@ package controller;
 import model.SimpleDatabase;
 import static controller.Auth.getUserId;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 
 public class Note {
@@ -18,11 +20,11 @@ public class Note {
      * @param noteContent: the content of note
      */
     public Note(String noteTitle, String noteContent) {
-        LocalDate date = LocalDate.now();
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss"));
 
         this.noteTitle = noteTitle;
         this.noteContent = noteContent;
-        this.lastModifyTime = String.valueOf(date);
+        this.lastModifyTime = String.valueOf(dateTime);
         this.userId = getUserId();
     }
 

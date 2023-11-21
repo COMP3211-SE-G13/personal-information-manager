@@ -295,7 +295,7 @@ public class Pages {
      * todo ddl
      */
     public static void todoDDL() {
-        System.out.print("Task Deadline (YYYY-MM-DD): ");
+        System.out.print("Task Deadline (YYYY-MM-DD HH:MM:SS): ");
     }
 
     /**
@@ -355,14 +355,14 @@ public class Pages {
      * event start time
      */
     public static void eventStartTime() {
-        System.out.print("Event Start Time (YYYY-MM-DD): ");
+        System.out.print("Event Start Time (YYYY-MM-DD HH:MM:SS): ");
     }
 
     /**
      * event alarm
      */
     public static void eventAlarm() {
-        System.out.print("Event Alarm (YYYY-MM-DD): ");
+        System.out.print("Event Alarm (YYYY-MM-DD HH:MM:SS): ");
     }
 
     /**
@@ -400,12 +400,12 @@ public class Pages {
         System.out.println("----------------------------------------------------------------");
         System.out.println("                           Search");
         System.out.println("- [1] Search by Keyword");
-        System.out.println("- [2] Search by Date");
+        System.out.println("- [2] Search by Time");
         System.out.println("- [3] Search with Logic Connector");
         System.out.print(">>> Please select the above options x in [x]: ");
     }
 
-    public static void searchCotactOnlyPage() {
+    public static void searchContactOnlyPage() {
         System.out.println("----------------------------------------------------------------");
         System.out.println("                           Search");
         System.out.println("- [1] Search by Keyword");
@@ -435,10 +435,10 @@ public class Pages {
     /**
      * The search By Keyword Page
      */
-    public static void searchByDatePage() {
+    public static void searchByTimePage() {
         System.out.println("----------------------------------------------------------------");
         System.out.println("                           Search");
-        System.out.print("Searching by Date: ");
+        System.out.print("Searching by Time: ");
     }
 
     /**

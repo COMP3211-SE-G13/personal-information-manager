@@ -23,10 +23,10 @@ import java.util.stream.Stream;
  *  - get(String fileName)
  */
 public class SimpleDatabase {
-    String[] contactsData = {"contactID", "userID", "firstName", "lastName", "phoneNumber", "address"};
-    String[] notesData = {"noteID", "userID", "noteTitle", "noteContent", "lastModifyTime"};
-    String[] tasksData = {"taskID", "userID", "taskTitle", "taskDescription", "taskDDL"};
-    String[] eventsData = {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"};
+    private final String[] contactsData = {"contactID", "userID", "firstName", "lastName", "phoneNumber", "address"};
+    private final String[] notesData = {"noteID", "userID", "noteTitle", "noteContent", "lastModifyTime"};
+    private final String[] tasksData = {"taskID", "userID", "taskTitle", "taskDescription", "taskDDL"};
+    private final String[] eventsData = {"eventID", "userID", "eventTitle", "eventDescription", "eventStartTime", "eventAlarm"};
 
     /**
      * SimpleDatabase Contract
@@ -554,26 +554,19 @@ public class SimpleDatabase {
     public static String[][] search(String keyword, String fileType) {
         String[][] results = new String[0][];
         if (keyword == null || fileType == null) {
-            //System.out.println("Invalid keyword or file type provided.");
             return results;
         }
 
         try {
             String[][] data = SimpleDatabase.get(fileType);
-            //System.out.println("Searching in data of length: " + data.length);
             for (int j = 0; j < data.length; j++) {
                 for (int k = 0; k < data[j].length; k++) {
                     if (data[j][k] != null && data[j][k].toLowerCase().contains(keyword.toLowerCase())) {
-                        //System.out.println("Match found in row: " + j + ", col: " + k + ", value: " + data[j][k]);
                         results = appendToResults(results, data[j]);
                         break;
                     }
                 }
             }
-            //System.out.println("Search results length: " + results.length);
-//            for (String[] row : results) {
-//                System.out.println(Arrays.toString(row));
-//            }
         } catch (Exception e) {
             System.out.println("Error occurred during searching.");
             return new String[0][];
@@ -596,22 +589,22 @@ public class SimpleDatabase {
 
 
     /**
-     * Search by date in a specific file type with given comparison operator.
+     * Search by time in a specific file type with given comparison operator.
      *
-     * @param inputDate: the input date string with format "operator yyyy-mm-dd".
+     * @param inputTime: the input time string with format "operator yyyy-mm-dd".
      * @param fileType:  the type of file to search in (notes, tasks, events).
      * @return the search result as a String[][].
      */
-    public static String[][] searchByDate(String inputDate, String fileType) {
+    public static String[][] searchByTime(String inputTime, String fileType) {
         String[][] results = new String[0][];
 
-        if (inputDate == null || (!inputDate.startsWith("> ") && !inputDate.startsWith("< ") && !inputDate.startsWith("= "))) {
-            System.out.println("Invalid date format or operator.");
+        if (inputTime== null || (!inputTime.startsWith("> ") && !inputTime.startsWith("< ") && !inputTime.startsWith("= "))) {
+            System.out.println("Invalid time format or operator.");
             return results;
         }
 
-        char operator = inputDate.charAt(0);
-        String dateString = inputDate.substring(2);
+        char operator = inputTime.charAt(0);
+        String timeString = inputTime.substring(2);
 
         try {
             String[][] data = SimpleDatabase.get(fileType);
@@ -621,9 +614,9 @@ public class SimpleDatabase {
                 boolean match = false; //choose the list number by checking the file type
                 //if the file is events, then check list 5 and 6
                 if ("events.csv".equals(fileType) && row.length >= 6) {
-                    match = matchDate(operator, row[4], dateString) || matchDate(operator, row[5], dateString);
+                    match = matchTime(operator, row[4], timeString) || matchTime(operator, row[5], timeString);
                 } else if (row.length >= 5) { //else only check list 5
-                    match = matchDate(operator, row[4], dateString);
+                    match = matchTime(operator, row[4], timeString);
                 }
 
                 if (match) {
@@ -632,21 +625,20 @@ public class SimpleDatabase {
             }
             return results;
         } catch (Exception e) {
-            //System.out.println("Error occurred during searching: " + e.getMessage());
             return new String[0][];
         }
     }
 
     /**
-     * Check if the date in the file matches the given date string.
+     * Check if the time in the file matches the given time string.
      * @param operator: the comparison operator
-     * @param dateInFile: the date string in the file
-     * @param dateString: the date string to compare with
-     * @return: true if the date in the file matches the given date string
+     * @param timeInFile: the time string in the file
+     * @param timeString: the time string to compare with
+     * @return: true if the time in the file matches the given time string
      */
-    private static boolean matchDate(char operator, String dateInFile, String dateString) {
-        if (dateInFile == null) return false;
-        int comparison = dateInFile.compareTo(dateString);
+    private static boolean matchTime(char operator, String timeInFile, String timeString) {
+        if (timeInFile == null) return false;
+        int comparison = timeInFile.compareTo(timeString);
         return (operator == '>' && comparison > 0) ||
                 (operator == '<' && comparison < 0) ||
                 (operator == '=' && comparison == 0);
@@ -670,10 +662,7 @@ public class SimpleDatabase {
             parts = expression.split("&&");
             String[][] results1 = performSearch(parts[0].trim(), fileType);
             String[][] results2 = performSearch(parts[1].trim(), fileType);
-//            System.out.println("Results from first part: \n" + Arrays.deepToString(results1));
-//            System.out.println("Results from second part: \n" + Arrays.deepToString(results2));
             combinedResults = intersectResults(results1, results2);
-            //System.out.println("Combined results: \n" + Arrays.deepToString(combinedResults));
         } else if (expression.contains("||")) {
             parts = expression.split("\\|\\|");
             String[][] results1 = performSearch(parts[0].trim(), fileType);
@@ -695,16 +684,13 @@ public class SimpleDatabase {
      * @return: the search result as a String[][]
      */
     private static String[][] performSearch(String query, String fileType) {
-        //System.out.println("Performing search with query: " + query + " on fileType: " + fileType);
         if (query.matches("([<>]=?|=)\\s\\d{4}-\\d{2}-\\d{2}")) {
             int spaceIndex = query.indexOf(' ');
             String operator = query.substring(0, spaceIndex).trim();
-            String date = query.substring(spaceIndex).trim();
-            //System.out.println("Detected date query. Operator: " + operator + ", Date: " + date);
-            return searchByDate(operator + " " + date, fileType);
+            String time = query.substring(spaceIndex).trim();
+            return searchByTime(operator + " " + time, fileType);
         } else {
             // Other queries are treated as keyword search
-            //System.out.println("Performing keyword search.");
             return search(query, fileType);
         }
     }

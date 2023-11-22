@@ -14,7 +14,7 @@ public class Search {
 
     /**
      * Search By Time Function (Public)
-     * @param inputTime: the date of search
+     * @param inputTime: the dateTime of search
      * @param type: the type of search
      * @return: the result of search
      */

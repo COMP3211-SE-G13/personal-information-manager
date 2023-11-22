@@ -13,32 +13,22 @@ A personal information manager that can write notes & add contacts & create some
 ## Code Structure
 
 ```bash
-├── PIM.iml
-├── lib
-│   ├── junit-jupiter-5.8.1.jar
-│   ├── junit-jupiter-api-5.8.1.jar
-│   ├── junit-jupiter-engine-5.8.1.jar
-│   └── junit-jupiter-params-5.8.1.jar
-├── src
-│   ├── controller
-│   │   ├── Auth.java
-│   │   ├── Contact.java
-│   │   ├── Event.java
-│   │   ├── Export.java
-│   │   ├── Import.java
-│   │   ├── Input.java
-│   │   ├── Note.java
-│   │   ├── PIM.java
-│   │   ├── Search.java
-│   │   └── Todo.java
-│   ├── input
-│   ├── model
-│   │   └── SimpleDatabase.java
-│   ├── output
-│   └── view
-│       └── Pages.java
-└── test
-    └── ProjectTest.java
+.
+├── controller
+│   ├── Auth.java
+│   ├── Contact.java
+│   ├── Event.java
+│   ├── Export.java
+│   ├── Import.java
+│   ├── Input.java
+│   ├── Note.java
+│   ├── PIM.java
+│   ├── Search.java
+│   └── Todo.java
+├── model
+│   └── SimpleDatabase.java
+└── view
+    └── Pages.java
 ```
 
 ## Code Usage

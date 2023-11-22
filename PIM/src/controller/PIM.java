@@ -3,6 +3,7 @@ package controller;
 import model.SimpleDatabase;
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
@@ -31,7 +32,8 @@ public class PIM {
      */
     private static Boolean checkDateFormat(String date) {
         try {
-            LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+            //LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             return true;
         } catch (DateTimeParseException e) {
             System.out.println("Please input the correct date format!");

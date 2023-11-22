@@ -20,7 +20,7 @@ public class Note {
      * @param noteContent: the content of note
      */
     public Note(String noteTitle, String noteContent) {
-        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss"));
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         this.noteTitle = noteTitle;
         this.noteContent = noteContent;

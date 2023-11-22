@@ -343,7 +343,7 @@ public class ProjectTest {
                 String resultGetAllString = "";
                 String resultGetOneString = "";
 
-                String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss"));
+                String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
                 String[][] dataGetAll = Note.getAllNotes();
                 String[] dataGetOne = Note.getOneNote("2");
@@ -408,7 +408,7 @@ public class ProjectTest {
 
                 String[][] data = Note.getAllNotes();
 
-                String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss"));
+                String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 String[][] result = new String[][]{{"1", "2", "Note 1", "Here is Note 1. Hello World!", dateTime}, {"2", "2", "Note 2", "Hello World for Note 2", dateTime}};
 
                 StringBuilder dataTempStr = new StringBuilder();
@@ -452,7 +452,7 @@ public class ProjectTest {
 
                 String[][] data = Note.getAllNotes();
 
-                String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss"));
+                String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 String[][] result = new String[][]{{"1", "2", "Note 1", "Here is Note 1. Hello World!", dateTime}};
 
                 StringBuilder dataTempStr = new StringBuilder();
@@ -496,7 +496,7 @@ public class ProjectTest {
 
                 String[][] data = Note.getAllNotes();
 
-                String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss"));
+                String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 String[][] result = new String[][]{{"1", "2", "Note 1", "Here is Note 1. Hello World!", dateTime}};
 
                 StringBuilder dataTempStr = new StringBuilder();

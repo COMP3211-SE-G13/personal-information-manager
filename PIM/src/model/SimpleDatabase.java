@@ -568,7 +568,7 @@ public class SimpleDatabase {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Error occurred during searching.");
+            //System.out.println("Error occurred during searching.");
             return new String[0][];
         }
         return results;
@@ -598,25 +598,31 @@ public class SimpleDatabase {
     public static String[][] searchByTime(String inputTime, String fileType) {
         String[][] results = new String[0][];
 
-        if (inputTime== null || (!inputTime.startsWith("> ") && !inputTime.startsWith("< ") && !inputTime.startsWith("= "))) {
+        //System.out.println("Searching by time: " + inputTime + " in " + fileType);
+
+        if (inputTime == null || (!inputTime.startsWith("> ") && !inputTime.startsWith("< ") && !inputTime.startsWith("= "))) {
             System.out.println("Invalid time format or operator.");
             return results;
         }
 
         char operator = inputTime.charAt(0);
         String timeString = inputTime.substring(2);
+        //System.out.println("Operator: " + operator + ", Time: " + timeString);
 
         try {
             String[][] data = SimpleDatabase.get(fileType);
+            //System.out.println("Data length: " + data.length);
+
             for (String[] row : data) {
                 if (row == null) continue;
 
-                boolean match = false; //choose the list number by checking the file type
-                //if the file is events, then check list 5 and 6
+                boolean match = false;
                 if ("events.csv".equals(fileType) && row.length >= 6) {
                     match = matchTime(operator, row[4], timeString) || matchTime(operator, row[5], timeString);
-                } else if (row.length >= 5) { //else only check list 5
+                    //System.out.println("Checking row for events.csv: " + Arrays.toString(row) + " - Match: " + match);
+                } else if (row.length >= 5) {
                     match = matchTime(operator, row[4], timeString);
+                    //System.out.println("Checking row for other file: " + Arrays.toString(row) + " - Match: " + match);
                 }
 
                 if (match) {
@@ -625,9 +631,11 @@ public class SimpleDatabase {
             }
             return results;
         } catch (Exception e) {
+            System.out.println("Error occurred during searching: " + e.getMessage());
             return new String[0][];
         }
     }
+
 
     /**
      * Check if the time in the file matches the given time string.
@@ -684,16 +692,21 @@ public class SimpleDatabase {
      * @return: the search result as a String[][]
      */
     private static String[][] performSearch(String query, String fileType) {
-        if (query.matches("([<>]=?|=)\\s\\d{4}-\\d{2}-\\d{2}")) {
-            int spaceIndex = query.indexOf(' ');
+        //System.out.println("Performing search with query: " + query + " on fileType: " + fileType);
+
+        if (query.matches("([<>]=?|=)\\s\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}")) {
+            int spaceIndex = query.lastIndexOf(' ');
             String operator = query.substring(0, spaceIndex).trim();
             String time = query.substring(spaceIndex).trim();
+            //System.out.println("Detected time query. Operator: " + operator + ", Time: " + time);
             return searchByTime(operator + " " + time, fileType);
         } else {
-            // Other queries are treated as keyword search
+            System.out.println("Performing keyword search.");
             return search(query, fileType);
         }
     }
+
+
 
     /**
      * Determine the file type from the given type string.

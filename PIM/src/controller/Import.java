@@ -134,7 +134,7 @@ public class Import {
             if (tempArray == null) {
                 continue;
             }
-            Todo todoData = new Todo(tempArray[2], tempArray[3], tempArray[4]);
+            Todo todoData = new Todo(tempArray[2], tempArray[4], tempArray[3]);
             Todo.createTask(todoData);
         }
 

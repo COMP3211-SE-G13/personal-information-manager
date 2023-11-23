@@ -40,80 +40,88 @@ public class Export {
             System.out.println("Contacts");
             exportFile.write("Contacts\n");
             for (int i = 0; i < contactsData.length - 1; i++) {
-                for (int j = 0; j < contactsData[i].length; j++) {
-                    if (j == 0) {
-                        System.out.print(contactsData[i][j] + " | ");
-                        exportFile.write(contactsData[i][j]);
-                    } else if (j == contactsData[i].length - 1) {
-                        System.out.print(contactsData[i][j] + " | ");
-                        exportFile.write("," + contactsData[i][j]);
-                    } else {
-                        System.out.print(contactsData[i][j] + " | ");
-                        exportFile.write("," + contactsData[i][j]);
+                if (String.valueOf(Auth.getUserId()).equals(contactsData[i][1])) {
+                    for (int j = 0; j < contactsData[i].length; j++) {
+                        if (j == 0) {
+                            System.out.print(contactsData[i][j] + " | ");
+                            exportFile.write(contactsData[i][j]);
+                        } else if (j == contactsData[i].length - 1) {
+                            System.out.print(contactsData[i][j] + " | ");
+                            exportFile.write("," + contactsData[i][j]);
+                        } else {
+                            System.out.print(contactsData[i][j] + " | ");
+                            exportFile.write("," + contactsData[i][j]);
+                        }
                     }
+                    System.out.println();
+                    exportFile.write("\n");
                 }
-                System.out.println();
-                exportFile.write("\n");
             }
             exportFile.write("End of Contacts");
             exportFile.write("\n");
             System.out.println("Notes");
             exportFile.write("Notes\n");
             for (int i = 0; i < notesData.length - 1; i++) {
-                for (int j = 0; j < notesData[i].length; j++) {
-                    if (j == 0) {
-                        System.out.print(notesData[i][j] + " | ");
-                        exportFile.write(notesData[i][j]);
-                    } else if (j == notesData[i].length - 1) {
-                        System.out.print(notesData[i][j] + " | ");
-                        exportFile.write("," + notesData[i][j]);
-                    } else {
-                        System.out.print(notesData[i][j] + " | ");
-                        exportFile.write("," + notesData[i][j]);
+                if (String.valueOf(Auth.getUserId()).equals(notesData[i][1])) {
+                    for (int j = 0; j < notesData[i].length; j++) {
+                        if (j == 0) {
+                            System.out.print(notesData[i][j] + " | ");
+                            exportFile.write(notesData[i][j]);
+                        } else if (j == notesData[i].length - 1) {
+                            System.out.print(notesData[i][j] + " | ");
+                            exportFile.write("," + notesData[i][j]);
+                        } else {
+                            System.out.print(notesData[i][j] + " | ");
+                            exportFile.write("," + notesData[i][j]);
+                        }
                     }
+                    System.out.println();
+                    exportFile.write("\n");
                 }
-                System.out.println();
-                exportFile.write("\n");
             }
             exportFile.write("End of Notes");
             exportFile.write("\n");
             System.out.println("Events");
             exportFile.write("Events\n");
             for (int i = 0; i < eventsData.length - 1; i++) {
-                for (int j = 0; j < eventsData[i].length; j++) {
-                    if (j == 0) {
-                        System.out.print(eventsData[i][j] + " | ");
-                        exportFile.write(eventsData[i][j]);
-                    } else if (j == eventsData[i].length - 1) {
-                        System.out.print(eventsData[i][j] + " | ");
-                        exportFile.write("," + eventsData[i][j]);
-                    } else {
-                        System.out.print(eventsData[i][j] + " | ");
-                        exportFile.write("," + eventsData[i][j]);
+                if (String.valueOf(Auth.getUserId()).equals(eventsData[i][1])) {
+                    for (int j = 0; j < eventsData[i].length; j++) {
+                        if (j == 0) {
+                            System.out.print(eventsData[i][j] + " | ");
+                            exportFile.write(eventsData[i][j]);
+                        } else if (j == eventsData[i].length - 1) {
+                            System.out.print(eventsData[i][j] + " | ");
+                            exportFile.write("," + eventsData[i][j]);
+                        } else {
+                            System.out.print(eventsData[i][j] + " | ");
+                            exportFile.write("," + eventsData[i][j]);
+                        }
                     }
+                    System.out.println();
+                    exportFile.write("\n");
                 }
-                System.out.println();
-                exportFile.write("\n");
             }
             exportFile.write("End of Events");
             exportFile.write("\n");
             System.out.println("Tasks");
             exportFile.write("Tasks\n");
             for (int i = 0; i < tasksData.length - 1; i++) {
-                for (int j = 0; j < tasksData[i].length; j++) {
-                    if (j == 0) {
-                        System.out.print(tasksData[i][j] + " | ");
-                        exportFile.write(tasksData[i][j]);
-                    } else if (j == tasksData[i].length - 1) {
-                        System.out.print(tasksData[i][j] + " | ");
-                        exportFile.write("," + tasksData[i][j]);
-                    } else {
-                        System.out.print(tasksData[i][j] + " | ");
-                        exportFile.write("," + tasksData[i][j]);
+                if (String.valueOf(Auth.getUserId()).equals(tasksData[i][1])) {
+                    for (int j = 0; j < tasksData[i].length; j++) {
+                        if (j == 0) {
+                            System.out.print(tasksData[i][j] + " | ");
+                            exportFile.write(tasksData[i][j]);
+                        } else if (j == tasksData[i].length - 1) {
+                            System.out.print(tasksData[i][j] + " | ");
+                            exportFile.write("," + tasksData[i][j]);
+                        } else {
+                            System.out.print(tasksData[i][j] + " | ");
+                            exportFile.write("," + tasksData[i][j]);
+                        }
                     }
+                    System.out.println();
+                    exportFile.write("\n");
                 }
-                System.out.println();
-                exportFile.write("\n");
             }
             exportFile.write("End of Tasks");
             exportFile.write("\n");

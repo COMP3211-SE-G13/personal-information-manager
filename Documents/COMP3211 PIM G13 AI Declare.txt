@@ -8,5 +8,7 @@ Project: PIM
 
 2. We use ChatGPT to modify the Java Docs to make more sense.
 
-3. For some unit test functions debugging, we use ChatGPT to enhance the availability of the code.
+3. We use ChatGPT to debug and improve the searching functions.
+
+4. For some unit test functions debugging, we use ChatGPT to enhance the availability of the code.
 

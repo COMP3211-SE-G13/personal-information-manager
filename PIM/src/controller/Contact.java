@@ -4,6 +4,9 @@ import model.SimpleDatabase;
 
 import static controller.Auth.getUserId;
 
+import java.util.ArrayList;
+
+
 public class Contact {
     private String lastName;
     private String firstName;
@@ -69,7 +72,21 @@ public class Contact {
     public static String[][] getAllContacts() {
         try{
             String[][] data = SimpleDatabase.get("contacts.csv");
-            return data;
+            String userId = String.valueOf(getUserId());
+            // Filter data based on userID
+            ArrayList<String[]> filteredList = new ArrayList<>();
+            for (int i = 0; i < data.length - 1; i++) {
+                if (data[i][1].equals(userId)) {
+                    String[] filteredLine = { data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5] };
+                    filteredList.add(filteredLine);
+                }
+            }
+
+            // Convert filtered contacts to 2D String array
+            String[][] filteredData = new String[filteredList.size() + 1][];
+            filteredData = filteredList.toArray(filteredData);
+
+            return filteredData;
         } catch (Exception e) {
             System.out.println("Error: " + e);
             System.out.println("Please try again!");

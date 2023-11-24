@@ -137,7 +137,7 @@ public class Pages {
      */
     public static void noteList() {
         System.out.println("----------------------------------------------------------------");
-        System.out.println("Your List of Notes: ");
+        System.out.println("Your List of Notes: (sort by last modify time in descending order)");
         System.out.println("Note ID        Note Title");
     }
 
@@ -321,7 +321,7 @@ public class Pages {
      */
     public static void todoList() {
         System.out.println("----------------------------------------------------------------");
-        System.out.println("Your List of Tasks: ");
+        System.out.println("Your List of Tasks: (sort by deadline in ascending order)");
         System.out.println("Task ID        Task Title");
     }
 
@@ -389,7 +389,7 @@ public class Pages {
      */
     public static void eventList() {
         System.out.println("----------------------------------------------------------------");
-        System.out.println("Your List of Events: ");
+        System.out.println("Your List of Events: (sort by start time in ascending order)");
         System.out.println("Event ID       Event Title");
     }
 

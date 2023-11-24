@@ -6,7 +6,7 @@ Project: PIM
 
 1. We use ChatGPT to summarise the Project details.
 
-2. We use ChatGPT to modify the Java Docs to make more sense.
+2. We use ChatGPT to modify the SRS Document to make more sense.
 
 3. We use ChatGPT to debug and improve the searching functions.
 

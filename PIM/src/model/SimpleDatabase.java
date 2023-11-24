@@ -299,6 +299,7 @@ public class SimpleDatabase {
      * @param fileWriter: The filewrite pointer of the file
      * @param newData: The data of the user want to insert
      * @param tempFile: The data get from the file by using the get function
+     * @param fileName: The file name of the data file
      * @exception Exception: The Exception for File operation
      */
     private void insertSorting(FileWriter fileWriter, String[][] newData, String[][] tempFile, String fileName) {
@@ -407,6 +408,14 @@ public class SimpleDatabase {
     }
 
 
+    /**
+     * Update Data Function
+     * @param file: The file to update
+     * @param contactID: The ID of the contact
+     * @param newData: The new data of the contact
+     * @param fileName: The file name of the data file
+     * @throws IOException: IOException throw the I/O error
+     */
     private void updateSorting(File file, int contactID, String[] newData, String fileName) throws IOException {
         if (!file.exists() || !file.isFile() || !file.canWrite()) {
             System.out.println("Cannot modify the file.");

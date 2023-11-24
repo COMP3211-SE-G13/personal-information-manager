@@ -1,0 +1,12 @@
+COMP3211 Project AI Usage Declare
+------------------------------------------------------------------------------------------------
+Group: 13
+Project: PIM
+-----------------------------------------------------------------------------------------------
+
+1. We use ChatGPT to summarise the Project details.
+
+2. We use ChatGPT to modify the Java Docs to make more sense.
+
+3. For some unit test functions debugging, we use ChatGPT to enhance the availability of the code.
+
